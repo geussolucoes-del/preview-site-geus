@@ -116,3 +116,114 @@ if (prefersReducedMotion || !("IntersectionObserver" in window)) {
   window.addEventListener("load", scheduleHashAlignment);
   window.addEventListener("hashchange", scheduleHashAlignment);
 }
+
+const leadForm = document.querySelector("[data-lead-form]");
+
+if (leadForm) {
+  const steps = Array.from(leadForm.querySelectorAll("[data-form-step]"));
+  const progressSteps = Array.from(leadForm.querySelectorAll("[data-progress-step]"));
+  const prevButton = leadForm.querySelector("[data-form-prev]");
+  const nextButton = leadForm.querySelector("[data-form-next]");
+  const qualifiedResult = leadForm.querySelector("[data-qualified-result]");
+  const unqualifiedResult = leadForm.querySelector("[data-unqualified-result]");
+  const whatsappResult = leadForm.querySelector("[data-whatsapp-result]");
+  let currentStep = 0;
+
+  const fieldLabels = {
+    business: "Negócio",
+    experience: "Experiência",
+    investment: "Investimento",
+    stock: "Estoque",
+    name: "Nome",
+    company: "Empresa",
+    phone: "Telefone",
+    email: "E-mail",
+  };
+
+  const getFieldText = (field) => {
+    if (!field) return "";
+    if (field.tagName === "SELECT") {
+      return field.selectedOptions[0]?.textContent?.trim() || "";
+    }
+    return field.value.trim();
+  };
+
+  const showStep = (index) => {
+    currentStep = Math.max(0, Math.min(index, steps.length - 1));
+    steps.forEach((step, stepIndex) => {
+      step.classList.toggle("is-active", stepIndex === currentStep);
+    });
+    progressSteps.forEach((step, stepIndex) => {
+      step.classList.toggle("is-active", stepIndex <= currentStep);
+    });
+    leadForm.dataset.step = String(currentStep + 1);
+  };
+
+  const validateCurrentStep = () => {
+    const activeStep = steps[currentStep];
+    const fields = Array.from(activeStep.querySelectorAll("input, select, textarea"));
+    const invalidField = fields.find((field) => !field.checkValidity());
+
+    if (invalidField) {
+      invalidField.reportValidity();
+      return false;
+    }
+
+    return true;
+  };
+
+  const buildWhatsappUrl = () => {
+    const formData = new FormData(leadForm);
+    const lines = [
+      "Olá! Preenchi o diagnóstico Auto Flux no site e quero conversar sobre minha loja.",
+      "",
+      ...Object.keys(fieldLabels)
+        .map((name) => {
+          const field = leadForm.elements[name];
+          const value = getFieldText(field);
+          return value ? `${fieldLabels[name]}: ${value}` : "";
+        })
+        .filter(Boolean),
+    ];
+
+    if (formData.get("investment") === "entender") {
+      lines.push("", "Ainda quero entender melhor qual plano faz sentido.");
+    }
+
+    return `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
+  };
+
+  const showResult = (isQualified) => {
+    leadForm.classList.add("is-complete");
+    qualifiedResult.hidden = !isQualified;
+    unqualifiedResult.hidden = isQualified;
+
+    if (isQualified && whatsappResult) {
+      whatsappResult.href = buildWhatsappUrl();
+    }
+
+    leadForm.scrollIntoView({ block: "center" });
+  };
+
+  nextButton?.addEventListener("click", () => {
+    if (!validateCurrentStep()) return;
+    showStep(currentStep + 1);
+  });
+
+  prevButton?.addEventListener("click", () => {
+    showStep(currentStep - 1);
+  });
+
+  leadForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!validateCurrentStep()) return;
+
+    const formData = new FormData(leadForm);
+    const isUnqualified =
+      formData.get("business") === "fora" || formData.get("investment") === "sem_orcamento";
+
+    showResult(!isUnqualified);
+  });
+
+  showStep(0);
+}
