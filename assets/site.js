@@ -79,22 +79,32 @@ const revealVisibleElements = () => {
   });
 };
 
-const alignHashTarget = () => {
+const alignHashTarget = (behavior = "smooth") => {
   const id = window.location.hash.slice(1);
   if (!id) return;
 
   const target = document.getElementById(decodeURIComponent(id));
   if (!target) return;
 
-  target.scrollIntoView({ block: "start" });
+  const scrollTarget =
+    id === "diagnostico" ? document.querySelector("[data-lead-form]") || target : target;
+  const rect = scrollTarget.getBoundingClientRect();
+  const headerOffset = header?.getBoundingClientRect().height || 0;
+  const safeGap = window.innerWidth <= 660 ? 12 : 18;
+  const targetTop =
+    rect.height > window.innerHeight * 0.86
+      ? rect.top + window.scrollY - headerOffset - safeGap
+      : rect.top + window.scrollY - (window.innerHeight - rect.height) / 2;
+
+  window.scrollTo({ top: Math.max(0, targetTop), behavior });
   updateHeader();
   revealVisibleElements();
 };
 
-const scheduleHashAlignment = () => {
+const scheduleHashAlignment = (behavior = "smooth") => {
   requestAnimationFrame(() => {
-    alignHashTarget();
-    window.setTimeout(alignHashTarget, 280);
+    alignHashTarget(behavior);
+    window.setTimeout(() => alignHashTarget(behavior), 280);
   });
 };
 
@@ -114,9 +124,39 @@ if (prefersReducedMotion || !("IntersectionObserver" in window)) {
 
   revealElements.forEach((element) => observer.observe(element));
   requestAnimationFrame(revealVisibleElements);
-  window.addEventListener("load", scheduleHashAlignment);
-  window.addEventListener("hashchange", scheduleHashAlignment);
 }
+
+window.addEventListener("DOMContentLoaded", () => scheduleHashAlignment("auto"));
+window.addEventListener("load", () => {
+  scheduleHashAlignment("auto");
+  window.setTimeout(() => scheduleHashAlignment("auto"), 520);
+  window.setTimeout(() => scheduleHashAlignment("auto"), 1100);
+});
+window.addEventListener("hashchange", () => scheduleHashAlignment("smooth"));
+
+if (window.location.hash) {
+  scheduleHashAlignment("auto");
+  window.setTimeout(() => scheduleHashAlignment("auto"), 80);
+  window.setTimeout(() => scheduleHashAlignment("auto"), 220);
+  window.setTimeout(() => scheduleHashAlignment("auto"), 520);
+}
+
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const hash = link.getAttribute("href");
+    if (!hash || hash === "#") return;
+
+    const target = document.getElementById(hash.slice(1));
+    if (!target) return;
+
+    event.preventDefault();
+    closeMenu();
+    if (window.location.hash !== hash) {
+      window.history.pushState(null, "", hash);
+    }
+    scheduleHashAlignment("smooth");
+  });
+});
 
 const pushGeusEvent = (event, payload = {}) => {
   const eventPayload = {
@@ -290,7 +330,7 @@ if (leadForm) {
     };
   };
 
-  const showStep = (index) => {
+  const showStep = (index, shouldCenter = false) => {
     currentStep = Math.max(0, Math.min(index, steps.length - 1));
     steps.forEach((step, stepIndex) => {
       step.classList.toggle("is-active", stepIndex === currentStep);
@@ -307,6 +347,17 @@ if (leadForm) {
         step: currentStep + 1,
         step_name: "investimento_estoque",
       });
+    }
+
+    if (shouldCenter) {
+      const rect = leadForm.getBoundingClientRect();
+      const headerOffset = header?.getBoundingClientRect().height || 0;
+      const safeGap = window.innerWidth <= 660 ? 12 : 18;
+      const targetTop =
+        rect.height > window.innerHeight * 0.86
+          ? rect.top + window.scrollY - headerOffset - safeGap
+          : rect.top + window.scrollY - (window.innerHeight - rect.height) / 2;
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
     }
   };
 
@@ -404,11 +455,11 @@ if (leadForm) {
 
   nextButton?.addEventListener("click", () => {
     if (!validateCurrentStep()) return;
-    showStep(currentStep + 1);
+    showStep(currentStep + 1, true);
   });
 
   prevButton?.addEventListener("click", () => {
-    showStep(currentStep - 1);
+    showStep(currentStep - 1, true);
   });
 
   leadForm.querySelectorAll('input[name="business"]').forEach((input) => {

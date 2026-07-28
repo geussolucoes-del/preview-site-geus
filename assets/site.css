@@ -11,7 +11,7 @@
   --purple-soft: #eee8ff;
   --green: #22995a;
   --shadow: 0 28px 80px rgba(51, 29, 89, 0.12);
-  --container: min(1180px, calc(100% - 40px));
+  --container: min(1120px, calc(100% - 40px));
 }
 
 * {
@@ -23,7 +23,11 @@ html {
 }
 
 :where(section, footer, main[id]) {
-  scroll-margin-top: 104px;
+  scroll-margin-top: 96px;
+}
+
+[data-lead-form] {
+  scroll-margin-top: 96px;
 }
 
 body {
@@ -87,7 +91,7 @@ button {
 }
 
 .section-pad {
-  padding: 118px 0;
+  padding: 92px 0;
 }
 
 .site-header {
@@ -120,7 +124,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 88px;
+  min-height: 78px;
 }
 
 .brand {
@@ -128,7 +132,7 @@ button {
   gap: 11px;
   align-items: center;
   color: var(--ink);
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 1;
@@ -136,8 +140,8 @@ button {
 }
 
 .brand img {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
@@ -178,8 +182,8 @@ button {
   gap: 10px;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
-  padding: 0 22px;
+  min-height: 48px;
+  padding: 0 20px;
   border: 0;
   border-radius: 999px;
   color: var(--white);
@@ -202,8 +206,8 @@ button {
 }
 
 .button-header {
-  min-height: 46px;
-  padding-inline: 20px;
+  min-height: 44px;
+  padding-inline: 19px;
 }
 
 .menu-button {
@@ -241,7 +245,7 @@ button {
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: 890px;
+  min-height: min(820px, 100svh);
   background: #f7f6fa;
 }
 
@@ -296,12 +300,12 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 890px;
-  padding: 180px 0 54px;
+  min-height: min(820px, 100svh);
+  padding: 138px 0 38px;
 }
 
 .hero-copy {
-  max-width: 690px;
+  max-width: 640px;
 }
 
 .eyebrow {
@@ -325,9 +329,9 @@ button {
 }
 
 .hero h1 {
-  max-width: 760px;
-  margin: 26px 0 28px;
-  font-size: clamp(58px, 6.4vw, 92px);
+  max-width: 690px;
+  margin: 22px 0 22px;
+  font-size: clamp(50px, 5.6vw, 78px);
   font-weight: 780;
   letter-spacing: -0.075em;
   line-height: 0.9;
@@ -340,7 +344,7 @@ button {
 
 .hero h1 small {
   display: block;
-  margin-top: 19px;
+  margin-top: 15px;
   font-size: 0.52em;
   font-weight: 660;
   letter-spacing: -0.055em;
@@ -348,7 +352,7 @@ button {
 }
 
 .hero-text {
-  max-width: 620px;
+  max-width: 570px;
   margin: 0;
   color: #4e4e5a;
   font-size: clamp(17px, 1.8vw, 20px);
@@ -359,12 +363,12 @@ button {
   display: flex;
   gap: 28px;
   align-items: center;
-  margin-top: 34px;
+  margin-top: 28px;
 }
 
 .button-primary {
-  min-height: 58px;
-  padding-inline: 26px;
+  min-height: 54px;
+  padding-inline: 24px;
 }
 
 .text-link {
@@ -388,7 +392,7 @@ button {
 }
 
 .hero-note {
-  margin: 22px 0 0;
+  margin: 16px 0 0;
   color: var(--muted);
   font-size: 12px;
   font-weight: 650;
@@ -396,8 +400,8 @@ button {
 
 .hero-proof {
   align-self: flex-end;
-  width: min(760px, 100%);
-  padding: 19px 22px 15px;
+  width: min(700px, 100%);
+  padding: 16px 20px 13px;
   border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.72);
@@ -436,7 +440,7 @@ button {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 17px 0 12px;
+  padding: 14px 0 10px;
 }
 
 .proof-grid div + div {
@@ -446,7 +450,7 @@ button {
 
 .proof-grid strong {
   display: block;
-  font-size: clamp(25px, 3vw, 38px);
+  font-size: clamp(23px, 2.6vw, 34px);
   letter-spacing: -0.055em;
   line-height: 1;
 }
@@ -531,9 +535,9 @@ button {
 .statement-grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
-  gap: 80px;
+  gap: 62px;
   align-items: end;
-  padding-top: 76px;
+  padding-top: 56px;
 }
 
 .statement h2,
@@ -541,7 +545,7 @@ button {
 .results h2,
 .faq h2 {
   margin: 0;
-  font-size: clamp(47px, 6.6vw, 84px);
+  font-size: clamp(40px, 5.2vw, 68px);
   font-weight: 710;
   letter-spacing: -0.07em;
   line-height: 0.98;
@@ -562,7 +566,7 @@ button {
 .statement-copy p {
   margin: 0 0 24px;
   color: var(--muted);
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.7;
 }
 
@@ -570,13 +574,13 @@ button {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
-  margin-top: 72px;
+  margin-top: 48px;
 }
 
 .problem-card {
   position: relative;
-  min-height: 340px;
-  padding: 28px;
+  min-height: 288px;
+  padding: 24px;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 26px;
@@ -602,8 +606,8 @@ button {
 }
 
 .problem-card h3 {
-  margin: 34px 0 12px;
-  font-size: 23px;
+  margin: 26px 0 10px;
+  font-size: 21px;
   letter-spacing: -0.035em;
 }
 
@@ -616,8 +620,8 @@ button {
 .card-mark {
   position: relative;
   display: grid;
-  width: 94px;
-  height: 94px;
+  width: 82px;
+  height: 82px;
   margin: 36px auto 0;
   place-items: center;
   border: 1px solid rgba(117, 64, 232, 0.14);
@@ -718,9 +722,9 @@ button {
 .method-intro {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.55fr);
-  gap: 78px;
+  gap: 58px;
   align-items: end;
-  padding: 74px 0 80px;
+  padding: 56px 0 58px;
 }
 
 .product-label {
@@ -746,7 +750,7 @@ button {
 .method-intro h2 {
   margin: 20px 0 0;
   max-width: 820px;
-  font-size: clamp(48px, 5.6vw, 76px);
+  font-size: clamp(40px, 4.8vw, 62px);
   font-weight: 690;
   letter-spacing: -0.07em;
   line-height: 1;
@@ -756,7 +760,7 @@ button {
 .method-intro > p {
   margin: 0 0 8px;
   color: rgba(255, 255, 255, 0.62);
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.72;
 }
 
@@ -766,7 +770,7 @@ button {
   flex-wrap: nowrap;
   justify-content: center;
   gap: 0;
-  padding: 38px 0 32px;
+  padding: 30px 0 26px;
   border-top: 1px solid rgba(255, 255, 255, 0.13);
   border-bottom: 1px solid rgba(255, 255, 255, 0.13);
 }
@@ -811,10 +815,10 @@ button {
 .system-panel {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
-  gap: 70px;
+  gap: 52px;
   align-items: center;
-  margin-top: 86px;
-  padding: 66px;
+  margin-top: 58px;
+  padding: 46px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 32px;
   background: rgba(255, 255, 255, 0.045);
@@ -830,7 +834,7 @@ button {
 
 .system-copy h3 {
   margin: 18px 0 18px;
-  font-size: clamp(36px, 4vw, 54px);
+  font-size: clamp(32px, 3.5vw, 46px);
   letter-spacing: -0.055em;
   line-height: 1.03;
 }
@@ -864,7 +868,7 @@ button {
 
 .system-visual {
   position: relative;
-  min-height: 520px;
+  min-height: 430px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 24px;
@@ -921,14 +925,14 @@ button {
 }
 
 .metric-main {
-  top: 88px;
+  top: 74px;
   left: 34px;
   width: 58%;
-  min-height: 205px;
+  min-height: 180px;
 }
 
 .metric-side {
-  top: 112px;
+  top: 92px;
   right: 24px;
   width: 34%;
 }
@@ -977,7 +981,7 @@ button {
 .message-stack {
   position: absolute;
   right: 28px;
-  bottom: 34px;
+  bottom: 26px;
   left: 70px;
 }
 
@@ -1017,13 +1021,13 @@ button {
 .results-grid {
   display: grid;
   grid-template-columns: 0.72fr 1fr 0.78fr;
-  gap: 42px;
+  gap: 34px;
   align-items: center;
-  padding: 80px 0 72px;
+  padding: 58px 0 52px;
 }
 
 .result-number {
-  padding-right: 32px;
+  padding-right: 26px;
   border-right: 1px solid var(--line);
 }
 
@@ -1039,7 +1043,7 @@ button {
 .result-number strong {
   display: block;
   color: var(--purple);
-  font-size: clamp(120px, 14vw, 190px);
+  font-size: clamp(94px, 10.5vw, 145px);
   font-weight: 760;
   letter-spacing: -0.1em;
   line-height: 0.9;
@@ -1053,24 +1057,24 @@ button {
 
 .result-number p {
   max-width: 370px;
-  margin: 18px 0 0;
+  margin: 14px 0 0;
   color: var(--muted);
 }
 
 .result-story h2 {
-  margin: 20px 0 24px;
-  font-size: clamp(43px, 5vw, 67px);
+  margin: 16px 0 18px;
+  font-size: clamp(36px, 4.1vw, 54px);
 }
 
 .result-story > p {
   margin: 0;
   color: var(--muted);
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .result-disclaimer {
-  margin-top: 30px;
-  padding: 18px 20px;
+  margin-top: 22px;
+  padding: 15px 18px;
   border-left: 3px solid var(--purple);
   color: #666370;
   background: rgba(255, 255, 255, 0.62);
@@ -1115,8 +1119,8 @@ button {
   display: flex;
   gap: 20px;
   align-items: center;
-  min-height: 120px;
-  padding: 24px 28px;
+  min-height: 104px;
+  padding: 20px 24px;
 }
 
 .result-strip > div + div {
@@ -1125,7 +1129,7 @@ button {
 
 .result-strip span {
   color: var(--purple);
-  font-size: 42px;
+  font-size: 36px;
   font-weight: 780;
   letter-spacing: -0.06em;
 }
@@ -1144,20 +1148,20 @@ button {
 .plans-heading {
   display: grid;
   grid-template-columns: 1.2fr 0.7fr;
-  gap: 80px;
+  gap: 58px;
   align-items: end;
-  padding: 76px 0 68px;
+  padding: 56px 0 48px;
 }
 
 .plans-heading h2 {
-  margin-top: 18px;
-  font-size: clamp(45px, 6vw, 76px);
+  margin-top: 14px;
+  font-size: clamp(38px, 4.9vw, 62px);
 }
 
 .plans-heading > p {
   margin: 0 0 8px;
   color: var(--muted);
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .plan-grid {
@@ -1171,8 +1175,8 @@ button {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 690px;
-  padding: 32px;
+  min-height: 610px;
+  padding: 28px;
   border: 1px solid rgba(117, 64, 232, 0.18);
   border-radius: 28px;
   background:
@@ -1188,7 +1192,7 @@ button {
     radial-gradient(circle at 100% 0, rgba(173, 89, 255, 0.38), transparent 22rem),
     linear-gradient(150deg, #211637, #5630a9 72%, #7137cc);
   box-shadow: 0 30px 80px rgba(82, 40, 155, 0.26);
-  transform: translateY(-16px);
+  transform: translateY(-10px);
 }
 
 .popular-tag {
@@ -1226,7 +1230,7 @@ button {
 .price {
   display: flex;
   align-items: baseline;
-  margin: 32px 0 30px;
+  margin: 24px 0 24px;
   letter-spacing: -0.055em;
 }
 
@@ -1237,7 +1241,7 @@ button {
 }
 
 .price strong {
-  font-size: clamp(48px, 5vw, 66px);
+  font-size: clamp(42px, 4.2vw, 56px);
   line-height: 1;
 }
 
@@ -1254,8 +1258,8 @@ button {
 
 .plan-card ul {
   display: grid;
-  gap: 12px;
-  margin: 0 0 32px;
+  gap: 10px;
+  margin: 0 0 24px;
   padding: 0;
   list-style: none;
 }
@@ -1323,18 +1327,18 @@ button {
 .diagnostic-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(420px, 1fr);
-  gap: 68px;
+  gap: 48px;
   align-items: start;
 }
 
 .diagnostic-copy {
   position: sticky;
-  top: 128px;
+  top: 108px;
 }
 
 .diagnostic-copy h2 {
-  margin: 28px 0 24px;
-  font-size: clamp(46px, 5vw, 74px);
+  margin: 22px 0 18px;
+  font-size: clamp(38px, 4.2vw, 58px);
   letter-spacing: -0.075em;
   line-height: 0.95;
 }
@@ -1343,13 +1347,13 @@ button {
   max-width: 530px;
   margin: 0;
   color: rgba(255, 255, 255, 0.68);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .diagnostic-copy ul {
   display: grid;
-  gap: 18px;
-  margin: 42px 0 0;
+  gap: 14px;
+  margin: 30px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -1376,8 +1380,8 @@ button {
 
 .lead-form {
   position: relative;
-  min-height: 620px;
-  padding: 30px;
+  min-height: 560px;
+  padding: 24px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 34px;
   background:
@@ -1393,7 +1397,7 @@ button {
   gap: 16px;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   color: rgba(255, 255, 255, 0.58);
   font-size: 12px;
   font-weight: 800;
@@ -1409,13 +1413,13 @@ button {
 .form-progress {
   display: flex;
   gap: 10px;
-  margin-bottom: 26px;
+  margin-bottom: 20px;
 }
 
 .form-progress span {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 50%;
@@ -1440,13 +1444,13 @@ button {
 
 .form-step.is-active {
   display: grid;
-  gap: 22px;
+  gap: 18px;
 }
 
 .form-step legend {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   color: #fff;
-  font-size: clamp(26px, 3vw, 36px);
+  font-size: clamp(24px, 2.5vw, 32px);
   font-weight: 780;
   letter-spacing: -0.055em;
   line-height: 1.05;
@@ -1454,12 +1458,12 @@ button {
 
 .question-block {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .question-block > span {
   color: rgba(255, 255, 255, 0.92);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 760;
 }
 
@@ -1471,7 +1475,7 @@ button {
 
 .question-block input:not([type="radio"]) {
   width: 100%;
-  min-height: 56px;
+  min-height: 50px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
   color: #fff;
@@ -1487,7 +1491,8 @@ button {
 
 .option-grid {
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .option-grid-plans {
@@ -1502,8 +1507,8 @@ button {
   position: relative;
   display: grid;
   gap: 5px;
-  min-height: 74px;
-  padding: 16px 16px 16px 48px;
+  min-height: 66px;
+  padding: 14px 14px 14px 44px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   background: rgba(11, 8, 20, 0.42);
@@ -1524,8 +1529,8 @@ button {
 
 .option-card input {
   position: absolute;
-  top: 20px;
-  left: 17px;
+  top: 18px;
+  left: 15px;
   width: 18px;
   height: 18px;
   margin: 0;
@@ -1577,7 +1582,7 @@ button {
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 14px;
 }
 
 .privacy-check {
@@ -1607,7 +1612,7 @@ button {
   gap: 12px;
   align-items: center;
   justify-content: flex-end;
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 .button-ghost {
@@ -1742,15 +1747,15 @@ button {
   display: grid;
   min-height: 100vh;
   place-items: center;
-  padding: 42px 20px;
+  padding: 28px 20px;
 }
 
 .journey-card {
   position: relative;
   display: grid;
-  gap: 22px;
-  width: min(100%, 850px);
-  padding: clamp(28px, 5vw, 58px);
+  gap: 18px;
+  width: min(100%, 780px);
+  padding: clamp(24px, 4vw, 44px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 38px;
   background:
@@ -1764,8 +1769,8 @@ button {
   position: absolute;
   right: 34px;
   bottom: 30px;
-  width: 170px;
-  height: 170px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(187, 94, 224, 0.32), transparent 68%);
   content: "";
@@ -1784,20 +1789,20 @@ button {
 .journey-card h1 {
   position: relative;
   z-index: 1;
-  max-width: 760px;
+  max-width: 680px;
   margin: 0;
-  font-size: clamp(44px, 7vw, 82px);
-  letter-spacing: -0.08em;
-  line-height: 0.92;
+  font-size: clamp(38px, 5.4vw, 64px);
+  letter-spacing: -0.075em;
+  line-height: 0.95;
 }
 
 .journey-card p {
   position: relative;
   z-index: 1;
-  max-width: 680px;
+  max-width: 640px;
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
-  font-size: clamp(16px, 2vw, 19px);
+  font-size: clamp(15px, 1.6vw, 17px);
 }
 
 .journey-summary {
@@ -1806,7 +1811,7 @@ button {
   display: grid;
   gap: 7px;
   max-width: 630px;
-  padding: 18px 20px;
+  padding: 15px 18px;
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 22px;
   background: rgba(10, 7, 18, 0.38);
@@ -2073,7 +2078,7 @@ button {
 
   .mobile-nav {
     position: fixed;
-    top: 88px;
+    top: 78px;
     right: 0;
     left: 0;
     z-index: 45;
@@ -2113,7 +2118,7 @@ button {
 
   .hero,
   .hero-inner {
-    min-height: 940px;
+    min-height: 820px;
   }
 
   .hero-media {
@@ -2152,7 +2157,7 @@ button {
   .faq-grid,
   .final-cta-inner {
     grid-template-columns: 1fr;
-    gap: 38px;
+    gap: 32px;
   }
 
   .problem-cards {
@@ -2180,7 +2185,7 @@ button {
     grid-template-columns: 42px 150px 1fr;
     gap: 14px;
     align-items: center;
-    padding: 18px 0;
+    padding: 15px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 0;
   }
@@ -2195,17 +2200,17 @@ button {
 
   .system-panel {
     grid-template-columns: 1fr;
-    padding: 40px;
+    padding: 34px;
   }
 
   .result-number {
-    padding: 0 0 44px;
+    padding: 0 0 30px;
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
 
   .result-number strong {
-    font-size: clamp(125px, 28vw, 230px);
+    font-size: clamp(92px, 22vw, 150px);
   }
 
   .result-image {
@@ -2215,7 +2220,7 @@ button {
 
   .plan-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 22px;
   }
 
   .plan-card {
@@ -2238,6 +2243,7 @@ button {
     min-height: auto;
   }
 
+  .option-grid,
   .option-grid-plans,
   .option-grid-compact {
     grid-template-columns: 1fr;
@@ -2278,42 +2284,46 @@ button {
   }
 
   :where(section, footer, main[id]) {
-    scroll-margin-top: 88px;
+    scroll-margin-top: 78px;
+  }
+
+  [data-lead-form] {
+    scroll-margin-top: 78px;
   }
 
   .section-pad {
-    padding: 82px 0;
+    padding: 64px 0;
   }
 
   .header-inner {
-    min-height: 76px;
+    min-height: 70px;
   }
 
   .mobile-nav {
-    top: 76px;
+    top: 70px;
   }
 
   .brand {
-    font-size: 25px;
+    font-size: 23px;
   }
 
   .brand img {
-    width: 39px;
-    height: 39px;
+    width: 36px;
+    height: 36px;
   }
 
   .hero,
   .hero-inner {
-    min-height: 920px;
+    min-height: 790px;
   }
 
   .hero-inner {
-    padding: 134px 0 30px;
+    padding: 108px 0 24px;
   }
 
   .hero-media {
-    top: 336px;
-    height: 370px;
+    top: 300px;
+    height: 330px;
     background-position: 68% center;
   }
 
@@ -2333,21 +2343,22 @@ button {
   }
 
   .hero h1 {
-    margin: 22px 0 24px;
-    font-size: clamp(44px, 13.4vw, 58px);
+    margin: 18px 0 18px;
+    font-size: clamp(38px, 11.8vw, 50px);
     letter-spacing: -0.07em;
     line-height: 0.94;
   }
 
   .hero-text {
-    font-size: 16px;
+    font-size: 15px;
+    line-height: 1.55;
   }
 
   .hero-actions {
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     align-items: stretch;
-    margin-top: 28px;
+    margin-top: 22px;
   }
 
   .text-link {
@@ -2359,7 +2370,7 @@ button {
   }
 
   .hero-proof {
-    padding: 17px;
+    padding: 14px;
     border-radius: 21px;
   }
 
@@ -2380,7 +2391,7 @@ button {
   }
 
   .proof-grid strong {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .proof-grid span {
@@ -2388,7 +2399,7 @@ button {
   }
 
   .statement-grid {
-    padding-top: 52px;
+    padding-top: 40px;
   }
 
   .statement h2,
@@ -2396,7 +2407,8 @@ button {
   .diagnostic-copy h2,
   .results h2,
   .faq h2 {
-    font-size: clamp(42px, 14vw, 60px);
+    font-size: clamp(34px, 10.8vw, 48px);
+    line-height: 1;
   }
 
   .statement-copy p,
@@ -2407,15 +2419,15 @@ button {
   }
 
   .problem-cards {
-    margin-top: 48px;
+    margin-top: 34px;
   }
 
   .method-intro {
-    padding: 52px 0;
+    padding: 40px 0;
   }
 
   .method-intro h2 {
-    font-size: clamp(44px, 14vw, 62px);
+    font-size: clamp(34px, 10.8vw, 48px);
   }
 
   .flow-map article,
@@ -2428,14 +2440,14 @@ button {
   }
 
   .system-panel {
-    gap: 40px;
-    margin-top: 60px;
-    padding: 26px 18px;
+    gap: 30px;
+    margin-top: 42px;
+    padding: 22px 16px;
     border-radius: 24px;
   }
 
   .system-visual {
-    min-height: 480px;
+    min-height: 390px;
   }
 
   .metric-main {
@@ -2445,7 +2457,7 @@ button {
   }
 
   .metric-side {
-    top: 295px;
+    top: 260px;
     right: 16px;
     width: 42%;
   }
@@ -2457,11 +2469,11 @@ button {
   }
 
   .results-grid {
-    padding-top: 54px;
+    padding-top: 42px;
   }
 
   .result-number strong {
-    font-size: 42vw;
+    font-size: 34vw;
   }
 
   .result-strip {
@@ -2478,15 +2490,15 @@ button {
   }
 
   .plans-heading {
-    padding: 52px 0 45px;
+    padding: 40px 0 34px;
   }
 
   .plan-card {
-    padding: 28px 22px;
+    padding: 24px 20px;
   }
 
   .diagnostic-grid {
-    gap: 44px;
+    gap: 32px;
   }
 
   .diagnostic-copy p {
@@ -2495,7 +2507,7 @@ button {
 
   .diagnostic-copy ul {
     gap: 12px;
-    margin-top: 32px;
+    margin-top: 24px;
   }
 
   .diagnostic-copy li {
@@ -2504,7 +2516,7 @@ button {
   }
 
   .lead-form {
-    padding: 20px 15px;
+    padding: 18px 14px;
     border-radius: 24px;
   }
 
@@ -2516,11 +2528,11 @@ button {
   }
 
   .form-progress {
-    margin-bottom: 26px;
+    margin-bottom: 18px;
   }
 
   .form-step legend {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .contact-grid {
@@ -2533,8 +2545,8 @@ button {
   }
 
   .option-card {
-    min-height: 68px;
-    padding: 14px 14px 14px 44px;
+    min-height: 62px;
+    padding: 12px 12px 12px 42px;
     border-radius: 17px;
   }
 
@@ -2610,8 +2622,8 @@ button {
   }
 
   .final-cta {
-    min-height: 780px;
-    padding: 74px 0 330px;
+    min-height: 680px;
+    padding: 58px 0 280px;
     background:
       linear-gradient(
         180deg,
@@ -2630,7 +2642,7 @@ button {
   }
 
   .final-cta h2 {
-    font-size: clamp(48px, 15vw, 66px);
+    font-size: clamp(38px, 12vw, 54px);
   }
 
   .cta-action {
@@ -2658,12 +2670,12 @@ button {
   }
 
   .journey-shell {
-    align-items: start;
-    padding: 24px 14px;
+    align-items: center;
+    padding: 18px 14px;
   }
 
   .journey-card {
-    gap: 19px;
+    gap: 16px;
     border-radius: 28px;
   }
 
@@ -2675,7 +2687,8 @@ button {
   }
 
   .journey-card h1 {
-    font-size: clamp(42px, 14vw, 62px);
+    font-size: clamp(32px, 10vw, 44px);
+    line-height: 1;
   }
 
   .journey-card .button,
@@ -2687,12 +2700,12 @@ button {
 
 @media (max-width: 380px) {
   .hero h1 {
-    font-size: 13.2vw;
+    font-size: 11.4vw;
   }
 
   .hero,
   .hero-inner {
-    min-height: 940px;
+    min-height: 800px;
   }
 
   .footer-links {
