@@ -654,6 +654,8 @@ button {
 .mark-message {
   display: flex;
   gap: 5px;
+  align-items: center;
+  justify-content: center;
 }
 
 .mark-message::before {
@@ -677,7 +679,8 @@ button {
   display: flex;
   gap: 5px;
   align-items: end;
-  padding-bottom: 27px;
+  justify-content: center;
+  padding-bottom: 24px;
 }
 
 .mark-chart i {
