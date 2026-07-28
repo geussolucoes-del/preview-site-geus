@@ -1680,6 +1680,166 @@ button {
   background: linear-gradient(135deg, #e246b6, #8a42ff);
 }
 
+.qualify-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  border-radius: 34px;
+  background: rgba(11, 8, 20, 0.72);
+  backdrop-filter: blur(12px);
+}
+
+.qualify-modal[hidden] {
+  display: none;
+}
+
+.qualify-modal-card {
+  display: grid;
+  gap: 18px;
+  width: min(100%, 520px);
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 0 0, rgba(187, 94, 224, 0.22), transparent 18rem),
+    linear-gradient(180deg, rgba(35, 24, 57, 0.96), rgba(16, 11, 28, 0.96));
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.36);
+}
+
+.qualify-modal-card h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(28px, 3vw, 42px);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.qualify-modal-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.journey-page {
+  min-height: 100vh;
+  color: #fff;
+  background:
+    radial-gradient(circle at 12% 0, rgba(187, 94, 224, 0.22), transparent 32rem),
+    radial-gradient(circle at 90% 20%, rgba(117, 64, 232, 0.34), transparent 30rem),
+    linear-gradient(135deg, #100c1a, #211437 58%, #0e0a15);
+}
+
+.journey-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 42px 20px;
+}
+
+.journey-card {
+  position: relative;
+  display: grid;
+  gap: 22px;
+  width: min(100%, 850px);
+  padding: clamp(28px, 5vw, 58px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 38px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.045)),
+    rgba(255, 255, 255, 0.06);
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(18px);
+}
+
+.journey-card::after {
+  position: absolute;
+  right: 34px;
+  bottom: 30px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(187, 94, 224, 0.32), transparent 68%);
+  content: "";
+  pointer-events: none;
+}
+
+.journey-card-muted::after {
+  background: radial-gradient(circle, rgba(226, 70, 182, 0.28), transparent 68%);
+}
+
+.journey-brand {
+  width: fit-content;
+  color: #fff;
+}
+
+.journey-card h1 {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(44px, 7vw, 82px);
+  letter-spacing: -0.08em;
+  line-height: 0.92;
+}
+
+.journey-card p {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(16px, 2vw, 19px);
+}
+
+.journey-summary {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 7px;
+  max-width: 630px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 22px;
+  background: rgba(10, 7, 18, 0.38);
+}
+
+.journey-summary span {
+  color: #cdb4ff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.journey-summary strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.journey-card .button,
+.journey-back {
+  position: relative;
+  z-index: 1;
+  width: fit-content;
+}
+
+.journey-card > small {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 .faq {
   background: #f4f1f8;
 }
@@ -2399,6 +2559,26 @@ button {
     align-items: stretch;
   }
 
+  .modal-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .modal-actions .button {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .qualify-modal {
+    padding: 14px;
+    border-radius: 24px;
+  }
+
+  .qualify-modal-card {
+    padding: 22px 16px;
+    border-radius: 22px;
+  }
+
   .form-actions .button {
     justify-content: center;
     width: 100%;
@@ -2475,6 +2655,33 @@ button {
   .footer-bottom {
     flex-direction: column;
     gap: 8px;
+  }
+
+  .journey-shell {
+    align-items: start;
+    padding: 24px 14px;
+  }
+
+  .journey-card {
+    gap: 19px;
+    border-radius: 28px;
+  }
+
+  .journey-card::after {
+    right: 0;
+    bottom: 0;
+    width: 120px;
+    height: 120px;
+  }
+
+  .journey-card h1 {
+    font-size: clamp(42px, 14vw, 62px);
+  }
+
+  .journey-card .button,
+  .journey-back {
+    justify-content: center;
+    width: 100%;
   }
 }
 

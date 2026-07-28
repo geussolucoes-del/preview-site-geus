@@ -70,6 +70,7 @@ updateHeader();
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const revealElements = document.querySelectorAll(".reveal");
+
 const revealVisibleElements = () => {
   revealElements.forEach((element) => {
     const rect = element.getBoundingClientRect();
@@ -117,6 +118,121 @@ if (prefersReducedMotion || !("IntersectionObserver" in window)) {
   window.addEventListener("hashchange", scheduleHashAlignment);
 }
 
+const pushGeusEvent = (event, payload = {}) => {
+  const eventPayload = {
+    event,
+    product: "GEUS Auto Flux",
+    funnel: "diagnostico_site",
+    ...payload,
+  };
+
+  window.dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
+  window.dataLayer.push(eventPayload);
+  window.__geusTrackedEvents = Array.isArray(window.__geusTrackedEvents)
+    ? window.__geusTrackedEvents
+    : [];
+  window.__geusTrackedEvents.push(eventPayload);
+  window.dispatchEvent(new CustomEvent("geus:dataLayer", { detail: eventPayload }));
+};
+
+const fieldLabels = {
+  business: "Negócio",
+  experience: "Experiência",
+  investment: "Investimento",
+  stock: "Estoque",
+  name: "Nome",
+  company: "Empresa",
+  phone: "Telefone",
+  email: "E-mail",
+};
+
+const leadStorageKey = "geus_auto_flux_lead";
+
+const getStoredLeadPayload = () => {
+  try {
+    return JSON.parse(sessionStorage.getItem(leadStorageKey) || "{}");
+  } catch {
+    return {};
+  }
+};
+
+const buildWhatsappUrlFromPayload = (leadPayload = {}) => {
+  const labels = leadPayload.labels || {};
+  const values = leadPayload.values || {};
+  const lines = [
+    "Olá! Preenchi o diagnóstico Auto Flux no site e quero conversar sobre minha operação.",
+    "",
+    ...Object.keys(fieldLabels)
+      .map((name) => {
+        const value = labels[name];
+        return value ? `${fieldLabels[name]}: ${value}` : "";
+      })
+      .filter(Boolean),
+  ];
+
+  if (values.investment === "entender") {
+    lines.push("", "Ainda quero entender melhor qual plano faz sentido.");
+  }
+
+  return `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
+};
+
+const sendLeadToEmailJS = async (leadPayload) => {
+  const config = window.GEUS_EMAILJS || {};
+  const hasConfig = config.publicKey && config.serviceId && config.templateId;
+
+  if (!hasConfig) {
+    pushGeusEvent("auto_flux_emailjs_not_configured", {
+      qualified: leadPayload.qualified,
+    });
+    return false;
+  }
+
+  const templateParams = {
+    product: "GEUS Auto Flux",
+    qualified: leadPayload.qualified ? "Sim" : "Não",
+    disqualification_reason: leadPayload.disqualificationReason || "qualificado",
+    business: leadPayload.labels?.business,
+    experience: leadPayload.labels?.experience,
+    investment: leadPayload.labels?.investment,
+    stock: leadPayload.labels?.stock,
+    name: leadPayload.labels?.name,
+    company: leadPayload.labels?.company,
+    phone: leadPayload.labels?.phone,
+    email: leadPayload.labels?.email || "Não informado",
+    page_url: window.location.href,
+    submitted_at: new Date().toISOString(),
+  };
+
+  try {
+    const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        service_id: config.serviceId,
+        template_id: config.templateId,
+        user_id: config.publicKey,
+        template_params: templateParams,
+      }),
+    });
+
+    if (!response.ok) throw new Error(`EmailJS HTTP ${response.status}`);
+
+    pushGeusEvent("auto_flux_emailjs_sent", {
+      qualified: leadPayload.qualified,
+    });
+    return true;
+  } catch (error) {
+    pushGeusEvent("auto_flux_emailjs_error", {
+      qualified: leadPayload.qualified,
+      error_message: error.message,
+    });
+    return false;
+  }
+};
+
 const leadForm = document.querySelector("[data-lead-form]");
 
 if (leadForm) {
@@ -124,40 +240,16 @@ if (leadForm) {
   const progressSteps = Array.from(leadForm.querySelectorAll("[data-progress-step]"));
   const prevButton = leadForm.querySelector("[data-form-prev]");
   const nextButton = leadForm.querySelector("[data-form-next]");
-  const qualifiedResult = leadForm.querySelector("[data-qualified-result]");
-  const unqualifiedResult = leadForm.querySelector("[data-unqualified-result]");
-  const whatsappResult = leadForm.querySelector("[data-whatsapp-result]");
   const currentStepLabel = leadForm.querySelector("[data-current-step-label]");
+  const disqualifyModal = leadForm.querySelector("[data-disqualify-modal]");
+  const disqualifyTitle = leadForm.querySelector("[data-disqualify-title]");
+  const disqualifyCopy = leadForm.querySelector("[data-disqualify-copy]");
+  const disqualifyCancel = leadForm.querySelector("[data-disqualify-cancel]");
+  const disqualifyConfirm = leadForm.querySelector("[data-disqualify-confirm]");
   let currentStep = 0;
   let midpointTracked = false;
-
-  const pushDataLayerEvent = (event, payload = {}) => {
-    const eventPayload = {
-      event,
-      product: "GEUS Auto Flux",
-      funnel: "diagnostico_site",
-      ...payload,
-    };
-
-    window.dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
-    window.dataLayer.push(eventPayload);
-    window.__geusTrackedEvents = Array.isArray(window.__geusTrackedEvents)
-      ? window.__geusTrackedEvents
-      : [];
-    window.__geusTrackedEvents.push(eventPayload);
-    window.dispatchEvent(new CustomEvent("geus:dataLayer", { detail: eventPayload }));
-  };
-
-  const fieldLabels = {
-    business: "Negócio",
-    experience: "Experiência",
-    investment: "Investimento",
-    stock: "Estoque",
-    name: "Nome",
-    company: "Empresa",
-    phone: "Telefone",
-    email: "E-mail",
-  };
+  let pendingDisqualification = null;
+  const lastValidValues = {};
 
   const getFieldText = (field) => {
     if (!field) return "";
@@ -168,9 +260,6 @@ if (leadForm) {
         selected?.value ||
         ""
       );
-    }
-    if (field.tagName === "SELECT") {
-      return field.selectedOptions[0]?.textContent?.trim() || "";
     }
     return field.value.trim();
   };
@@ -210,13 +299,11 @@ if (leadForm) {
       step.classList.toggle("is-active", stepIndex <= currentStep);
     });
     leadForm.dataset.step = String(currentStep + 1);
-    if (currentStepLabel) {
-      currentStepLabel.textContent = `Etapa ${currentStep + 1} de ${steps.length}`;
-    }
+    if (currentStepLabel) currentStepLabel.textContent = `Etapa ${currentStep + 1} de ${steps.length}`;
 
     if (currentStep >= 1 && !midpointTracked) {
       midpointTracked = true;
-      pushDataLayerEvent("auto_flux_form_midpoint", {
+      pushGeusEvent("auto_flux_form_midpoint", {
         step: currentStep + 1,
         step_name: "investimento_estoque",
       });
@@ -225,7 +312,7 @@ if (leadForm) {
 
   const validateCurrentStep = () => {
     const activeStep = steps[currentStep];
-    const fields = Array.from(activeStep.querySelectorAll("input, select, textarea"));
+    const fields = Array.from(activeStep.querySelectorAll("input, textarea"));
     const invalidField = fields.find((field) => !field.checkValidity());
 
     if (invalidField) {
@@ -236,117 +323,80 @@ if (leadForm) {
     return true;
   };
 
-  const buildWhatsappUrl = () => {
-    const leadPayload = getLeadPayload();
-    const lines = [
-      "Olá! Preenchi o diagnóstico Auto Flux no site e quero conversar sobre minha loja.",
-      "",
-      ...Object.keys(fieldLabels)
-        .map((name) => {
-          const value = leadPayload.labels[name];
-          return value ? `${fieldLabels[name]}: ${value}` : "";
-        })
-        .filter(Boolean),
-    ];
-
-    if (leadPayload.values.investment === "entender") {
-      lines.push("", "Ainda quero entender melhor qual plano faz sentido.");
-    }
-
-    return `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
+  const redirectToThankYou = (leadPayload) => {
+    sessionStorage.setItem(leadStorageKey, JSON.stringify(leadPayload));
+    window.location.href = "/obrigado/";
   };
 
-  const sendLeadToEmailJS = async (leadPayload) => {
-    const config = window.GEUS_EMAILJS || {};
-    const hasConfig = config.publicKey && config.serviceId && config.templateId;
+  const redirectToAgradecimento = (leadPayload) => {
+    sessionStorage.setItem(leadStorageKey, JSON.stringify(leadPayload));
+    const reason = encodeURIComponent(leadPayload.disqualificationReason || "fora_perfil");
+    window.location.href = `/agradecimento/?motivo=${reason}`;
+  };
 
-    if (!hasConfig) {
-      pushDataLayerEvent("auto_flux_emailjs_not_configured", {
-        qualified: leadPayload.qualified,
-      });
-      return false;
-    }
+  const openDisqualificationModal = (reason, sourceField, input) => {
+    pendingDisqualification = { reason, sourceField, input };
 
-    const templateParams = {
-      product: "GEUS Auto Flux",
-      qualified: leadPayload.qualified ? "Sim" : "Não",
-      disqualification_reason: leadPayload.disqualificationReason || "qualificado",
-      business: leadPayload.labels.business,
-      experience: leadPayload.labels.experience,
-      investment: leadPayload.labels.investment,
-      stock: leadPayload.labels.stock,
-      name: leadPayload.labels.name,
-      company: leadPayload.labels.company,
-      phone: leadPayload.labels.phone,
-      email: leadPayload.labels.email || "Não informado",
-      page_url: window.location.href,
-      submitted_at: new Date().toISOString(),
+    const modalCopy = {
+      nao_vende_veiculos: {
+        title: "Você confirma que não trabalha com venda de veículos?",
+        copy:
+          "Se essa resposta estiver certa, o Auto Flux não é o melhor caminho agora, porque a metodologia nasceu para lojas, pátios e revendedores de veículos. Se foi sem querer, volte e continue seu diagnóstico normalmente.",
+      },
+      sem_orcamento: {
+        title: "Você confirma que ainda não tem o investimento mínimo?",
+        copy:
+          "Hoje o ponto de entrada do Auto Flux começa no plano Start, a partir de R$ 997/mês. Se essa resposta estiver certa, vamos te levar para o melhor próximo passo sem forçar uma conversa fora de hora.",
+      },
     };
 
-    try {
-      const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          service_id: config.serviceId,
-          template_id: config.templateId,
-          user_id: config.publicKey,
-          template_params: templateParams,
-        }),
-      });
-
-      if (!response.ok) throw new Error(`EmailJS HTTP ${response.status}`);
-
-      pushDataLayerEvent("auto_flux_emailjs_sent", {
-        qualified: leadPayload.qualified,
-      });
-      return true;
-    } catch (error) {
-      pushDataLayerEvent("auto_flux_emailjs_error", {
-        qualified: leadPayload.qualified,
-        error_message: error.message,
-      });
-      return false;
-    }
+    disqualifyTitle.textContent = modalCopy[reason]?.title || "Você confirma essa resposta?";
+    disqualifyCopy.textContent =
+      modalCopy[reason]?.copy ||
+      "Essa escolha encerra o diagnóstico por enquanto. Se foi sem querer, você pode voltar e continuar normalmente.";
+    disqualifyModal.hidden = false;
+    disqualifyConfirm?.focus();
   };
 
-  const showResult = (leadPayload) => {
-    leadForm.classList.add("is-complete");
-    qualifiedResult.hidden = !leadPayload.qualified;
-    unqualifiedResult.hidden = leadPayload.qualified;
+  const cancelDisqualification = () => {
+    if (pendingDisqualification?.input) {
+      const input = pendingDisqualification.input;
+      const previousValue = lastValidValues[input.name];
+      input.checked = false;
 
-    if (leadPayload.qualified && whatsappResult) {
-      whatsappResult.href = buildWhatsappUrl();
+      if (previousValue) {
+        const previousInput = leadForm.querySelector(
+          `input[name="${input.name}"][value="${previousValue}"]`,
+        );
+        if (previousInput) previousInput.checked = true;
+      }
     }
 
-    pushDataLayerEvent("auto_flux_thank_you_view", {
-      qualified: leadPayload.qualified,
-      disqualification_reason: leadPayload.disqualificationReason || "qualificado",
-    });
-
-    leadForm.scrollIntoView({ block: "center" });
+    pendingDisqualification = null;
+    disqualifyModal.hidden = true;
   };
 
-  const disqualifyImmediately = (reason, sourceField) => {
+  const confirmDisqualification = async () => {
+    if (!pendingDisqualification) return;
+    const { reason, sourceField } = pendingDisqualification;
     const leadPayload = getLeadPayload();
     leadPayload.qualified = false;
     leadPayload.disqualificationReason = reason;
 
-    pushDataLayerEvent("auto_flux_form_disqualified", {
+    pushGeusEvent("auto_flux_form_disqualified", {
       disqualification_reason: reason,
       source_field: sourceField,
       business: leadPayload.values.business,
       investment: leadPayload.values.investment,
     });
 
-    showResult(leadPayload);
+    await sendLeadToEmailJS(leadPayload);
+    redirectToAgradecimento(leadPayload);
   };
 
   document.querySelectorAll('a[href="#diagnostico"]').forEach((link) => {
     link.addEventListener("click", () => {
-      pushDataLayerEvent("auto_flux_form_open_click", {
+      pushGeusEvent("auto_flux_form_open_click", {
         cta_text: link.textContent.trim().replace(/\s+/g, " "),
       });
     });
@@ -364,18 +414,25 @@ if (leadForm) {
   leadForm.querySelectorAll('input[name="business"]').forEach((input) => {
     input.addEventListener("change", () => {
       if (input.value === "fora" && input.checked) {
-        disqualifyImmediately("nao_vende_veiculos", "business");
+        openDisqualificationModal("nao_vende_veiculos", "business", input);
+        return;
       }
+      if (input.checked) lastValidValues[input.name] = input.value;
     });
   });
 
   leadForm.querySelectorAll('input[name="investment"]').forEach((input) => {
     input.addEventListener("change", () => {
       if (input.value === "sem_orcamento" && input.checked) {
-        disqualifyImmediately("sem_orcamento", "investment");
+        openDisqualificationModal("sem_orcamento", "investment", input);
+        return;
       }
+      if (input.checked) lastValidValues[input.name] = input.value;
     });
   });
+
+  disqualifyCancel?.addEventListener("click", cancelDisqualification);
+  disqualifyConfirm?.addEventListener("click", confirmDisqualification);
 
   leadForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -383,7 +440,7 @@ if (leadForm) {
 
     const leadPayload = getLeadPayload();
 
-    pushDataLayerEvent("auto_flux_form_submit", {
+    pushGeusEvent("auto_flux_form_submit", {
       qualified: leadPayload.qualified,
       disqualification_reason: leadPayload.disqualificationReason || "qualificado",
       business: leadPayload.values.business,
@@ -391,19 +448,78 @@ if (leadForm) {
       stock: leadPayload.values.stock,
     });
 
-    sendLeadToEmailJS(leadPayload);
-    showResult(leadPayload);
-  });
-
-  whatsappResult?.addEventListener("click", () => {
-    const leadPayload = getLeadPayload();
-    pushDataLayerEvent("auto_flux_thank_you_whatsapp_click", {
-      qualified: leadPayload.qualified,
-      business: leadPayload.values.business,
-      investment: leadPayload.values.investment,
-      stock: leadPayload.values.stock,
-    });
+    await sendLeadToEmailJS(leadPayload);
+    redirectToThankYou(leadPayload);
   });
 
   showStep(0);
+}
+
+const qualifiedThankPage = document.querySelector("[data-thank-qualified]");
+
+if (qualifiedThankPage) {
+  const leadPayload = getStoredLeadPayload();
+  const whatsappResult = qualifiedThankPage.querySelector("[data-whatsapp-result]");
+  const leadSummary = qualifiedThankPage.querySelector("[data-lead-summary] strong");
+
+  if (whatsappResult) {
+    whatsappResult.href = buildWhatsappUrlFromPayload(leadPayload);
+    whatsappResult.addEventListener("click", () => {
+      pushGeusEvent("auto_flux_thank_you_whatsapp_click", {
+        qualified: true,
+        business: leadPayload.values?.business,
+        investment: leadPayload.values?.investment,
+        stock: leadPayload.values?.stock,
+      });
+    });
+  }
+
+  if (leadSummary && leadPayload.labels?.company) {
+    leadSummary.textContent = `${leadPayload.labels.company}: ${leadPayload.labels.investment || "diagnóstico recebido"} · ${leadPayload.labels.stock || "estoque informado"}.`;
+  }
+
+  pushGeusEvent("auto_flux_thank_you_view", {
+    qualified: true,
+    disqualification_reason: "qualificado",
+  });
+}
+
+const unqualifiedThankPage = document.querySelector("[data-thank-unqualified]");
+
+if (unqualifiedThankPage) {
+  const params = new URLSearchParams(window.location.search);
+  const reason = params.get("motivo") || getStoredLeadPayload().disqualificationReason || "fora_perfil";
+  const heading = unqualifiedThankPage.querySelector("[data-unqualified-heading]");
+  const copy = unqualifiedThankPage.querySelector("[data-unqualified-copy]");
+  const instagramButton = unqualifiedThankPage.querySelector("[data-instagram-result]");
+
+  const reasonCopy = {
+    nao_vende_veiculos: {
+      heading: "Quando o caminho for venda de veículos, a GEUS pode entrar com força.",
+      copy:
+        "Obrigado por responder com clareza. Neste momento, o Auto Flux é focado em lojas, pátios e revendedores de veículos. Mesmo que agora não seja o encaixe certo, fica perto da GEUS: conteúdos, novidades e futuras soluções podem fazer sentido no seu próximo movimento.",
+    },
+    sem_orcamento: {
+      heading: "Seu momento foi entendido — e isso também é estratégia.",
+      copy:
+        "Obrigado por responder sem enrolação. Hoje o Auto Flux começa no plano Start, a partir de R$ 997/mês, e talvez ainda não seja a hora ideal de entrar. Fica perto da GEUS: conteúdos e novidades podem te ajudar a preparar o próximo movimento com mais segurança.",
+    },
+  };
+
+  heading.textContent = reasonCopy[reason]?.heading || "Talvez esse ainda não seja o momento certo.";
+  copy.textContent =
+    reasonCopy[reason]?.copy ||
+    "Obrigado por responder. Mesmo que agora não seja o encaixe ideal, siga a GEUS para acompanhar conteúdos, novidades e futuras soluções.";
+
+  instagramButton?.addEventListener("click", () => {
+    pushGeusEvent("auto_flux_unqualified_instagram_click", {
+      qualified: false,
+      disqualification_reason: reason,
+    });
+  });
+
+  pushGeusEvent("auto_flux_unqualified_thank_you_view", {
+    qualified: false,
+    disqualification_reason: reason,
+  });
 }
