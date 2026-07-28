@@ -13,6 +13,9 @@
     />
     <meta name="theme-color" content="#7241e8" />
     <meta name="robots" content="index, follow" />
+    <script>
+      window.dataLayer = window.dataLayer || [];
+    </script>
     <link rel="canonical" href="https://www.geussolucoes.com/" />
 
     <meta property="og:type" content="website" />
@@ -40,7 +43,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
     <link rel="manifest" href="/site.webmanifest?v=2" />
     <link rel="preload" as="image" href="/images/hero-auto-flux.webp" type="image/webp" />
-    <link rel="stylesheet" href="/assets/site.css?v=7" />
+    <link rel="stylesheet" href="/assets/site.css?v=10" />
     <title>GEUS Auto Flux — Mais compradores para sua loja de veículos</title>
   </head>
   <body>
@@ -452,6 +455,11 @@
           </div>
 
           <form class="lead-form reveal reveal-delay" data-lead-form>
+            <div class="form-topline">
+              <span data-current-step-label>Etapa 1 de 3</span>
+              <strong>Leva menos de 1 minuto</strong>
+            </div>
+
             <div class="form-progress" aria-label="Progresso do diagnóstico">
               <span class="is-active" data-progress-step>1</span>
               <span data-progress-step>2</span>
@@ -461,53 +469,101 @@
             <fieldset class="form-step is-active" data-form-step="1">
               <legend>Primeiro, o perfil da sua operação</legend>
 
-              <label class="question-block">
+              <div class="question-block">
                 <span>O que descreve seu negócio hoje?</span>
-                <select name="business" required>
-                  <option value="">Selecione uma opção</option>
-                  <option value="loja">Tenho loja / pátio de veículos</option>
-                  <option value="revendedor">Sou revendedor autônomo</option>
-                  <option value="fora">Não trabalho com venda de veículos</option>
-                </select>
-              </label>
+                <div class="option-grid">
+                  <label class="option-card">
+                    <input type="radio" name="business" value="loja" required />
+                    <span>Tenho loja / pátio de veículos</span>
+                    <small>Operação com estoque e estrutura comercial.</small>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="business" value="revendedor" required />
+                    <span>Sou revendedor autônomo</span>
+                    <small>Vendo veículos e quero estruturar captação.</small>
+                  </label>
+                  <label class="option-card option-card-muted">
+                    <input type="radio" name="business" value="fora" required />
+                    <span>Não trabalho com venda de veículos</span>
+                    <small>Fora do perfil atual do Auto Flux.</small>
+                  </label>
+                </div>
+              </div>
 
-              <label class="question-block">
+              <div class="question-block">
                 <span>Você já investiu em marketing ou tráfego pago pra vender veículos?</span>
-                <select name="experience" required>
-                  <option value="">Selecione uma opção</option>
-                  <option value="resultado">Sim — e deu resultado</option>
-                  <option value="sem_resultado">Sim — mas não deu certo</option>
-                  <option value="primeira_vez">Não — seria a primeira vez</option>
-                </select>
-              </label>
+                <div class="option-grid">
+                  <label class="option-card">
+                    <input type="radio" name="experience" value="resultado" required />
+                    <span>Sim — e deu resultado</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="experience" value="sem_resultado" required />
+                    <span>Sim — mas não deu certo</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="experience" value="primeira_vez" required />
+                    <span>Não — seria a primeira vez</span>
+                  </label>
+                </div>
+              </div>
             </fieldset>
 
             <fieldset class="form-step" data-form-step="2">
               <legend>Agora, investimento e estrutura</legend>
 
-              <label class="question-block">
+              <div class="question-block">
                 <span>Qual investimento faz sentido pro seu momento?</span>
                 <small>Todas as faixas incluem site + gestão. A diferença é a verba de anúncio.</small>
-                <select name="investment" required>
-                  <option value="">Selecione uma opção</option>
-                  <option value="start">START — R$ 997/mês (verba de anúncio à parte)</option>
-                  <option value="pro">PRO — R$ 1.797/mês (verba de anúncio inclusa)</option>
-                  <option value="premium">PREMIUM — R$ 3.497/mês (Meta + Google, escala)</option>
-                  <option value="entender">Quero entender melhor antes de escolher</option>
-                  <option value="sem_orcamento">Não tenho esse orçamento no momento</option>
-                </select>
-              </label>
+                <div class="option-grid option-grid-plans">
+                  <label class="option-card">
+                    <input type="radio" name="investment" value="start" required />
+                    <span>START — R$ 997/mês</span>
+                    <small>Verba de anúncio à parte.</small>
+                  </label>
+                  <label class="option-card option-card-featured">
+                    <input type="radio" name="investment" value="pro" required />
+                    <span>PRO — R$ 1.797/mês</span>
+                    <small>Verba de anúncio inclusa.</small>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="investment" value="premium" required />
+                    <span>PREMIUM — R$ 3.497/mês</span>
+                    <small>Meta + Google, escala.</small>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="investment" value="entender" required />
+                    <span>Quero entender melhor antes de escolher</span>
+                  </label>
+                  <label class="option-card option-card-muted">
+                    <input type="radio" name="investment" value="sem_orcamento" required />
+                    <span>Não tenho esse orçamento no momento</span>
+                    <small>Fora do investimento mínimo atual.</small>
+                  </label>
+                </div>
+              </div>
 
-              <label class="question-block">
+              <div class="question-block">
                 <span>Quantos veículos você mantém em estoque, em média?</span>
-                <select name="stock" required>
-                  <option value="">Selecione uma opção</option>
-                  <option value="ate_5">Até 5</option>
-                  <option value="6_20">6 a 20</option>
-                  <option value="21_50">21 a 50</option>
-                  <option value="mais_50">Mais de 50</option>
-                </select>
-              </label>
+                <div class="option-grid option-grid-compact">
+                  <label class="option-card">
+                    <input type="radio" name="stock" value="ate_5" required />
+                    <span>Até 5</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="stock" value="6_20" required />
+                    <span>6 a 20</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="stock" value="21_50" required />
+                    <span>21 a 50</span>
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="stock" value="mais_50" required />
+                    <span>Mais de 50</span>
+                  </label>
+                </div>
+              </div>
             </fieldset>
 
             <fieldset class="form-step" data-form-step="3">
@@ -583,8 +639,8 @@
               <span class="result-pill">Obrigado pelo interesse</span>
               <h3>No momento, o Auto Flux não parece ser o melhor encaixe.</h3>
               <p>
-                A metodologia é focada em lojas e revendedores de veículos com estrutura para
-                investir em captação. Siga a GEUS no Instagram e acompanhe as novidades.
+                Mesmo assim, fica perto da GEUS. Siga nosso Instagram para acompanhar novidades,
+                conteúdos e futuras soluções que talvez façam mais sentido para o seu momento.
               </p>
               <a
                 class="button button-light"
@@ -715,6 +771,6 @@
         templateId: "",
       };
     </script>
-    <script src="/assets/site.js?v=7" defer></script>
+    <script src="/assets/site.js?v=10" defer></script>
   </body>
 </html>

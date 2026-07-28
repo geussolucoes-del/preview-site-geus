@@ -1376,21 +1376,40 @@ button {
 
 .lead-form {
   position: relative;
-  min-height: 650px;
-  padding: 34px;
+  min-height: 620px;
+  padding: 30px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 34px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04)),
+    radial-gradient(circle at 0 0, rgba(187, 94, 224, 0.2), transparent 19rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.045)),
     rgba(255, 255, 255, 0.06);
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(18px);
 }
 
+.form-topline {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.form-topline strong {
+  color: #dbc8ff;
+  font-size: 11px;
+}
+
 .form-progress {
   display: flex;
   gap: 10px;
-  margin-bottom: 34px;
+  margin-bottom: 26px;
 }
 
 .form-progress span {
@@ -1421,13 +1440,13 @@ button {
 
 .form-step.is-active {
   display: grid;
-  gap: 20px;
+  gap: 22px;
 }
 
 .form-step legend {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   color: #fff;
-  font-size: clamp(25px, 3vw, 38px);
+  font-size: clamp(26px, 3vw, 36px);
   font-weight: 780;
   letter-spacing: -0.055em;
   line-height: 1.05;
@@ -1435,12 +1454,12 @@ button {
 
 .question-block {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .question-block > span {
   color: rgba(255, 255, 255, 0.92);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 760;
 }
 
@@ -1450,8 +1469,7 @@ button {
   font-weight: 500;
 }
 
-.question-block input,
-.question-block select {
+.question-block input:not([type="radio"]) {
   width: 100%;
   min-height: 56px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1462,30 +1480,98 @@ button {
   outline: 0;
 }
 
-.question-block select {
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(255, 255, 255, 0.72) 50%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.72) 50%, transparent 50%);
-  background-position:
-    calc(100% - 22px) 50%,
-    calc(100% - 16px) 50%;
-  background-size:
-    6px 6px,
-    6px 6px;
-  background-repeat: no-repeat;
-  padding-right: 42px;
-}
-
-.question-block input:focus,
-.question-block select:focus {
+.question-block input:not([type="radio"]):focus {
   border-color: rgba(187, 94, 224, 0.82);
   box-shadow: 0 0 0 4px rgba(117, 64, 232, 0.2);
 }
 
-.question-block option {
-  color: var(--ink);
-  background: #fff;
+.option-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.option-grid-plans {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.option-grid-compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.option-card {
+  position: relative;
+  display: grid;
+  gap: 5px;
+  min-height: 74px;
+  padding: 16px 16px 16px 48px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(11, 8, 20, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.option-card:hover {
+  border-color: rgba(187, 94, 224, 0.46);
+  background: rgba(26, 17, 45, 0.72);
+  transform: translateY(-1px);
+}
+
+.option-card input {
+  position: absolute;
+  top: 20px;
+  left: 17px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--lilac);
+}
+
+.option-card span {
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 14px;
+  font-weight: 820;
+  line-height: 1.25;
+}
+
+.option-card small {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.option-card:has(input:checked) {
+  border-color: rgba(187, 94, 224, 0.95);
+  background:
+    linear-gradient(135deg, rgba(117, 64, 232, 0.34), rgba(187, 94, 224, 0.18)),
+    rgba(24, 15, 41, 0.86);
+  box-shadow:
+    0 18px 46px rgba(81, 36, 153, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.option-card-featured::after {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(187, 94, 224, 0.28);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  content: "FOCO";
+}
+
+.option-card-muted {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .contact-grid {
@@ -1536,6 +1622,7 @@ button {
   display: none;
 }
 
+.lead-form.is-complete .form-topline,
 .lead-form.is-complete .form-progress,
 .lead-form.is-complete .form-step,
 .lead-form.is-complete .form-actions {
@@ -1546,8 +1633,8 @@ button {
   display: grid;
   gap: 18px;
   align-content: center;
-  min-height: 460px;
-  padding: 18px;
+  min-height: 420px;
+  padding: 24px 10px;
 }
 
 .lead-result[hidden] {
@@ -1587,6 +1674,10 @@ button {
 
 .lead-result-muted .result-pill {
   background: rgba(255, 255, 255, 0.12);
+}
+
+.lead-result-muted .button-light {
+  background: linear-gradient(135deg, #e246b6, #8a42ff);
 }
 
 .faq {
@@ -1986,6 +2077,11 @@ button {
   .lead-form {
     min-height: auto;
   }
+
+  .option-grid-plans,
+  .option-grid-compact {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (min-width: 661px) and (max-width: 1080px) {
@@ -2248,8 +2344,15 @@ button {
   }
 
   .lead-form {
-    padding: 22px 16px;
+    padding: 20px 15px;
     border-radius: 24px;
+  }
+
+  .form-topline {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 16px;
   }
 
   .form-progress {
@@ -2264,10 +2367,31 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .question-block input,
-  .question-block select {
+  .question-block input:not([type="radio"]) {
     min-height: 54px;
     font-size: 14px;
+  }
+
+  .option-card {
+    min-height: 68px;
+    padding: 14px 14px 14px 44px;
+    border-radius: 17px;
+  }
+
+  .option-card input {
+    top: 17px;
+    left: 15px;
+  }
+
+  .option-card span {
+    font-size: 13px;
+  }
+
+  .option-card-featured::after {
+    position: static;
+    width: fit-content;
+    grid-row: 1;
+    margin-bottom: 2px;
   }
 
   .form-actions {

@@ -127,17 +127,25 @@ if (leadForm) {
   const qualifiedResult = leadForm.querySelector("[data-qualified-result]");
   const unqualifiedResult = leadForm.querySelector("[data-unqualified-result]");
   const whatsappResult = leadForm.querySelector("[data-whatsapp-result]");
+  const currentStepLabel = leadForm.querySelector("[data-current-step-label]");
   let currentStep = 0;
   let midpointTracked = false;
 
   const pushDataLayerEvent = (event, payload = {}) => {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
+    const eventPayload = {
       event,
       product: "GEUS Auto Flux",
       funnel: "diagnostico_site",
       ...payload,
-    });
+    };
+
+    window.dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
+    window.dataLayer.push(eventPayload);
+    window.__geusTrackedEvents = Array.isArray(window.__geusTrackedEvents)
+      ? window.__geusTrackedEvents
+      : [];
+    window.__geusTrackedEvents.push(eventPayload);
+    window.dispatchEvent(new CustomEvent("geus:dataLayer", { detail: eventPayload }));
   };
 
   const fieldLabels = {
@@ -153,6 +161,14 @@ if (leadForm) {
 
   const getFieldText = (field) => {
     if (!field) return "";
+    if (!field.tagName && typeof field.length === "number") {
+      const selected = Array.from(field).find((item) => item.checked);
+      return (
+        selected?.closest(".option-card")?.querySelector("span")?.textContent?.trim() ||
+        selected?.value ||
+        ""
+      );
+    }
     if (field.tagName === "SELECT") {
       return field.selectedOptions[0]?.textContent?.trim() || "";
     }
@@ -194,6 +210,9 @@ if (leadForm) {
       step.classList.toggle("is-active", stepIndex <= currentStep);
     });
     leadForm.dataset.step = String(currentStep + 1);
+    if (currentStepLabel) {
+      currentStepLabel.textContent = `Etapa ${currentStep + 1} de ${steps.length}`;
+    }
 
     if (currentStep >= 1 && !midpointTracked) {
       midpointTracked = true;
@@ -310,6 +329,21 @@ if (leadForm) {
     leadForm.scrollIntoView({ block: "center" });
   };
 
+  const disqualifyImmediately = (reason, sourceField) => {
+    const leadPayload = getLeadPayload();
+    leadPayload.qualified = false;
+    leadPayload.disqualificationReason = reason;
+
+    pushDataLayerEvent("auto_flux_form_disqualified", {
+      disqualification_reason: reason,
+      source_field: sourceField,
+      business: leadPayload.values.business,
+      investment: leadPayload.values.investment,
+    });
+
+    showResult(leadPayload);
+  };
+
   document.querySelectorAll('a[href="#diagnostico"]').forEach((link) => {
     link.addEventListener("click", () => {
       pushDataLayerEvent("auto_flux_form_open_click", {
@@ -325,6 +359,22 @@ if (leadForm) {
 
   prevButton?.addEventListener("click", () => {
     showStep(currentStep - 1);
+  });
+
+  leadForm.querySelectorAll('input[name="business"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      if (input.value === "fora" && input.checked) {
+        disqualifyImmediately("nao_vende_veiculos", "business");
+      }
+    });
+  });
+
+  leadForm.querySelectorAll('input[name="investment"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      if (input.value === "sem_orcamento" && input.checked) {
+        disqualifyImmediately("sem_orcamento", "investment");
+      }
+    });
   });
 
   leadForm.addEventListener("submit", async (event) => {
