@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Política de Privacidade da GEUS e da metodologia GEUS Auto Flux."
+      content="Política de Privacidade da GEUS."
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#7540e8" />
-    <title>Política de Privacidade | GEUS Auto Flux</title>
+    <title>Política de Privacidade | GEUS</title>
     <link rel="icon" href="../favicon.ico" />
     <style>
       :root {
@@ -100,14 +100,6 @@
         font-size: 25px;
         font-weight: 400;
         letter-spacing: -0.05em;
-      }
-
-      .brand-product {
-        color: var(--purple);
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
       }
 
       .topbar-label {
@@ -374,46 +366,21 @@
         transform: translateY(-1px);
       }
 
-      .whatsapp-float {
-        position: fixed;
-        right: 24px;
-        bottom: 24px;
-        z-index: 10;
+      .contact-actions {
         display: inline-flex;
         gap: 10px;
         align-items: center;
-        min-height: 54px;
-        padding: 0 20px;
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        border-radius: 999px;
-        color: #fff;
-        background: #1fa855;
-        box-shadow: 0 16px 38px rgba(16, 118, 59, 0.3);
-        font-size: 14px;
-        font-weight: 800;
-        text-decoration: none;
-        transition:
-          transform 180ms ease,
-          box-shadow 180ms ease;
       }
 
-      .whatsapp-float::before {
-        display: grid;
-        width: 26px;
-        height: 26px;
-        place-items: center;
-        border-radius: 50%;
-        color: #1fa855;
+      .button-instagram {
+        color: var(--purple-deep);
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: inset 0 0 0 1px rgba(117, 64, 232, 0.18);
+      }
+
+      .button-instagram:hover {
+        color: var(--purple-deep);
         background: #fff;
-        content: "W";
-        font-size: 13px;
-        font-weight: 900;
-      }
-
-      .whatsapp-float:hover {
-        color: #fff;
-        box-shadow: 0 20px 44px rgba(16, 118, 59, 0.38);
-        transform: translateY(-2px);
       }
 
       footer {
@@ -501,11 +468,9 @@
           justify-content: center;
         }
 
-        .whatsapp-float {
-          right: 14px;
-          bottom: 14px;
-          min-height: 50px;
-          padding: 0 17px;
+        .contact-actions {
+          width: 100%;
+          flex-direction: column;
         }
       }
 
@@ -524,11 +489,10 @@
   </head>
   <body>
     <header class="shell topbar">
-      <a class="brand" href="../" aria-label="GEUS Auto Flux - página inicial">
+      <a class="brand" href="../" aria-label="GEUS - página inicial">
         <img src="../assets/logo-geus-symbol.png" alt="" width="42" height="42" />
         <span class="brand-copy">
           <span class="brand-name">geus</span>
-          <span class="brand-product">Auto Flux</span>
         </span>
       </a>
       <span class="topbar-label">Privacidade e proteção de dados</span>
@@ -781,14 +745,24 @@
                 <span>Canal de atendimento</span>
                 <strong>WhatsApp: +55 33 99834-7871</strong>
               </div>
-              <a
-                class="button"
-                href="https://wa.me/5533998347871?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20GEUS%20e%20gostaria%20de%20falar%20sobre%20privacidade%20e%20prote%C3%A7%C3%A3o%20de%20dados."
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Falar com a GEUS
-              </a>
+              <div class="contact-actions">
+                <a
+                  class="button button-instagram"
+                  href="https://www.instagram.com/geusofc/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Instagram ↗
+                </a>
+                <a
+                  class="button"
+                  href="https://wa.me/5533998347871?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20GEUS%20e%20gostaria%20de%20falar%20sobre%20privacidade%20e%20prote%C3%A7%C3%A3o%20de%20dados."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp ↗
+                </a>
+              </div>
             </div>
           </section>
         </article>
@@ -797,18 +771,9 @@
 
     <footer>
       <div class="shell footer-inner">
-        <span><span class="footer-brand">GEUS Auto Flux</span> — O motor digital da sua loja.</span>
+        <span><span class="footer-brand">GEUS</span> — Soluções para crescimento digital.</span>
         <span>© 2026 GEUS. Todos os direitos reservados.</span>
       </div>
     </footer>
-    <a
-      class="whatsapp-float"
-      href="https://wa.me/5533998347871?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20GEUS%20e%20gostaria%20de%20falar%20sobre%20privacidade%20e%20prote%C3%A7%C3%A3o%20de%20dados."
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Falar com a GEUS pelo WhatsApp"
-    >
-      WhatsApp
-    </a>
   </body>
 </html>
