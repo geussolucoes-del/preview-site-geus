@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Política de Privacidade da GEUS e da metodologia GEUS Auto Flux."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#7540e8" />
+    <title>Política de Privacidade | GEUS Auto Flux</title>
+    <link rel="icon" href="../favicon.ico" />
+    <style>
+      :root {
+        --ink: #10111a;
+        --muted: #5f6170;
+        --line: rgba(26, 20, 42, 0.1);
+        --surface: rgba(255, 255, 255, 0.82);
+        --purple: #7540e8;
+        --purple-deep: #5424c7;
+        --lilac: #b65bdc;
+        --shadow: 0 24px 70px rgba(45, 24, 85, 0.11);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 8% 4%, rgba(182, 91, 220, 0.13), transparent 27rem),
+          radial-gradient(circle at 92% 16%, rgba(117, 64, 232, 0.12), transparent 25rem),
+          #f8f7fb;
+        font-family:
+          Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--purple-deep);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+      }
+
+      a:hover {
+        color: var(--purple);
+      }
+
+      a:focus-visible {
+        border-radius: 4px;
+        outline: 3px solid rgba(117, 64, 232, 0.28);
+        outline-offset: 3px;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 88px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .brand img {
+        width: 42px;
+        height: 42px;
+        object-fit: contain;
+      }
+
+      .brand-copy {
+        display: grid;
+        gap: 1px;
+        line-height: 1;
+      }
+
+      .brand-name {
+        font-size: 25px;
+        font-weight: 400;
+        letter-spacing: -0.05em;
+      }
+
+      .brand-product {
+        color: var(--purple);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .topbar-label {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 40px;
+        align-items: end;
+        padding: 92px 0 64px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        color: var(--purple-deep);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 32px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--purple-deep), var(--lilac));
+        content: "";
+      }
+
+      h1 {
+        max-width: 790px;
+        margin: 0;
+        font-size: clamp(48px, 7vw, 88px);
+        font-weight: 750;
+        letter-spacing: -0.065em;
+        line-height: 0.98;
+      }
+
+      .hero p {
+        max-width: 710px;
+        margin: 30px 0 0;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 20px);
+        line-height: 1.6;
+      }
+
+      .updated {
+        min-width: 190px;
+        padding: 18px 20px;
+        border: 1px solid rgba(117, 64, 232, 0.15);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.64);
+        box-shadow: 0 12px 40px rgba(45, 24, 85, 0.06);
+        backdrop-filter: blur(12px);
+      }
+
+      .updated span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .updated strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 15px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 250px minmax(0, 1fr);
+        gap: 38px;
+        align-items: start;
+        padding-bottom: 100px;
+      }
+
+      .toc {
+        position: sticky;
+        top: 24px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.66);
+        backdrop-filter: blur(14px);
+      }
+
+      .toc strong {
+        display: block;
+        margin-bottom: 14px;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .toc a {
+        display: block;
+        padding: 7px 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+        text-decoration: none;
+      }
+
+      .toc a:hover {
+        color: var(--purple-deep);
+      }
+
+      .policy {
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 30px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .summary {
+        padding: 34px 42px;
+        border-bottom: 1px solid var(--line);
+        background:
+          linear-gradient(120deg, rgba(117, 64, 232, 0.09), rgba(182, 91, 220, 0.04)),
+          rgba(255, 255, 255, 0.72);
+      }
+
+      .summary strong {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--purple-deep);
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .summary p {
+        margin: 0;
+        font-size: 17px;
+      }
+
+      .section {
+        padding: 38px 42px;
+        border-bottom: 1px solid var(--line);
+        scroll-margin-top: 22px;
+      }
+
+      .section:last-child {
+        border-bottom: 0;
+      }
+
+      h2 {
+        margin: 0 0 16px;
+        font-size: clamp(24px, 3vw, 34px);
+        letter-spacing: -0.035em;
+        line-height: 1.2;
+      }
+
+      h3 {
+        margin: 28px 0 8px;
+        font-size: 18px;
+        letter-spacing: -0.015em;
+      }
+
+      p {
+        margin: 0 0 16px;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul {
+        margin: 14px 0 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 8px 0;
+        padding-left: 4px;
+      }
+
+      li::marker {
+        color: var(--purple);
+      }
+
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 22px;
+      }
+
+      .data-card {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.65);
+      }
+
+      .data-card strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+      }
+
+      .data-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .contact-card {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 22px;
+        padding: 22px 24px;
+        border: 1px solid rgba(117, 64, 232, 0.16);
+        border-radius: 20px;
+        background: linear-gradient(120deg, rgba(117, 64, 232, 0.09), rgba(182, 91, 220, 0.06));
+      }
+
+      .contact-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .contact-card strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 17px;
+      }
+
+      .button {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        min-height: 46px;
+        padding: 0 20px;
+        border-radius: 999px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--purple-deep), var(--lilac));
+        box-shadow: 0 12px 28px rgba(117, 64, 232, 0.24);
+        font-size: 14px;
+        font-weight: 750;
+        text-decoration: none;
+      }
+
+      .button:hover {
+        color: #fff;
+        transform: translateY(-1px);
+      }
+
+      .whatsapp-float {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 10;
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        min-height: 54px;
+        padding: 0 20px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        color: #fff;
+        background: #1fa855;
+        box-shadow: 0 16px 38px rgba(16, 118, 59, 0.3);
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease;
+      }
+
+      .whatsapp-float::before {
+        display: grid;
+        width: 26px;
+        height: 26px;
+        place-items: center;
+        border-radius: 50%;
+        color: #1fa855;
+        background: #fff;
+        content: "W";
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .whatsapp-float:hover {
+        color: #fff;
+        box-shadow: 0 20px 44px rgba(16, 118, 59, 0.38);
+        transform: translateY(-2px);
+      }
+
+      footer {
+        padding: 32px 0 44px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer-inner {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .footer-brand {
+        color: var(--ink);
+        font-weight: 750;
+      }
+
+      @media (max-width: 860px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 28px;
+          padding-top: 70px;
+        }
+
+        .updated {
+          width: fit-content;
+        }
+
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          position: static;
+          display: none;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .shell {
+          width: min(100% - 28px, 1180px);
+        }
+
+        .topbar {
+          min-height: 76px;
+        }
+
+        .topbar-label {
+          display: none;
+        }
+
+        .hero {
+          padding: 58px 0 44px;
+        }
+
+        h1 {
+          font-size: clamp(45px, 15vw, 62px);
+        }
+
+        .summary,
+        .section {
+          padding: 28px 24px;
+        }
+
+        .policy {
+          border-radius: 24px;
+        }
+
+        .data-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .contact-card,
+        .footer-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .button {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .whatsapp-float {
+          right: 14px;
+          bottom: 14px;
+          min-height: 50px;
+          padding: 0 17px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="shell topbar">
+      <a class="brand" href="../" aria-label="GEUS Auto Flux - página inicial">
+        <img src="../assets/logo-geus-symbol.png" alt="" width="42" height="42" />
+        <span class="brand-copy">
+          <span class="brand-name">geus</span>
+          <span class="brand-product">Auto Flux</span>
+        </span>
+      </a>
+      <span class="topbar-label">Privacidade e proteção de dados</span>
+    </header>
+
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <span class="eyebrow">Transparência GEUS</span>
+          <h1 id="page-title">Política de Privacidade</h1>
+          <p>
+            Esta Política explica como a GEUS coleta, utiliza, compartilha e protege dados
+            pessoais em seus sites, formulários, campanhas e canais de atendimento.
+          </p>
+        </div>
+        <div class="updated">
+          <span>Última atualização</span>
+          <strong>28 de julho de 2026</strong>
+        </div>
+      </section>
+
+      <div class="layout">
+        <nav class="toc" aria-label="Sumário da Política de Privacidade">
+          <strong>Nesta política</strong>
+          <a href="#quem-somos">1. Quem somos</a>
+          <a href="#dados-coletados">2. Dados coletados</a>
+          <a href="#finalidades">3. Como utilizamos</a>
+          <a href="#bases-legais">4. Bases legais</a>
+          <a href="#compartilhamento">5. Compartilhamento</a>
+          <a href="#transferencias">6. Transferências</a>
+          <a href="#retencao">7. Retenção</a>
+          <a href="#direitos">8. Seus direitos</a>
+          <a href="#cookies">9. Cookies</a>
+          <a href="#seguranca">10. Segurança</a>
+          <a href="#criancas">11. Crianças e adolescentes</a>
+          <a href="#alteracoes">12. Alterações</a>
+          <a href="#contato">13. Contato</a>
+        </nav>
+
+        <article class="policy">
+          <div class="summary">
+            <strong>Em resumo</strong>
+            <p>
+              Utilizamos apenas os dados necessários para atender solicitações, apresentar
+              nossas soluções, manter o relacionamento comercial e aprimorar nossos serviços.
+              Não comercializamos dados pessoais.
+            </p>
+          </div>
+
+          <section class="section" id="quem-somos">
+            <h2>1. Quem somos</h2>
+            <p>
+              A <strong>GEUS</strong>, incluindo sua metodologia <strong>GEUS Auto Flux</strong>,
+              oferece soluções de aquisição digital, comunicação, tecnologia e gestão de
+              campanhas, especialmente para lojas, agências e revendas de veículos.
+            </p>
+            <p>
+              Para os tratamentos descritos nesta Política, a GEUS atua como controladora dos
+              dados pessoais, determinando as finalidades e os meios de tratamento, conforme a
+              Lei nº 13.709/2018 — Lei Geral de Proteção de Dados Pessoais (LGPD).
+            </p>
+          </section>
+
+          <section class="section" id="dados-coletados">
+            <h2>2. Quais dados podemos coletar</h2>
+            <p>
+              Os dados tratados variam conforme a forma de interação com a GEUS. Podemos coletar:
+            </p>
+            <div class="data-grid">
+              <div class="data-card">
+                <strong>Dados de identificação e contato</strong>
+                <span>Nome, telefone, WhatsApp, e-mail e demais informações fornecidas em formulários.</span>
+              </div>
+              <div class="data-card">
+                <strong>Dados profissionais e comerciais</strong>
+                <span>Empresa ou loja, cargo, cidade, segmento, tamanho da operação e interesses comerciais.</span>
+              </div>
+              <div class="data-card">
+                <strong>Dados da solicitação</strong>
+                <span>Mensagens, respostas, preferências, histórico de atendimento e informações enviadas voluntariamente.</span>
+              </div>
+              <div class="data-card">
+                <strong>Dados técnicos e de navegação</strong>
+                <span>Endereço IP, dispositivo, navegador, páginas acessadas, origem do acesso, data, horário e cookies.</span>
+              </div>
+            </div>
+            <p>
+              Solicitamos que não sejam enviados dados pessoais sensíveis ou informações de
+              terceiros que não sejam necessárias ao atendimento.
+            </p>
+          </section>
+
+          <section class="section" id="finalidades">
+            <h2>3. Como utilizamos os dados</h2>
+            <p>Podemos utilizar os dados pessoais para:</p>
+            <ul>
+              <li>receber, identificar e responder solicitações feitas em formulários ou canais de atendimento;</li>
+              <li>entrar em contato por telefone, WhatsApp, e-mail ou outro canal informado;</li>
+              <li>entender necessidades comerciais e apresentar serviços, propostas, diagnósticos ou demonstrações;</li>
+              <li>executar contratos e prestar os serviços contratados;</li>
+              <li>organizar o relacionamento comercial e manter registros de atendimento;</li>
+              <li>enviar comunicações institucionais ou promocionais, quando permitido pela legislação aplicável;</li>
+              <li>medir o desempenho de páginas e campanhas e melhorar nossos serviços;</li>
+              <li>prevenir fraudes, abusos, incidentes de segurança e usos indevidos;</li>
+              <li>cumprir obrigações legais, regulatórias e exercer direitos em processos.</li>
+            </ul>
+          </section>
+
+          <section class="section" id="bases-legais">
+            <h2>4. Bases legais do tratamento</h2>
+            <p>
+              O tratamento poderá se apoiar, conforme o caso, no consentimento do titular, na
+              execução de contrato ou de procedimentos preliminares relacionados a contrato, no
+              cumprimento de obrigação legal ou regulatória, no exercício regular de direitos e
+              no legítimo interesse da GEUS ou de terceiros, sempre com avaliação dos direitos e
+              liberdades fundamentais do titular.
+            </p>
+            <p>
+              Quando o tratamento depender de consentimento, ele poderá ser revogado a qualquer
+              momento. A revogação não afeta os tratamentos realizados anteriormente de forma
+              válida.
+            </p>
+          </section>
+
+          <section class="section" id="compartilhamento">
+            <h2>5. Com quem podemos compartilhar</h2>
+            <p>
+              A GEUS poderá compartilhar dados estritamente necessários com fornecedores que
+              apoiam sua operação, incluindo serviços de hospedagem, formulários, CRM,
+              automação, atendimento, comunicação, WhatsApp, e-mail, mídia, análise de dados,
+              segurança e armazenamento em nuvem.
+            </p>
+            <p>Também poderá haver compartilhamento:</p>
+            <ul>
+              <li>com parceiros envolvidos na execução de uma solicitação ou serviço;</li>
+              <li>quando exigido por lei, ordem judicial ou autoridade competente;</li>
+              <li>para proteger direitos, prevenir fraudes ou investigar incidentes;</li>
+              <li>em eventual reorganização societária, observadas as proteções aplicáveis.</li>
+            </ul>
+            <p>
+              Esses terceiros recebem somente os dados necessários às suas funções e devem
+              tratá-los de acordo com obrigações de confidencialidade, segurança e proteção de
+              dados. A GEUS não vende nem aluga dados pessoais.
+            </p>
+          </section>
+
+          <section class="section" id="transferencias">
+            <h2>6. Transferências internacionais</h2>
+            <p>
+              Alguns fornecedores de tecnologia podem processar ou armazenar dados em outros
+              países. Quando isso ocorrer, a GEUS adotará medidas compatíveis com a LGPD para
+              assegurar proteção adequada, incluindo cláusulas contratuais, controles de
+              segurança e verificação das garantias oferecidas pelo fornecedor.
+            </p>
+          </section>
+
+          <section class="section" id="retencao">
+            <h2>7. Por quanto tempo mantemos os dados</h2>
+            <p>
+              Conservamos os dados somente pelo período necessário para cumprir as finalidades
+              descritas nesta Política, atender obrigações legais e contratuais, resguardar
+              direitos e manter registros legítimos da relação comercial.
+            </p>
+            <p>
+              Encerrada a necessidade, os dados serão eliminados, anonimizados ou mantidos de
+              forma segura nas hipóteses autorizadas pela legislação.
+            </p>
+          </section>
+
+          <section class="section" id="direitos">
+            <h2>8. Seus direitos como titular</h2>
+            <p>
+              Nos termos da LGPD, o titular poderá solicitar, quando aplicável:
+            </p>
+            <ul>
+              <li>confirmação da existência de tratamento;</li>
+              <li>acesso aos dados pessoais;</li>
+              <li>correção de dados incompletos, inexatos ou desatualizados;</li>
+              <li>anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em desconformidade;</li>
+              <li>portabilidade, observadas as regras aplicáveis e os segredos comercial e industrial;</li>
+              <li>informações sobre compartilhamentos e sobre a possibilidade de negar consentimento;</li>
+              <li>revogação do consentimento e eliminação dos dados tratados com essa base, quando cabível;</li>
+              <li>oposição a tratamento realizado em desconformidade com a LGPD;</li>
+              <li>revisão de decisões tomadas unicamente com base em tratamento automatizado, quando aplicável.</li>
+            </ul>
+            <p>
+              Para proteger o próprio titular, poderemos solicitar informações adicionais para
+              confirmar sua identidade antes de atender ao pedido.
+            </p>
+          </section>
+
+          <section class="section" id="cookies">
+            <h2>9. Cookies e tecnologias semelhantes</h2>
+            <p>
+              O site poderá utilizar cookies necessários ao funcionamento e, conforme as
+              ferramentas habilitadas, cookies de medição, desempenho ou publicidade. Essas
+              tecnologias ajudam a lembrar preferências, entender a navegação, medir campanhas e
+              melhorar a experiência.
+            </p>
+            <p>
+              O visitante pode controlar cookies pelas configurações do navegador e, quando
+              disponibilizado, pelo gerenciador de consentimento do site. O bloqueio de cookies
+              essenciais poderá prejudicar algumas funcionalidades.
+            </p>
+          </section>
+
+          <section class="section" id="seguranca">
+            <h2>10. Segurança da informação</h2>
+            <p>
+              Adotamos medidas técnicas e administrativas razoáveis para proteger dados contra
+              acessos não autorizados, perda, alteração, divulgação ou destruição indevida.
+              Entre essas medidas podem estar controles de acesso, autenticação, registros de
+              atividade, cópias de segurança e seleção criteriosa de fornecedores.
+            </p>
+            <p>
+              Nenhum ambiente é totalmente imune a riscos. Caso ocorra incidente relevante,
+              serão adotadas as providências cabíveis, incluindo comunicações exigidas pela
+              legislação.
+            </p>
+          </section>
+
+          <section class="section" id="criancas">
+            <h2>11. Crianças e adolescentes</h2>
+            <p>
+              Os serviços e formulários comerciais da GEUS são direcionados a pessoas maiores de
+              18 anos e representantes de empresas. Não coletamos intencionalmente dados de
+              crianças ou adolescentes por esses canais. Caso identifiquemos uma coleta
+              inadequada, adotaremos medidas para eliminar os dados.
+            </p>
+          </section>
+
+          <section class="section" id="alteracoes">
+            <h2>12. Alterações desta Política</h2>
+            <p>
+              Esta Política poderá ser atualizada para refletir mudanças em nossas práticas,
+              serviços ou obrigações legais. A versão vigente estará sempre disponível nesta
+              página, acompanhada da data de atualização.
+            </p>
+          </section>
+
+          <section class="section" id="contato">
+            <h2>13. Contato e solicitações de privacidade</h2>
+            <p>
+              Para exercer direitos, tirar dúvidas ou fazer uma solicitação relacionada a dados
+              pessoais, entre em contato com a GEUS. Informe no início da mensagem que o assunto
+              é “Privacidade” ou “LGPD”.
+            </p>
+            <div class="contact-card">
+              <div>
+                <span>Canal de atendimento</span>
+                <strong>WhatsApp: +55 33 99834-7871</strong>
+              </div>
+              <a
+                class="button"
+                href="https://wa.me/5533998347871?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20GEUS%20e%20gostaria%20de%20falar%20sobre%20privacidade%20e%20prote%C3%A7%C3%A3o%20de%20dados."
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Falar com a GEUS
+              </a>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer>
+      <div class="shell footer-inner">
+        <span><span class="footer-brand">GEUS Auto Flux</span> — O motor digital da sua loja.</span>
+        <span>© 2026 GEUS. Todos os direitos reservados.</span>
+      </div>
+    </footer>
+    <a
+      class="whatsapp-float"
+      href="https://wa.me/5533998347871?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20GEUS%20e%20gostaria%20de%20falar%20sobre%20privacidade%20e%20prote%C3%A7%C3%A3o%20de%20dados."
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Falar com a GEUS pelo WhatsApp"
+    >
+      WhatsApp
+    </a>
+  </body>
+</html>
