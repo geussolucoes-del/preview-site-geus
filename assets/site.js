@@ -6,12 +6,45 @@ const updateHeader = () => {
   header?.classList.toggle("is-scrolled", window.scrollY > 12);
 };
 
+let lastScrollY = window.scrollY;
+let tickingHeader = false;
+
+const updateSmartHeader = () => {
+  if (!header) return;
+
+  const currentScrollY = window.scrollY;
+  const isMenuOpen = document.body.classList.contains("menu-open");
+  const delta = currentScrollY - lastScrollY;
+
+  if (delta > 1 && currentScrollY > 160 && !isMenuOpen) {
+    header.classList.add("is-hidden");
+  }
+
+  if (delta < -1 || currentScrollY < 120 || isMenuOpen) {
+    header.classList.remove("is-hidden");
+  }
+
+  if (Math.abs(delta) > 1) {
+    lastScrollY = Math.max(currentScrollY, 0);
+  }
+
+  tickingHeader = false;
+};
+
+const requestHeaderUpdate = () => {
+  updateHeader();
+  if (tickingHeader) return;
+  tickingHeader = true;
+  requestAnimationFrame(updateSmartHeader);
+};
+
 const closeMenu = () => {
   if (!menuButton || !mobileNav) return;
   menuButton.setAttribute("aria-expanded", "false");
   menuButton.setAttribute("aria-label", "Abrir menu");
   mobileNav.classList.remove("is-open");
   header?.classList.remove("menu-visible");
+  header?.classList.remove("is-hidden");
   document.body.classList.remove("menu-open");
 };
 
@@ -28,10 +61,11 @@ mobileNav?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", closeMenu);
 });
 
-window.addEventListener("scroll", updateHeader, { passive: true });
+window.addEventListener("scroll", requestHeaderUpdate, { passive: true });
 window.addEventListener("resize", () => {
   if (window.innerWidth > 1080) closeMenu();
 });
+window.setInterval(requestHeaderUpdate, 160);
 updateHeader();
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
