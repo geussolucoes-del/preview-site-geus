@@ -128,6 +128,17 @@ if (leadForm) {
   const unqualifiedResult = leadForm.querySelector("[data-unqualified-result]");
   const whatsappResult = leadForm.querySelector("[data-whatsapp-result]");
   let currentStep = 0;
+  let midpointTracked = false;
+
+  const pushDataLayerEvent = (event, payload = {}) => {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event,
+      product: "GEUS Auto Flux",
+      funnel: "diagnostico_site",
+      ...payload,
+    });
+  };
 
   const fieldLabels = {
     business: "Negócio",
@@ -148,6 +159,32 @@ if (leadForm) {
     return field.value.trim();
   };
 
+  const getLeadPayload = () => {
+    const formData = new FormData(leadForm);
+    const values = {};
+    const labels = {};
+
+    Object.keys(fieldLabels).forEach((name) => {
+      const field = leadForm.elements[name];
+      values[name] = formData.get(name) || "";
+      labels[name] = getFieldText(field);
+    });
+
+    const disqualificationReason =
+      values.business === "fora"
+        ? "nao_vende_veiculos"
+        : values.investment === "sem_orcamento"
+          ? "sem_orcamento"
+          : "";
+
+    return {
+      values,
+      labels,
+      qualified: !disqualificationReason,
+      disqualificationReason,
+    };
+  };
+
   const showStep = (index) => {
     currentStep = Math.max(0, Math.min(index, steps.length - 1));
     steps.forEach((step, stepIndex) => {
@@ -157,6 +194,14 @@ if (leadForm) {
       step.classList.toggle("is-active", stepIndex <= currentStep);
     });
     leadForm.dataset.step = String(currentStep + 1);
+
+    if (currentStep >= 1 && !midpointTracked) {
+      midpointTracked = true;
+      pushDataLayerEvent("auto_flux_form_midpoint", {
+        step: currentStep + 1,
+        step_name: "investimento_estoque",
+      });
+    }
   };
 
   const validateCurrentStep = () => {
@@ -173,37 +218,105 @@ if (leadForm) {
   };
 
   const buildWhatsappUrl = () => {
-    const formData = new FormData(leadForm);
+    const leadPayload = getLeadPayload();
     const lines = [
       "Olá! Preenchi o diagnóstico Auto Flux no site e quero conversar sobre minha loja.",
       "",
       ...Object.keys(fieldLabels)
         .map((name) => {
-          const field = leadForm.elements[name];
-          const value = getFieldText(field);
+          const value = leadPayload.labels[name];
           return value ? `${fieldLabels[name]}: ${value}` : "";
         })
         .filter(Boolean),
     ];
 
-    if (formData.get("investment") === "entender") {
+    if (leadPayload.values.investment === "entender") {
       lines.push("", "Ainda quero entender melhor qual plano faz sentido.");
     }
 
     return `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
   };
 
-  const showResult = (isQualified) => {
-    leadForm.classList.add("is-complete");
-    qualifiedResult.hidden = !isQualified;
-    unqualifiedResult.hidden = isQualified;
+  const sendLeadToEmailJS = async (leadPayload) => {
+    const config = window.GEUS_EMAILJS || {};
+    const hasConfig = config.publicKey && config.serviceId && config.templateId;
 
-    if (isQualified && whatsappResult) {
+    if (!hasConfig) {
+      pushDataLayerEvent("auto_flux_emailjs_not_configured", {
+        qualified: leadPayload.qualified,
+      });
+      return false;
+    }
+
+    const templateParams = {
+      product: "GEUS Auto Flux",
+      qualified: leadPayload.qualified ? "Sim" : "Não",
+      disqualification_reason: leadPayload.disqualificationReason || "qualificado",
+      business: leadPayload.labels.business,
+      experience: leadPayload.labels.experience,
+      investment: leadPayload.labels.investment,
+      stock: leadPayload.labels.stock,
+      name: leadPayload.labels.name,
+      company: leadPayload.labels.company,
+      phone: leadPayload.labels.phone,
+      email: leadPayload.labels.email || "Não informado",
+      page_url: window.location.href,
+      submitted_at: new Date().toISOString(),
+    };
+
+    try {
+      const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service_id: config.serviceId,
+          template_id: config.templateId,
+          user_id: config.publicKey,
+          template_params: templateParams,
+        }),
+      });
+
+      if (!response.ok) throw new Error(`EmailJS HTTP ${response.status}`);
+
+      pushDataLayerEvent("auto_flux_emailjs_sent", {
+        qualified: leadPayload.qualified,
+      });
+      return true;
+    } catch (error) {
+      pushDataLayerEvent("auto_flux_emailjs_error", {
+        qualified: leadPayload.qualified,
+        error_message: error.message,
+      });
+      return false;
+    }
+  };
+
+  const showResult = (leadPayload) => {
+    leadForm.classList.add("is-complete");
+    qualifiedResult.hidden = !leadPayload.qualified;
+    unqualifiedResult.hidden = leadPayload.qualified;
+
+    if (leadPayload.qualified && whatsappResult) {
       whatsappResult.href = buildWhatsappUrl();
     }
 
+    pushDataLayerEvent("auto_flux_thank_you_view", {
+      qualified: leadPayload.qualified,
+      disqualification_reason: leadPayload.disqualificationReason || "qualificado",
+    });
+
     leadForm.scrollIntoView({ block: "center" });
   };
+
+  document.querySelectorAll('a[href="#diagnostico"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      pushDataLayerEvent("auto_flux_form_open_click", {
+        cta_text: link.textContent.trim().replace(/\s+/g, " "),
+      });
+    });
+  });
 
   nextButton?.addEventListener("click", () => {
     if (!validateCurrentStep()) return;
@@ -214,15 +327,32 @@ if (leadForm) {
     showStep(currentStep - 1);
   });
 
-  leadForm.addEventListener("submit", (event) => {
+  leadForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!validateCurrentStep()) return;
 
-    const formData = new FormData(leadForm);
-    const isUnqualified =
-      formData.get("business") === "fora" || formData.get("investment") === "sem_orcamento";
+    const leadPayload = getLeadPayload();
 
-    showResult(!isUnqualified);
+    pushDataLayerEvent("auto_flux_form_submit", {
+      qualified: leadPayload.qualified,
+      disqualification_reason: leadPayload.disqualificationReason || "qualificado",
+      business: leadPayload.values.business,
+      investment: leadPayload.values.investment,
+      stock: leadPayload.values.stock,
+    });
+
+    sendLeadToEmailJS(leadPayload);
+    showResult(leadPayload);
+  });
+
+  whatsappResult?.addEventListener("click", () => {
+    const leadPayload = getLeadPayload();
+    pushDataLayerEvent("auto_flux_thank_you_whatsapp_click", {
+      qualified: leadPayload.qualified,
+      business: leadPayload.values.business,
+      investment: leadPayload.values.investment,
+      stock: leadPayload.values.stock,
+    });
   });
 
   showStep(0);

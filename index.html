@@ -40,7 +40,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
     <link rel="manifest" href="/site.webmanifest?v=2" />
     <link rel="preload" as="image" href="/images/hero-auto-flux.webp" type="image/webp" />
-    <link rel="stylesheet" href="/assets/site.css?v=6" />
+    <link rel="stylesheet" href="/assets/site.css?v=7" />
     <title>GEUS Auto Flux — Mais compradores para sua loja de veículos</title>
   </head>
   <body>
@@ -561,7 +561,7 @@
               </button>
             </div>
 
-            <div class="lead-result" data-qualified-result hidden>
+            <div class="lead-result" data-qualified-result data-thank-you-page hidden>
               <span class="result-pill">Perfil qualificado</span>
               <h3>Obrigado. Sua operação tem perfil para conversar com a GEUS.</h3>
               <p>
@@ -579,7 +579,7 @@
               </a>
             </div>
 
-            <div class="lead-result lead-result-muted" data-unqualified-result hidden>
+            <div class="lead-result lead-result-muted" data-unqualified-result data-thank-you-page hidden>
               <span class="result-pill">Obrigado pelo interesse</span>
               <h3>No momento, o Auto Flux não parece ser o melhor encaixe.</h3>
               <p>
@@ -708,6 +708,13 @@
       </div>
     </footer>
 
-    <script src="/assets/site.js?v=6" defer></script>
+    <script>
+      window.GEUS_EMAILJS = window.GEUS_EMAILJS || {
+        publicKey: "",
+        serviceId: "",
+        templateId: "",
+      };
+    </script>
+    <script src="/assets/site.js?v=7" defer></script>
   </body>
 </html>
