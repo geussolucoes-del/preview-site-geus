@@ -30,12 +30,38 @@ mobileNav?.querySelectorAll("a").forEach((link) => {
 
 window.addEventListener("scroll", updateHeader, { passive: true });
 window.addEventListener("resize", () => {
-  if (window.innerWidth > 980) closeMenu();
+  if (window.innerWidth > 1080) closeMenu();
 });
 updateHeader();
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const revealElements = document.querySelectorAll(".reveal");
+const revealVisibleElements = () => {
+  revealElements.forEach((element) => {
+    const rect = element.getBoundingClientRect();
+    const isVisible = rect.top < window.innerHeight * 0.94 && rect.bottom > 0;
+    if (isVisible) element.classList.add("is-visible");
+  });
+};
+
+const alignHashTarget = () => {
+  const id = window.location.hash.slice(1);
+  if (!id) return;
+
+  const target = document.getElementById(decodeURIComponent(id));
+  if (!target) return;
+
+  target.scrollIntoView({ block: "start" });
+  updateHeader();
+  revealVisibleElements();
+};
+
+const scheduleHashAlignment = () => {
+  requestAnimationFrame(() => {
+    alignHashTarget();
+    window.setTimeout(alignHashTarget, 280);
+  });
+};
 
 if (prefersReducedMotion || !("IntersectionObserver" in window)) {
   revealElements.forEach((element) => element.classList.add("is-visible"));
@@ -52,4 +78,7 @@ if (prefersReducedMotion || !("IntersectionObserver" in window)) {
   );
 
   revealElements.forEach((element) => observer.observe(element));
+  requestAnimationFrame(revealVisibleElements);
+  window.addEventListener("load", scheduleHashAlignment);
+  window.addEventListener("hashchange", scheduleHashAlignment);
 }
