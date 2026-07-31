@@ -1,6 +1,9 @@
 const LANG_KEY = "geus_language";
+const AUTO_LANG_KEY = "geus_auto_language";
 const isPortuguese = (navigator.language || "").toLowerCase().startsWith("pt");
-let language = localStorage.getItem(LANG_KEY) || (isPortuguese ? "pt" : "en");
+const storedLanguage = localStorage.getItem(LANG_KEY);
+const autoLanguage = sessionStorage.getItem(AUTO_LANG_KEY);
+let language = storedLanguage || autoLanguage || (isPortuguese ? "pt" : "en");
 
 const dictionary = {
   pt: {
@@ -46,9 +49,9 @@ const renderChrome = () => {
     </div></footer>`;
 };
 
-const applyLanguage = (nextLanguage) => {
+const applyLanguage = (nextLanguage, persist = true) => {
   language = nextLanguage;
-  localStorage.setItem(LANG_KEY, language);
+  if (persist) localStorage.setItem(LANG_KEY, language);
   document.documentElement.lang = language === "pt" ? "pt-BR" : "en";
   document.querySelectorAll("[data-t]").forEach((node) => {
     const text = dictionary[language][node.dataset.t];
@@ -66,7 +69,19 @@ const applyLanguage = (nextLanguage) => {
 };
 
 renderChrome();
-applyLanguage(language);
+applyLanguage(language, Boolean(storedLanguage));
+
+if (!storedLanguage && !autoLanguage) {
+  fetch("/api/locale", { headers: { Accept: "application/json" } })
+    .then((response) => response.ok ? response.json() : null)
+    .then((locale) => {
+      if (locale?.language && !localStorage.getItem(LANG_KEY)) {
+        sessionStorage.setItem(AUTO_LANG_KEY, locale.language);
+        applyLanguage(locale.language, false);
+      }
+    })
+    .catch(() => {});
+}
 
 document.addEventListener("click", (event) => {
   const langButton = event.target.closest("[data-lang]");
@@ -124,6 +139,24 @@ document.querySelectorAll("[data-diagnostic-form]").forEach((form) => {
     const needField = form.querySelector('[name="Necessidade"]');
     if (needField && Array.from(needField.options).some((option) => option.value === requestedProduct)) {
       needField.value = requestedProduct;
+    }
+    if (requestedProduct === "autoflux") {
+      document.body.classList.add("diagnostic-autoflux");
+      document.querySelectorAll("[data-autoflux-pt][data-autoflux-en]").forEach((node) => {
+        node.dataset.pt = node.dataset.autofluxPt;
+        node.dataset.en = node.dataset.autofluxEn;
+      });
+      const segmentField = form.querySelector('[name="Segmento"]');
+      if (segmentField && !segmentField.value) segmentField.value = language === "pt" ? "Automotivo / loja de veículos" : "Automotive / vehicle dealership";
+      const plan = new URLSearchParams(window.location.search).get("plano");
+      if (plan) {
+        const planField = document.createElement("input");
+        planField.type = "hidden";
+        planField.name = "Plano AutoFlux";
+        planField.value = plan.toUpperCase();
+        form.append(planField);
+      }
+      applyLanguage(language, false);
     }
   }
 
