@@ -67,7 +67,7 @@ img { display: block; max-width: 100%; }
 .button-ghost:hover { background: var(--paper); color: var(--bg); }
 
 .home-hero { min-height: calc(100svh - 38px); padding: calc(var(--header) + 2rem) 0 1.5rem; display: grid; align-items: end; }
-#produtos { padding-top: 2rem; }
+#produtos { padding-top: .5rem; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1.03fr) minmax(380px, .97fr); gap: clamp(2rem, 5vw, 6rem); align-items: end; }
 .home-hero .display { font-size: 4.15rem; }
 .home-hero .eyebrow { margin-bottom: 1rem; }
