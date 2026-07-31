@@ -357,6 +357,7 @@ img { display: block; max-width: 100%; }
 .contact-row:hover strong { color: var(--lime); }
 
 .cta-band { padding: clamp(4rem, 9vw, 8rem) 0; background: var(--lime); color: #0b0c0b; }
+.cta-band .section-kicker { color: #0b0c0b; }
 .cta-band h2 { max-width: 1100px; margin: 0; font-size: 5.8rem; line-height: .92; }
 .cta-band .button { border-color: #0b0c0b; }
 .site-footer { padding: 3rem 0 1.5rem; border-top: 1px solid var(--line); }
