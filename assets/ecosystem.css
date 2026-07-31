@@ -364,6 +364,49 @@ img { display: block; max-width: 100%; }
 .contact-row strong { font-size: 2.4rem; overflow-wrap: anywhere; }
 .contact-row:hover strong { color: var(--lime); }
 
+/* Contact decision page */
+.contact-hero { min-height: 70svh; display: flex; align-items: end; padding: calc(var(--header) + 4rem) 0 4rem; border-bottom: 1px solid var(--line); }
+.contact-hero-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(280px,.36fr); gap: clamp(2rem,7vw,7rem); align-items: end; }
+.contact-hero .display { max-width: 980px; font-size: clamp(4.5rem,7vw,7.5rem); }
+.contact-hero-note { padding-left: 1.5rem; border-left: 1px solid var(--line); }
+.contact-hero-note > span { color: var(--lime); font-size: .68rem; font-weight: 800; }
+.contact-hero-note p { margin: 1rem 0 0; color: var(--muted); line-height: 1.7; }
+.contact-section-head { display: grid; grid-template-columns: minmax(180px,.28fr) minmax(0,1fr); gap: 2rem; align-items: end; margin-bottom: clamp(2.5rem,6vw,5rem); }
+.contact-section-head > div { display: flex; align-items: center; gap: 1rem; }
+.contact-section-head > div > span { color: var(--lime); font-size: .7rem; font-weight: 800; }
+.contact-section-head .section-kicker { margin: 0; }
+.contact-section-head h2 { max-width: 900px; margin: 0; font-size: 4.2rem; line-height: .97; }
+.contact-channel-grid { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); grid-template-areas: "primary text" "instagram email"; gap: 1px; border: 1px solid var(--line); background: var(--line); }
+.contact-channel { min-width: 0; min-height: 360px; display: flex; flex-direction: column; padding: clamp(1.35rem,3vw,2.5rem); background: var(--surface); color: var(--text); transition: background-color .2s ease, color .2s ease; }
+.contact-channel:hover { background: var(--surface-2); }
+.contact-whatsapp { grid-area: primary; background: var(--lime); color: #0b0c0b; }
+.contact-whatsapp:hover { background: #d5ff78; }
+.contact-text { grid-area: text; }
+.contact-instagram { grid-area: instagram; }
+.contact-email { grid-area: email; }
+.contact-channel-top, .contact-channel-action { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+.contact-mark { min-width: 38px; min-height: 38px; display: grid; place-items: center; border: 1px solid currentColor; font-size: .65rem; font-weight: 850; }
+.contact-badge { color: var(--muted); font-size: .64rem; font-weight: 750; text-align: right; text-transform: uppercase; }
+.contact-whatsapp .contact-badge { color: #354215; }
+.contact-channel-copy { margin: auto 0 3rem; }
+.contact-channel-copy > p { margin: 0 0 .8rem; font-size: .7rem; font-weight: 800; text-transform: uppercase; }
+.contact-channel-copy h3 { max-width: 660px; margin: 0 0 1rem; font-size: 2.45rem; line-height: 1.04; overflow-wrap: anywhere; }
+.contact-channel-copy > span { display: block; max-width: 540px; color: var(--muted); line-height: 1.6; }
+.contact-whatsapp .contact-channel-copy > span { color: #354215; }
+.contact-channel-action { padding-top: 1.2rem; border-top: 1px solid currentColor; font-size: .7rem; }
+.contact-channel-action b { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+.contact-channel-action strong { flex: 0 0 auto; }
+html[lang="en"] .contact-channel-grid { grid-template-areas: "primary whatsapp" "instagram email"; }
+html[lang="en"] .contact-text { grid-area: primary; background: var(--lime); color: #0b0c0b; }
+html[lang="en"] .contact-text:hover { background: #d5ff78; }
+html[lang="en"] .contact-text .contact-badge, html[lang="en"] .contact-text .contact-channel-copy > span { color: #354215; }
+html[lang="en"] .contact-whatsapp { grid-area: whatsapp; background: var(--surface); color: var(--text); }
+html[lang="en"] .contact-whatsapp:hover { background: var(--surface-2); }
+html[lang="en"] .contact-whatsapp .contact-badge, html[lang="en"] .contact-whatsapp .contact-channel-copy > span { color: var(--muted); }
+.contact-diagnostic-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(320px,.45fr); gap: clamp(3rem,8vw,8rem); align-items: end; }
+.contact-diagnostic h2 { max-width: 900px; margin: 0; font-size: 4.5rem; line-height: .96; }
+.contact-diagnostic-grid > div:last-child p { margin: 0 0 2rem; color: #5f5c65; line-height: 1.7; }
+
 .cta-band { padding: clamp(4rem, 9vw, 8rem) 0; background: var(--lime); color: #0b0c0b; }
 .cta-band .section-kicker { color: #0b0c0b; }
 .cta-band h2 { max-width: 1100px; margin: 0; font-size: 5.8rem; line-height: .92; }
@@ -416,6 +459,10 @@ img { display: block; max-width: 100%; }
   .autoflux-result-image { grid-column: 1 / -1; aspect-ratio: 16 / 7; }
   .autoflux-plan-grid { grid-template-columns: 1fr; }
   .autoflux-plan + .autoflux-plan { border-top: 1px solid rgba(0,0,0,.17); border-left: 0; }
+  .contact-hero-grid, .contact-diagnostic-grid { grid-template-columns: 1fr; }
+  .contact-section-head { grid-template-columns: 1fr; }
+  .contact-channel-grid, html[lang="en"] .contact-channel-grid { grid-template-columns: 1fr 1fr; grid-template-areas: "primary primary" "text text" "instagram email"; }
+  html[lang="en"] .contact-channel-grid { grid-template-areas: "primary primary" "whatsapp whatsapp" "instagram email"; }
 }
 
 @media (max-width: 680px) {
@@ -526,6 +573,17 @@ img { display: block; max-width: 100%; }
   .autoflux-plan { padding: 1.4rem; }
   .autoflux-price strong { font-size: 3.8rem; }
   .autoflux-fit h2, .autoflux-faq h2 { font-size: 2.7rem; }
+  .contact-hero { min-height: auto; padding-top: calc(var(--header) + 3.5rem); padding-bottom: 3.5rem; }
+  .contact-hero .display { font-size: 3.05rem; }
+  .contact-hero-note { margin-top: 1rem; }
+  .contact-section-head h2 { font-size: 2.65rem; }
+  .contact-channel-grid, html[lang="en"] .contact-channel-grid { grid-template-columns: 1fr; grid-template-areas: "primary" "text" "instagram" "email"; }
+  html[lang="en"] .contact-channel-grid { grid-template-areas: "primary" "whatsapp" "instagram" "email"; }
+  .contact-channel { min-height: 330px; }
+  .contact-channel-copy h3 { font-size: 2rem; }
+  .contact-channel-action { align-items: end; }
+  .contact-channel-action strong { max-width: 120px; text-align: right; }
+  .contact-diagnostic h2 { font-size: 2.75rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
