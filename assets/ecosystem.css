@@ -206,6 +206,10 @@ img { display: block; max-width: 100%; }
 .selected-work .project-meta, .selected-work .project-body p:not(.project-meta) { color: #5f5c65; }
 .selected-work .project-number { color: var(--violet-deep); }
 .selected-work .browser-bar { border-bottom-color: rgba(0,0,0,.14); }
+.section-paper .project-card { background: var(--paper); }
+.section-paper .project-meta, .section-paper .project-body p:not(.project-meta) { color: #5f5c65; }
+.section-paper .project-number { color: var(--violet-deep); }
+.section-paper .browser-bar { border-bottom-color: rgba(0,0,0,.14); color: #514e56; }
 .logistics-case { border-top: 1px solid var(--line); background: #111114; }
 .logistics-layout { display: grid; grid-template-columns: minmax(280px,.55fr) minmax(0,1fr); gap: clamp(2.5rem,7vw,7rem); align-items: center; }
 .logistics-copy h2 { max-width: 540px; margin: 0 0 1.5rem; font-size: 4.2rem; line-height: .95; }
