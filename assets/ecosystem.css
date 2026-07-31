@@ -38,6 +38,7 @@ img { display: block; max-width: 100%; }
 .narrow { width: min(920px, calc(100% - (2 * var(--pad)))); margin-inline: auto; }
 .section { padding: clamp(5rem, 10vw, 9rem) 0; border-top: 1px solid var(--line); }
 .section-paper { background: var(--paper); color: #111114; }
+.section-paper .section-kicker { color: var(--violet-deep); }
 .section-violet { background: var(--violet-deep); }
 .muted { color: var(--muted); }
 
