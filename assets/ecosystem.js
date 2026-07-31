@@ -5,11 +5,11 @@ let language = localStorage.getItem(LANG_KEY) || (isPortuguese ? "pt" : "en");
 const dictionary = {
   pt: {
     skip: "Ir para o conteúdo", navProducts: "Produtos", navPortfolio: "Portfólio", navReviews: "Reviews", navContact: "Contato", talk: "Falar agora",
-    menuLabel: "Abrir menu", footerLine: "Estratégia, design e automação para negócios reais.", rights: "Geus Soluções. Todos os direitos reservados."
+    menuLabel: "Abrir menu", footerLine: "Tecnologia e crescimento construídos de perto para negócios reais.", rights: "Geus Soluções. Todos os direitos reservados."
   },
   en: {
     skip: "Skip to content", navProducts: "Products", navPortfolio: "Portfolio", navReviews: "Reviews", navContact: "Contact", talk: "Talk to us",
-    menuLabel: "Open menu", footerLine: "Strategy, design and automation for real businesses.", rights: "Geus Solutions. All rights reserved."
+    menuLabel: "Open menu", footerLine: "Technology and growth built closely around real businesses.", rights: "Geus Solutions. All rights reserved."
   }
 };
 
