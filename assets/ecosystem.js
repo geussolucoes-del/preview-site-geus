@@ -61,6 +61,7 @@ const applyLanguage = (nextLanguage) => {
     node.placeholder = node.dataset[`${language}Placeholder`];
   });
   document.querySelectorAll("[data-lang]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.lang === language)));
+  document.querySelector("[data-menu]")?.setAttribute("aria-label", dictionary[language].menuLabel);
   document.querySelectorAll("[data-contact-label]").forEach((node) => node.textContent = language === "pt" ? node.dataset.pt : node.dataset.en);
 };
 
