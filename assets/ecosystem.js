@@ -87,15 +87,77 @@ if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: re
   reveal.forEach((node) => observer.observe(node));
 } else reveal.forEach((node) => node.classList.add("is-visible"));
 
-document.querySelector("[data-diagnostic-form]")?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const form = event.currentTarget;
-  if (!form.reportValidity()) return;
-  const data = new FormData(form);
-  const lines = language === "pt" ? ["Olá! Preenchi o diagnóstico estratégico da Geus."] : ["Hi! I completed the Geus strategic audit."];
-  for (const [key, value] of data.entries()) if (String(value).trim()) lines.push(`${key}: ${value}`);
-  const url = `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
-  window.open(url, "_blank", "noopener");
-  const success = document.querySelector("[data-form-success]");
-  if (success) { success.hidden = false; success.textContent = language === "pt" ? "Diagnóstico preparado. Abrimos o WhatsApp para você enviar." : "Audit prepared. WhatsApp is open for you to send it."; }
+document.querySelectorAll("[data-diagnostic-form]").forEach((form) => {
+  const steps = Array.from(form.querySelectorAll("[data-form-step]"));
+  const progress = Array.from(form.querySelectorAll("[data-progress]"));
+  const previousButton = form.querySelector("[data-form-prev]");
+  const nextButton = form.querySelector("[data-form-next]");
+  const submitButton = form.querySelector("[data-form-submit]");
+  const stepLabel = form.querySelector("[data-form-step-label]");
+  let currentStep = 0;
+
+  const showStep = (index) => {
+    currentStep = Math.max(0, Math.min(index, steps.length - 1));
+    steps.forEach((step, stepIndex) => {
+      const active = stepIndex === currentStep;
+      step.hidden = !active;
+      step.classList.toggle("is-active", active);
+    });
+    progress.forEach((item, stepIndex) => item.classList.toggle("is-active", stepIndex <= currentStep));
+    previousButton.hidden = currentStep === 0;
+    nextButton.hidden = currentStep === steps.length - 1;
+    submitButton.hidden = currentStep !== steps.length - 1;
+    form.dataset.step = String(currentStep);
+    if (stepLabel) stepLabel.textContent = `${currentStep + 1} / ${steps.length}`;
+  };
+
+  const validateCurrentStep = () => {
+    const fields = Array.from(steps[currentStep].querySelectorAll("input, select, textarea"));
+    const invalidField = fields.find((field) => !field.checkValidity());
+    if (!invalidField) return true;
+    invalidField.reportValidity();
+    return false;
+  };
+
+  const requestedProduct = new URLSearchParams(window.location.search).get("produto");
+  if (requestedProduct) {
+    const needField = form.querySelector('[name="Necessidade"]');
+    if (needField && Array.from(needField.options).some((option) => option.value === requestedProduct)) {
+      needField.value = requestedProduct;
+    }
+  }
+
+  nextButton?.addEventListener("click", () => {
+    if (!validateCurrentStep()) return;
+    showStep(currentStep + 1);
+    form.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  previousButton?.addEventListener("click", () => {
+    showStep(currentStep - 1);
+    form.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!validateCurrentStep() || !form.reportValidity()) return;
+    const data = new FormData(form);
+    const lines = language === "pt"
+      ? ["Olá! Preenchi o diagnóstico estratégico da Geus."]
+      : ["Hi! I completed the Geus strategic audit."];
+    for (const [key, value] of data.entries()) {
+      if (String(value).trim()) lines.push(`${key}: ${value}`);
+    }
+    const url = `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(url, "_blank", "noopener");
+    const success = form.querySelector("[data-form-success]");
+    if (success) {
+      success.hidden = false;
+      success.textContent = language === "pt"
+        ? "Diagnóstico preparado. Abrimos o WhatsApp para você enviar."
+        : "Audit prepared. WhatsApp is open for you to send it.";
+    }
+  });
+
+  showStep(0);
 });
