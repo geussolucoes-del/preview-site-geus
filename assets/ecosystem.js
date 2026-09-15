@@ -8,15 +8,16 @@ let language = storedLanguage || autoLanguage || (isPortuguese ? "pt" : "en");
 const dictionary = {
   pt: {
     skip: "Ir para o conteúdo", navProducts: "Produtos", navPortfolio: "Portfólio", navReviews: "Reviews", navContact: "Contato", talk: "Falar agora",
-    menuLabel: "Abrir menu", footerLine: "Tecnologia e crescimento construídos de perto para negócios reais.", rights: "Geus Soluções. Todos os direitos reservados."
+    menuLabel: "Abrir menu", closeMenu: "Fechar menu", navLabel: "Principal", audit: "Diagnóstico", privacy: "Privacidade", terms: "Termos", footerLine: "Tecnologia e crescimento construídos de perto para negócios reais.", rights: "Geus Soluções. Todos os direitos reservados."
   },
   en: {
     skip: "Skip to content", navProducts: "Products", navPortfolio: "Portfolio", navReviews: "Reviews", navContact: "Contact", talk: "Talk to us",
-    menuLabel: "Open menu", footerLine: "Technology and growth built closely around real businesses.", rights: "Geus Solutions. All rights reserved."
+    menuLabel: "Open menu", closeMenu: "Close menu", navLabel: "Main navigation", audit: "Assessment", privacy: "Privacy", terms: "Terms", footerLine: "Technology and growth built closely around real businesses.", rights: "Geus Solutions. All rights reserved."
   }
 };
 
 const currentPath = location.pathname.replace(/\/$/, "") || "/";
+const diagnosticHref = currentPath === "/produtos/cadia" ? "/diagnostico/?produto=cadia" : "/diagnostico/";
 const navCurrent = (path) => currentPath === path || (path !== "/" && currentPath.startsWith(path));
 
 const renderChrome = () => {
@@ -34,19 +35,19 @@ const renderChrome = () => {
       </nav>
       <div class="header-actions">
         <div class="lang-switch" role="group" aria-label="Language"><button type="button" data-lang="pt">PT</button><button type="button" data-lang="en">EN</button></div>
-        <a class="header-cta" href="/diagnostico/" data-t="talk"></a>
+        <a class="header-cta" href="${diagnosticHref}" data-t="talk"></a>
         <button class="menu-button" type="button" aria-controls="mobile-menu" aria-expanded="false" data-menu><span></span><span></span></button>
       </div>
     </div></div>
     <nav class="mobile-menu" id="mobile-menu" hidden>
-      <a href="/produtos/" data-t="navProducts"></a><a href="/portfolio/" data-t="navPortfolio"></a><a href="/reviews/" data-t="navReviews"></a><a href="/diagnostico/">Diagnóstico / Audit</a><a href="/contato/" data-t="navContact"></a>
+      <a href="/produtos/" data-t="navProducts"></a><a href="/portfolio/" data-t="navPortfolio"></a><a href="/reviews/" data-t="navReviews"></a><a href="${diagnosticHref}" data-t="audit"></a><a href="/contato/" data-t="navContact"></a>
     </nav>`;
   if (footer) footer.innerHTML = `
-    <footer class="site-footer"><div class="container">
+    <div class="site-footer"><div class="container">
       <div class="footer-main"><div><a class="brand" href="/"><img src="/assets/logo-geus-symbol.png" alt="" width="34" height="34"><span>geus</span></a><p class="muted" data-t="footerLine"></p></div>
-      <nav class="footer-links"><a href="/produtos/">AutoFlux + MADG</a><a href="/portfolio/" data-t="navPortfolio"></a><a href="/diagnostico/">Diagnóstico</a><a href="/contato/" data-t="navContact"></a><a href="https://www.instagram.com/geusofc/" target="_blank" rel="noopener">Instagram ↗</a><a href="mailto:geussolucoes@gmail.com">E-mail ↗</a></nav></div>
-      <div class="footer-bottom"><span>© ${new Date().getFullYear()} <span data-t="rights"></span></span><span><a href="/politica-de-privacidade/">Privacidade</a> · <a href="/termos-de-uso/">Termos</a></span></div>
-    </div></footer>`;
+      <nav class="footer-links" aria-label="Geus"><a href="/produtos/autoflux/">AutoFlux</a><a href="/produtos/madg/">MADG</a><a href="/produtos/cadia/">CADIA</a><a href="/portfolio/" data-t="navPortfolio"></a><a href="${diagnosticHref}" data-t="audit"></a><a href="/contato/" data-t="navContact"></a><a href="https://www.instagram.com/geusofc/" target="_blank" rel="noopener">Instagram ↗</a><a href="mailto:geussolucoes@gmail.com">E-mail ↗</a></nav></div>
+      <div class="footer-bottom"><span>© ${new Date().getFullYear()} <span data-t="rights"></span></span><span><a href="/politica-de-privacidade/" data-t="privacy"></a> · <a href="/termos-de-uso/" data-t="terms"></a></span></div>
+    </div></div>`;
 };
 
 const applyLanguage = (nextLanguage, persist = true) => {
@@ -63,8 +64,13 @@ const applyLanguage = (nextLanguage, persist = true) => {
   document.querySelectorAll("[data-pt-placeholder][data-en-placeholder]").forEach((node) => {
     node.placeholder = node.dataset[`${language}Placeholder`];
   });
+  document.querySelectorAll("[data-pt-aria-label][data-en-aria-label]").forEach((node) => {
+    node.setAttribute("aria-label", node.dataset[`${language}AriaLabel`]);
+  });
   document.querySelectorAll("[data-lang]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.lang === language)));
-  document.querySelector("[data-menu]")?.setAttribute("aria-label", dictionary[language].menuLabel);
+  const menuButton = document.querySelector("[data-menu]");
+  menuButton?.setAttribute("aria-label", dictionary[language][menuButton.getAttribute("aria-expanded") === "true" ? "closeMenu" : "menuLabel"]);
+  document.querySelectorAll(".desktop-nav, .mobile-menu").forEach((node) => node.setAttribute("aria-label", dictionary[language].navLabel));
   document.querySelectorAll("[data-contact-label]").forEach((node) => node.textContent = language === "pt" ? node.dataset.pt : node.dataset.en);
 };
 
@@ -83,18 +89,40 @@ if (!storedLanguage && !autoLanguage) {
     .catch(() => {});
 }
 
+const setMenuOpen = (open, restoreFocus = false) => {
+  const button = document.querySelector("[data-menu]");
+  const menu = document.getElementById("mobile-menu");
+  if (!button || !menu) return;
+  button.setAttribute("aria-expanded", String(open));
+  button.setAttribute("aria-label", dictionary[language][open ? "closeMenu" : "menuLabel"]);
+  menu.hidden = !open;
+  document.body.classList.toggle("menu-open", open);
+  if (open) menu.querySelector("a")?.focus();
+  else if (restoreFocus) button.focus();
+};
+
 document.addEventListener("click", (event) => {
   const langButton = event.target.closest("[data-lang]");
   if (langButton) applyLanguage(langButton.dataset.lang);
   const menuButton = event.target.closest("[data-menu]");
   if (menuButton) {
-    const menu = document.getElementById("mobile-menu");
     const open = menuButton.getAttribute("aria-expanded") !== "true";
-    menuButton.setAttribute("aria-expanded", String(open));
-    menu.hidden = !open;
-    document.body.classList.toggle("menu-open", open);
+    setMenuOpen(open);
   }
+  if (event.target.closest(".mobile-menu a")) setMenuOpen(false);
 });
+
+document.addEventListener("keydown", (event) => {
+  if (!document.body.classList.contains("menu-open")) return;
+  if (event.key === "Escape") setMenuOpen(false, true);
+  if (event.key !== "Tab") return;
+  const controls = Array.from(document.querySelectorAll(".site-header a, .site-header button, .mobile-menu a")).filter((node) => node.getClientRects().length);
+  const first = controls[0];
+  const last = controls[controls.length - 1];
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+});
+matchMedia("(min-width: 981px)").addEventListener("change", (event) => { if (event.matches) setMenuOpen(false); });
 
 const reveal = document.querySelectorAll(".reveal");
 if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -103,6 +131,8 @@ if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: re
 } else reveal.forEach((node) => node.classList.add("is-visible"));
 
 document.querySelectorAll("[data-diagnostic-form]").forEach((form) => {
+  // Validate the visible step ourselves; native submit cannot focus hidden fields.
+  form.noValidate = true;
   const steps = Array.from(form.querySelectorAll("[data-form-step]"));
   const progress = Array.from(form.querySelectorAll("[data-progress]"));
   const previousButton = form.querySelector("[data-form-prev]");
@@ -134,21 +164,39 @@ document.querySelectorAll("[data-diagnostic-form]").forEach((form) => {
     return false;
   };
 
-  const requestedProduct = new URLSearchParams(window.location.search).get("produto");
+  const query = new URLSearchParams(window.location.search);
+  const requestedProduct = query.get("produto");
+  const needField = form.querySelector('[name="Necessidade"]');
+  const cadiaFields = form.querySelector("[data-cadia-fields]");
+  const modeField = form.querySelector('[name="Autonomia CADIA"]');
+  const contextualNodes = Array.from(document.querySelectorAll("[data-autoflux-pt], [data-cadia-pt]"));
+  contextualNodes.forEach((node) => { node.dataset.basePt = node.dataset.pt; node.dataset.baseEn = node.dataset.en; });
+
+  const syncProductContext = () => {
+    const product = needField?.value;
+    const cadiaSelected = product === "cadia";
+    document.body.classList.toggle("diagnostic-cadia", cadiaSelected);
+    document.body.classList.toggle("diagnostic-autoflux", product === "autoflux");
+    contextualNodes.forEach((node) => {
+      const context = product === "cadia" || product === "autoflux" ? product : "base";
+      node.dataset.pt = node.dataset[`${context}Pt`] || node.dataset.basePt;
+      node.dataset.en = node.dataset[`${context}En`] || node.dataset.baseEn;
+    });
+    if (cadiaFields) {
+      cadiaFields.hidden = !cadiaSelected;
+      cadiaFields.querySelectorAll("input, select").forEach((field) => { field.disabled = !cadiaSelected; });
+    }
+    applyLanguage(language, false);
+  };
+
   if (requestedProduct) {
-    const needField = form.querySelector('[name="Necessidade"]');
     if (needField && Array.from(needField.options).some((option) => option.value === requestedProduct)) {
       needField.value = requestedProduct;
     }
     if (requestedProduct === "autoflux") {
-      document.body.classList.add("diagnostic-autoflux");
-      document.querySelectorAll("[data-autoflux-pt][data-autoflux-en]").forEach((node) => {
-        node.dataset.pt = node.dataset.autofluxPt;
-        node.dataset.en = node.dataset.autofluxEn;
-      });
       const segmentField = form.querySelector('[name="Segmento"]');
       if (segmentField && !segmentField.value) segmentField.value = language === "pt" ? "Automotivo / loja de veículos" : "Automotive / vehicle dealership";
-      const plan = new URLSearchParams(window.location.search).get("plano");
+      const plan = query.get("plano");
       if (plan) {
         const planField = document.createElement("input");
         planField.type = "hidden";
@@ -156,30 +204,46 @@ document.querySelectorAll("[data-diagnostic-form]").forEach((form) => {
         planField.value = plan.toUpperCase();
         form.append(planField);
       }
-      applyLanguage(language, false);
     }
   }
+  if (requestedProduct === "cadia" && modeField && ["assistida", "supervisionada", "autonoma"].includes(query.get("modo"))) {
+    modeField.value = query.get("modo");
+  }
+  needField?.addEventListener("change", syncProductContext);
+  syncProductContext();
+
+  const focusStep = () => {
+    const legend = steps[currentStep].querySelector("legend");
+    if (legend) { legend.tabIndex = -1; legend.focus({ preventScroll: true }); }
+    form.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  };
 
   nextButton?.addEventListener("click", () => {
     if (!validateCurrentStep()) return;
     showStep(currentStep + 1);
-    form.scrollIntoView({ behavior: "smooth", block: "center" });
+    focusStep();
   });
 
   previousButton?.addEventListener("click", () => {
     showStep(currentStep - 1);
-    form.scrollIntoView({ behavior: "smooth", block: "center" });
+    focusStep();
   });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!validateCurrentStep() || !form.reportValidity()) return;
+    if (!validateCurrentStep()) return;
+    if (currentStep < steps.length - 1) { showStep(currentStep + 1); focusStep(); return; }
+    const invalidStep = steps.findIndex((step) => Array.from(step.querySelectorAll("input, select, textarea")).some((field) => !field.checkValidity()));
+    if (invalidStep !== -1) { showStep(invalidStep); focusStep(); validateCurrentStep(); return; }
     const data = new FormData(form);
     const lines = language === "pt"
       ? ["Olá! Preenchi o diagnóstico estratégico da Geus."]
       : ["Hi! I completed the Geus strategic audit."];
     for (const [key, value] of data.entries()) {
-      if (String(value).trim()) lines.push(`${key}: ${value}`);
+      if (key === "Plano AutoFlux" && needField?.value !== "autoflux") continue;
+      const field = form.elements.namedItem(key);
+      const displayValue = field?.tagName === "SELECT" ? field.selectedOptions[0]?.textContent : value;
+      if (String(value).trim()) lines.push(`${key}: ${String(displayValue).trim()}`);
     }
     const url = `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener");
@@ -187,8 +251,14 @@ document.querySelectorAll("[data-diagnostic-form]").forEach((form) => {
     if (success) {
       success.hidden = false;
       success.textContent = language === "pt"
-        ? "Diagnóstico preparado. Abrimos o WhatsApp para você enviar."
-        : "Audit prepared. WhatsApp is open for you to send it.";
+        ? "Diagnóstico preparado. Revise e envie sua mensagem no WhatsApp. "
+        : "Assessment prepared. Review and send your message on WhatsApp. ";
+      const sendLink = document.createElement("a");
+      sendLink.href = url;
+      sendLink.target = "_blank";
+      sendLink.rel = "noopener";
+      sendLink.textContent = language === "pt" ? "Abrir WhatsApp ↗" : "Open WhatsApp ↗";
+      success.append(sendLink);
     }
   });
 

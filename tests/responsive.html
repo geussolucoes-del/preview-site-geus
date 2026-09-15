@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Geus — QA responsivo</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px system-ui,sans-serif; background: #e6e6e6; color: #161616; }
+    header { padding: 12px 20px; background: white; border-bottom: 1px solid #bbb; }
+    h1 { margin: 0 0 10px; font-size: 18px; }
+    form { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+    label { display: grid; gap: 4px; }
+    select, input, button { min-height: 36px; font: inherit; }
+    input { width: 100px; }
+    button { padding-inline: 12px; }
+    main { padding: 16px; overflow: auto; }
+    iframe { display: block; max-width: none; margin-inline: auto; border: 0; background: #09090b; }
+    output { display: block; margin-top: 12px; white-space: pre-wrap; font: 12px/1.5 ui-monospace,monospace; }
+    p { margin: 8px 0 0; font-size: 12px; color: #555; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Geus / Curadoria responsiva</h1>
+    <form id="controls">
+      <label>Página<select id="route"><option value="/produtos/cadia/">CADIA</option><option value="/produtos/">Produtos</option><option value="/">Home</option><option value="/diagnostico/?produto=cadia&amp;modo=autonoma">Diagnóstico CADIA</option><option value="/produtos/autoflux/">AutoFlux</option><option value="/produtos/madg/">MADG</option></select></label>
+      <label>Largura<input id="width" type="number" min="280" max="1920" value="390"></label>
+      <label>Altura<input id="height" type="number" min="400" max="1500" value="844"></label>
+      <button type="submit">Aplicar viewport</button>
+      <button type="button" id="inspect">Verificar layout</button>
+      <button type="button" id="matrix">Testar 7 larguras</button>
+    </form>
+    <p>Ferramenta de QA, fora da navegação e do sitemap. Viewports de layout em iframe; não substitui teste em dispositivos físicos. Não envia mensagens.</p>
+    <output id="result" aria-live="polite">Carregando…</output>
+  </header>
+  <main><iframe id="preview" title="Preview responsivo da Geus" width="390" height="844" src="/produtos/cadia/"></iframe></main>
+  <script>
+    const preview = document.getElementById('preview');
+    const result = document.getElementById('result');
+    const width = document.getElementById('width');
+    const height = document.getElementById('height');
+    const route = document.getElementById('route');
+    const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const measure = () => {
+      const doc = preview.contentDocument;
+      const viewport = doc.documentElement.clientWidth;
+      const overflows = [...doc.querySelectorAll('main *')].filter(node => {
+        const box = node.getBoundingClientRect();
+        return box.width > 0 && (box.right > viewport + 1 || box.left < -1);
+      }).map(node => node.tagName.toLowerCase() + (node.className ? '.' + String(node.className).trim().replaceAll(' ', '.') : ''));
+      return { width: viewport, language: doc.documentElement.lang, overflow: [...new Set(overflows)], h1: doc.querySelectorAll('h1').length, brokenImages: [...doc.images].filter(img => img.complete && !img.naturalWidth).length };
+    };
+    const inspect = () => { result.textContent = JSON.stringify(measure()); };
+    preview.addEventListener('load', inspect);
+    document.getElementById('inspect').addEventListener('click', inspect);
+    document.getElementById('controls').addEventListener('submit', async event => {
+      event.preventDefault();
+      preview.width = width.value;
+      preview.height = height.value;
+      if (new URL(preview.src).pathname + new URL(preview.src).search !== route.value) preview.src = route.value;
+      else { await settle(); inspect(); }
+    });
+    document.getElementById('matrix').addEventListener('click', async event => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      const original = preview.width;
+      const reports = [];
+      try {
+        await preview.contentDocument.fonts.ready;
+        for (const size of [320, 360, 390, 768, 1024, 1280, 1440]) {
+          preview.width = size;
+          await settle();
+          reports.push(measure());
+        }
+        result.textContent = reports.map(report => JSON.stringify(report)).join('\n');
+      } finally { preview.width = original; button.disabled = false; }
+    });
+  </script>
+</body>
+</html>

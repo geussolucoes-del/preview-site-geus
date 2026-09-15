@@ -1,0 +1,204 @@
+/* CADIA — native Geus typography, palette and editorial rhythm. */
+.cadia-page { --cadia-rule: rgba(17,17,20,.18); }
+.cadia-page h1, .cadia-page h2, .cadia-page h3 { text-wrap: balance; }
+.cadia-page p { text-wrap: pretty; }
+.cadia-page .section-title { font-size: clamp(2.45rem, 4.5vw, 4.7rem); line-height: 1.02; letter-spacing: -.035em; }
+.cadia-page .section-head { grid-template-columns: minmax(0,1fr) minmax(280px,.53fr); gap: clamp(2rem,6vw,6rem); }
+.cadia-page .section-paper .section-copy { color: #57535e; }
+.cadia-page .section-paper :focus-visible { outline-color: var(--violet-deep); }
+.cadia-hero { padding-top: calc(var(--header) + 2rem); }
+.cadia-masthead { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .7rem; }
+.cadia-masthead a { display: inline-flex; align-items: center; min-height: 44px; }
+.cadia-masthead a:hover { color: var(--lime); }
+.cadia-masthead > span { align-self: center; text-transform: uppercase; letter-spacing: .04em; }
+.cadia-hero-grid { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(340px,.8fr); align-items: center; gap: clamp(2rem,6vw,7rem); padding: clamp(2rem,5vw,5rem) 0; }
+.cadia-hero .eyebrow { margin-bottom: 1.7rem; }
+.cadia-wordmark { display: flex; align-items: flex-start; width: fit-content; gap: .08em; margin: 0 0 1.7rem; color: var(--violet); font-size: clamp(5.5rem,11vw,10.7rem); font-weight: 800; line-height: .78; letter-spacing: -.075em; }
+.cadia-wordmark > span { padding-top: .1em; font-size: .32em; font-weight: 400; letter-spacing: 0; }
+.cadia-hero h1 { max-width: 620px; margin: 0; font-size: clamp(2.25rem,3.6vw,3.65rem); font-weight: 750; line-height: 1.04; letter-spacing: -.04em; }
+.cadia-hero-promise { max-width: 570px; margin: 1.35rem 0 0; color: #c4c1ca; font-size: clamp(1rem,1.3vw,1.15rem); line-height: 1.7; }
+.cadia-hero .button-row { margin-top: 1.8rem; }
+.cadia-definition { max-width: 470px; margin: 1.2rem 0 0; color: var(--muted); font-size: .71rem; line-height: 1.6; }
+.cadia-signal { position: relative; min-width: 0; margin: 0; padding: 0 1.5rem 1rem; border: 1px solid var(--line); background: var(--surface); }
+.cadia-signal::before { position: absolute; top: -1px; left: -1px; width: 64px; height: 3px; background: var(--violet); content: ""; }
+.cadia-signal-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; padding: 1.15rem 0; border-bottom: 1px solid var(--line); font-size: .64rem; font-weight: 650; text-transform: uppercase; }
+.cadia-demo-label { color: var(--muted); font-size: .6rem; }
+.cadia-message { margin-top: 1.5rem; padding: 1.15rem; border: 1px solid var(--line); background: var(--surface-2); }
+.cadia-message > span { color: var(--violet); font-size: .63rem; font-weight: 700; text-transform: uppercase; }
+.cadia-message p { margin: .65rem 0 0; font-size: 1.1rem; line-height: 1.5; letter-spacing: -.02em; }
+.cadia-signal-track { margin: 0; padding: .4rem 0; list-style: none; }
+.cadia-signal-track li { position: relative; display: grid; grid-template-columns: 12px minmax(0,1fr) 16px; align-items: center; gap: .9rem; padding: 1rem .15rem; }
+.cadia-signal-track li:not(:last-child)::after { position: absolute; top: calc(50% + 8px); bottom: calc(-50% + 8px); left: 8px; width: 1px; background: var(--line); content: ""; }
+.cadia-track-dot { width: 12px; height: 12px; border: 1px solid var(--violet); border-radius: 50%; background: var(--surface); }
+.cadia-signal-track strong { display: block; font-size: .8rem; font-weight: 650; }
+.cadia-signal-track small { display: block; margin-top: .4rem; color: var(--muted); font-size: .69rem; line-height: 1.4; }
+.cadia-signal-track li > span:last-child { color: var(--violet); }
+.cadia-signal-outcome { display: grid; grid-template-columns: minmax(0,1fr) 30px; gap: .6rem 1rem; padding: 1.2rem; border: 1px solid rgba(201,255,79,.4); background: #1a2112; }
+.cadia-signal-outcome > span:first-child { color: var(--lime); font-size: .63rem; text-transform: uppercase; }
+.cadia-signal-outcome strong { grid-column: 1; max-width: 260px; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.025em; }
+.cadia-outcome-arrow { grid-area: 1 / 2 / 3 / 3; align-self: center; color: var(--lime); font-size: 2.1rem; }
+.cadia-signal-note { margin: .9rem 0 0; color: var(--muted); font-size: .66rem; line-height: 1.6; }
+.cadia-page-nav { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border-top: 1px solid var(--line); }
+.cadia-page-nav a { display: flex; align-items: center; gap: 1rem; min-height: 66px; padding: .7rem 1rem; font-size: .72rem; }
+.cadia-page-nav a:first-child { padding-left: 0; }
+.cadia-page-nav a + a { border-left: 1px solid var(--line); }
+.cadia-page-nav span { color: var(--violet); font-size: .63rem; }
+.cadia-page-nav b { font-weight: 500; }
+.cadia-page-nav a:hover { color: var(--lime); background: var(--surface); }
+.cadia-journey-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); margin: 0; padding: 0; border-top: 1px solid var(--cadia-rule); border-bottom: 1px solid var(--cadia-rule); list-style: none; }
+.cadia-journey-grid li { min-width: 0; padding: 1.5rem; }
+.cadia-journey-grid li:first-child { padding-left: 0; }
+.cadia-journey-grid li + li { border-left: 1px solid var(--cadia-rule); }
+.cadia-journey-grid li > span { color: var(--violet-deep); font-size: .68rem; font-weight: 700; text-transform: uppercase; }
+.cadia-journey-grid h3 { min-height: 2.4em; margin: 3.4rem 0 1rem; font-size: clamp(1.2rem,1.8vw,1.65rem); line-height: 1.15; letter-spacing: -.025em; }
+.cadia-journey-grid p { margin: 0; color: #57535e; font-size: .88rem; line-height: 1.65; }
+.cadia-journey-foot { display: flex; align-items: center; gap: 1rem; max-width: 830px; margin-top: 1.5rem; }
+.cadia-journey-foot > span { color: var(--violet-deep); font-size: 2rem; }
+.cadia-journey-foot p { margin: 0; color: #57535e; font-size: .86rem; line-height: 1.6; }
+.cadia-mode-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border: 1px solid var(--line); }
+.cadia-mode { display: flex; flex-direction: column; min-width: 0; padding: clamp(1.25rem,2.5vw,2.5rem); }
+.cadia-mode + .cadia-mode { border-left: 1px solid var(--line); }
+.cadia-mode-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.75rem; color: var(--muted); font-size: .7rem; }
+.cadia-level { display: flex; align-items: end; gap: 5px; height: 24px; }
+.cadia-level i { width: 8px; background: #3c3942; }
+.cadia-level i:nth-child(1) { height: 10px; background: var(--violet); }
+.cadia-level i:nth-child(2) { height: 17px; }
+.cadia-level i:nth-child(3) { height: 24px; }
+.cadia-mode:nth-child(2) .cadia-level i:nth-child(2) { background: var(--violet); }
+.cadia-mode:nth-child(3) .cadia-level i { background: var(--lime); }
+.cadia-mode .cadia-mode-role { margin: 0 0 .75rem; color: var(--violet); font-size: .65rem; font-weight: 700; text-transform: uppercase; }
+.cadia-mode h3 { margin: 0 0 1.25rem; font-size: clamp(1.35rem,2.2vw,2rem); line-height: 1.14; letter-spacing: -.025em; }
+.cadia-mode > p { margin: 0; color: var(--muted); font-size: .87rem; line-height: 1.65; }
+.cadia-mode ul { flex: 1; margin: 1.75rem 0; padding: 0; list-style: none; }
+.cadia-mode li { position: relative; padding: .75rem 0 .75rem 1rem; border-top: 1px solid var(--line); color: #d8d5df; font-size: .8rem; line-height: 1.5; }
+.cadia-mode li::before { position: absolute; top: 1.1rem; left: 0; width: 4px; height: 4px; background: var(--violet); content: ""; }
+.cadia-mode-result { min-height: 105px; margin-bottom: 1rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.cadia-mode-result span { display: block; margin-bottom: .65rem; color: var(--muted); font-size: .62rem; text-transform: uppercase; }
+.cadia-mode-result strong { display: block; font-size: 1.05rem; line-height: 1.4; font-weight: 600; }
+.cadia-mode .arrow-link { min-height: 44px; font-size: .74rem; line-height: 1.5; }
+.cadia-mode-autonomous { background: #17131e; box-shadow: inset 0 3px var(--violet); }
+.cadia-mode-autonomous .cadia-mode-role, .cadia-mode-autonomous .arrow-link { color: var(--lime); }
+.cadia-mode-note { max-width: 800px; margin: 1.5rem 0 0; color: var(--muted); font-size: .8rem; line-height: 1.65; }
+.cadia-governance { background: var(--surface); }
+.cadia-split { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.95fr); gap: clamp(2.5rem,8vw,8rem); align-items: start; }
+.cadia-split > div > .section-copy { margin-top: 1.5rem; }
+.cadia-rules { border-top: 1px solid var(--line); }
+.cadia-rules article { display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
+.cadia-rules article > span { color: var(--lime); font-size: .65rem; }
+.cadia-rules h3 { margin: 0 0 .6rem; font-size: 1.15rem; }
+.cadia-rules p { margin: 0; color: var(--muted); font-size: .87rem; line-height: 1.65; }
+.cadia-connections { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); border: 1px solid var(--cadia-rule); }
+.cadia-connection-core { position: relative; display: flex; flex-direction: column; min-height: 380px; padding: clamp(1.5rem,3vw,3rem); background: var(--violet-deep); color: white; }
+.cadia-connection-core > span:first-child { color: var(--lime); font-size: .67rem; font-weight: 700; }
+.cadia-connection-core strong { max-width: 350px; margin: auto 0 1.2rem; padding-top: 2.5rem; font-size: clamp(1.8rem,3vw,3rem); line-height: 1.03; letter-spacing: -.035em; text-wrap: balance; }
+.cadia-connection-core p { max-width: 350px; margin: 0; font-size: .87rem; line-height: 1.7; }
+.cadia-core-arrow { position: absolute; top: 1.2rem; right: 1.5rem; color: var(--lime); font-size: 2rem; }
+.cadia-connection-list article { display: grid; grid-template-columns: 25px minmax(0,1fr); gap: 1rem; padding: 1.5rem 2rem; }
+.cadia-connection-list article + article { border-top: 1px solid var(--cadia-rule); }
+.cadia-connection-list article > span { color: var(--violet-deep); font-size: .65rem; }
+.cadia-connection-list h3 { margin: 0 0 .5rem; font-size: 1.25rem; }
+.cadia-connection-list p { margin: 0; color: #57535e; font-size: .87rem; line-height: 1.6; }
+.cadia-integration-note { max-width: 950px; margin: 1.25rem 0 0; color: #57535e; font-size: .76rem; line-height: 1.65; }
+.cadia-ecosystem { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 2rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--cadia-rule); }
+.cadia-ecosystem p { flex: 1 1 260px; margin: 0; color: #57535e; font-size: .85rem; line-height: 1.6; }
+.cadia-ecosystem a { display: inline-flex; align-items: center; min-height: 44px; color: var(--violet-deep); font-size: .72rem; font-weight: 650; }
+.cadia-ecosystem a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.cadia-delivery { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.cadia-delivery li { padding: 1.5rem 1.5rem 1.5rem 0; }
+.cadia-delivery li + li { padding-left: 1.5rem; border-left: 1px solid var(--line); }
+.cadia-delivery span { color: var(--violet); font-size: .7rem; }
+.cadia-delivery h3 { margin: 2rem 0 .8rem; font-size: 1.25rem; }
+.cadia-delivery p { margin: 0; color: var(--muted); font-size: .87rem; line-height: 1.65; }
+.cadia-offer { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.75fr); align-items: center; gap: 2.5rem 4rem; margin-top: 4rem; padding: clamp(1.5rem,4vw,4rem); border: 1px solid var(--line); border-top: 3px solid var(--violet); background: var(--surface); }
+.cadia-offer h3 { margin: 2rem 0 0; }
+.cadia-offer h3 > span { display: block; color: #d0ccd6; font-size: 1rem; font-weight: 500; }
+.cadia-offer h3 strong { display: block; margin-top: .65rem; font-size: clamp(3rem,5.5vw,5.8rem); font-weight: 750; line-height: 1; letter-spacing: -.045em; }
+.cadia-offer-context p { margin: 0 0 1rem; font-size: 1rem; line-height: 1.65; }
+.cadia-offer-context small { display: block; color: var(--muted); font-size: .75rem; line-height: 1.65; }
+.cadia-offer .button { margin-top: 1.5rem; }
+.cadia-faq { padding-top: 0; border-top: 0; }
+.cadia-faq .section-title { font-size: clamp(2.3rem,3.5vw,3.7rem); }
+.cadia-faq-list { border-top: 1px solid var(--line); }
+.cadia-faq details { border-bottom: 1px solid var(--line); }
+.cadia-faq summary { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 70px; padding: 1.25rem 0; cursor: pointer; font-size: .95rem; font-weight: 600; line-height: 1.5; list-style: none; }
+.cadia-faq summary::-webkit-details-marker { display: none; }
+.cadia-faq summary b { flex: 0 0 auto; color: var(--violet); font-size: 1.5rem; font-weight: 400; transition: transform .2s; }
+.cadia-faq details[open] summary b { transform: rotate(45deg); }
+.cadia-faq details p { margin: 0 0 1.5rem; color: var(--muted); font-size: .88rem; line-height: 1.7; }
+.cadia-final h2 { max-width: 1050px; font-size: clamp(3rem,7.2vw,7rem); line-height: .98; letter-spacing: -.045em; }
+.cadia-final p:not(.section-kicker) { max-width: 630px; margin: 1.75rem 0 0; line-height: 1.7; }
+.cadia-final .button:first-child { background: var(--bg); color: var(--lime); }
+.cadia-final .button:hover { background: var(--paper); color: var(--bg); }
+.cadia-final :focus-visible { outline-color: var(--bg); }
+
+@media (max-width: 1100px) {
+  .cadia-hero-grid { gap: 2rem; grid-template-columns: minmax(0,1fr) minmax(320px,.85fr); }
+  .cadia-hero .button-row { flex-direction: column; align-items: flex-start; }
+  .cadia-hero .button { min-width: 245px; }
+  .cadia-journey-grid, .cadia-delivery { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .cadia-journey-grid li:nth-child(3), .cadia-delivery li:nth-child(3) { border-left: 0; padding-left: 0; }
+  .cadia-journey-grid li:nth-child(n+3) { border-top: 1px solid var(--cadia-rule); }
+  .cadia-delivery li:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .cadia-journey-grid h3 { min-height: 0; margin-top: 2rem; }
+}
+@media (max-width: 800px) {
+  .cadia-page .section-head, .cadia-hero-grid, .cadia-split { grid-template-columns: 1fr; }
+  .cadia-hero-grid { gap: 2.5rem; }
+  .cadia-hero .button-row { flex-direction: row; }
+  .cadia-hero .button { min-width: 0; }
+  .cadia-wordmark { font-size: clamp(5.5rem,18vw,9rem); }
+  .cadia-signal { max-width: 650px; width: 100%; }
+  .cadia-mode-grid { grid-template-columns: 1fr; }
+  .cadia-mode + .cadia-mode { border-left: 0; border-top: 1px solid var(--line); }
+  .cadia-mode { padding: 1.75rem; }
+  .cadia-mode-top { margin-bottom: 1.75rem; }
+  .cadia-mode h3 { font-size: 2rem; }
+  .cadia-mode-result { min-height: 0; }
+  .cadia-connections { grid-template-columns: 1fr; }
+  .cadia-connection-core { min-height: 300px; }
+  .cadia-offer { grid-template-columns: 1fr; }
+  .cadia-offer h3 strong { font-size: 4.5rem; }
+}
+@media (max-width: 480px) {
+  .cadia-hero { padding-top: calc(var(--header) + .65rem); }
+  .cadia-masthead > span { max-width: 140px; font-size: .57rem; text-align: right; line-height: 1.5; }
+  .cadia-hero-grid { padding-top: 1.75rem; }
+  .cadia-hero .eyebrow { margin-bottom: 1.5rem; }
+  .cadia-wordmark { font-size: 20vw; margin-bottom: 1.3rem; }
+  .cadia-hero h1 { font-size: 2.2rem; }
+  .cadia-hero-promise { font-size: .98rem; margin-top: 1rem; }
+  .cadia-hero .button-row { display: grid; grid-template-columns: 1fr; }
+  .cadia-hero .button { min-height: 52px; }
+  .cadia-definition { font-size: .66rem; }
+  .cadia-signal { padding-inline: 1rem; }
+  .cadia-message { padding: 1rem; }
+  .cadia-message p { font-size: 1rem; }
+  .cadia-signal-head { font-size: .61rem; }
+  .cadia-demo-label { font-size: .54rem; }
+  .cadia-page-nav { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .cadia-page-nav a { min-height: 56px; gap: .7rem; }
+  .cadia-page-nav a:nth-child(3) { border-left: 0; padding-left: 0; }
+  .cadia-page-nav a:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .cadia-page .section { padding-block: 4rem; }
+  .cadia-page .section-head { margin-bottom: 2.25rem; }
+  .cadia-page .section-title { font-size: clamp(2.05rem,8.5vw,2.55rem); }
+  .cadia-journey-grid, .cadia-delivery { grid-template-columns: 1fr; }
+  .cadia-journey-grid li, .cadia-delivery li { padding: 1.5rem 0; }
+  .cadia-journey-grid li + li { border-left: 0; border-top: 1px solid var(--cadia-rule); }
+  .cadia-journey-grid h3 { margin-top: 1.25rem; font-size: 1.55rem; }
+  .cadia-mode { padding: 1.35rem; }
+  .cadia-mode h3 { font-size: clamp(1.55rem,7vw,2rem); }
+  .cadia-rules article { grid-template-columns: 24px minmax(0,1fr); gap: .65rem; }
+  .cadia-connection-list article { padding: 1.5rem 1.2rem; gap: .65rem; }
+  .cadia-connection-list h3 { font-size: 1.1rem; }
+  .cadia-delivery li + li { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+  .cadia-delivery h3 { margin-top: 1rem; }
+  .cadia-offer { margin-top: 2.5rem; padding: 1.35rem; }
+  .cadia-offer h3 strong { font-size: clamp(2.8rem,12vw,4.5rem); }
+  .cadia-offer .button { width: 100%; }
+  .cadia-page .cadia-faq { padding-top: 0; }
+  .cadia-final .button-row { display: grid; grid-template-columns: 1fr; }
+}
+
+/* The content stays available if scripts or motion are disabled. */
+.cadia-page .reveal { opacity: 1; transform: none; }
