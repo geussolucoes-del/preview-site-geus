@@ -729,3 +729,27 @@ html[lang="en"] .contact-whatsapp .contact-badge, html[lang="en"] .contact-whats
 }
 .portfolio-section .project-body > div { min-width: 0; }
 .portfolio-section .project-foot a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* Narrow layouts and one shared diagnostic across all product journeys. */
+.hero-grid > *, .page-hero-grid > *, .section-head > *, .form-layout > *, .mission-index, .field { min-width: 0; }
+.display, .section-title, .contact-section-head h2 { overflow-wrap: anywhere; text-wrap: balance; }
+.mission-index { gap: 1rem; flex-wrap: wrap; }
+[data-diagnostic-mount], .diagnostic-branch { min-width: 0; }
+.form-panel [hidden] { display: none !important; }
+.form-step > .field, .diagnostic-branch > .field { margin-bottom: 1.2rem; }
+.field input, .field select, .field textarea { min-width: 0; max-width: 100%; font-size: 16px; color: var(--text, #f4f2f6); }
+.field [aria-invalid="true"] { border-color: #f8a6a6; }
+.diagnostic-consent { display: flex; align-items: flex-start; gap: .7rem; margin: 1.5rem 0 .6rem; font-size: .85rem; line-height: 1.5; }
+.diagnostic-consent input { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px; accent-color: var(--violet); }
+.diagnostic-review { overflow-wrap: anywhere; }
+.diagnostic-review dt { margin-top: 1.2rem; color: var(--muted); font-size: .8rem; }
+.diagnostic-review dd { margin: .3rem 0 0; white-space: pre-wrap; line-height: 1.5; }
+.diagnostic-review > .button { margin: 1rem .5rem 0 0; }
+.form-panel .button { white-space: normal; text-align: center; }
+.form-panel > a, .form-step > a { text-decoration: underline; }
+@media (max-width: 380px) {
+  .display { font-size: clamp(2rem, 10vw, 3rem); }
+  .section-title, .contact-section-head h2 { font-size: 2rem; }
+  .form-actions { grid-template-columns: 1fr; }
+  .diagnostic-review > .button { display: flex; width: 100%; margin-right: 0; }
+}

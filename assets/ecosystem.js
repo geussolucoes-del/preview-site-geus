@@ -1,8 +1,10 @@
 const LANG_KEY = "geus_language";
 const AUTO_LANG_KEY = "geus_auto_language";
 const isPortuguese = (navigator.language || "").toLowerCase().startsWith("pt");
-const storedLanguage = localStorage.getItem(LANG_KEY);
-const autoLanguage = sessionStorage.getItem(AUTO_LANG_KEY);
+const safeGet = (type, key) => { try { return window[type].getItem(key); } catch { return null; } };
+const safeSet = (type, key, value) => { try { window[type].setItem(key, value); } catch {} };
+const storedLanguage = safeGet("localStorage", LANG_KEY);
+const autoLanguage = safeGet("sessionStorage", AUTO_LANG_KEY);
 let language = storedLanguage || autoLanguage || (isPortuguese ? "pt" : "en");
 
 const dictionary = {
@@ -17,7 +19,8 @@ const dictionary = {
 };
 
 const currentPath = location.pathname.replace(/\/$/, "") || "/";
-const diagnosticHref = currentPath === "/produtos/cadia" ? "/diagnostico/?produto=cadia" : "/diagnostico/";
+const activeProduct = ["autoflux", "madg", "cadia"].find(product => currentPath === `/produtos/${product}`);
+const diagnosticHref = activeProduct ? `/diagnostico/?produto=${activeProduct}` : "/diagnostico/";
 const navCurrent = (path) => currentPath === path || (path !== "/" && currentPath.startsWith(path));
 
 const renderChrome = () => {
@@ -52,7 +55,7 @@ const renderChrome = () => {
 
 const applyLanguage = (nextLanguage, persist = true) => {
   language = nextLanguage;
-  if (persist) localStorage.setItem(LANG_KEY, language);
+  if (persist) safeSet("localStorage", LANG_KEY, language);
   document.documentElement.lang = language === "pt" ? "pt-BR" : "en";
   document.querySelectorAll("[data-t]").forEach((node) => {
     const text = dictionary[language][node.dataset.t];
@@ -71,6 +74,10 @@ const applyLanguage = (nextLanguage, persist = true) => {
   const menuButton = document.querySelector("[data-menu]");
   menuButton?.setAttribute("aria-label", dictionary[language][menuButton.getAttribute("aria-expanded") === "true" ? "closeMenu" : "menuLabel"]);
   document.querySelectorAll(".desktop-nav, .mobile-menu").forEach((node) => node.setAttribute("aria-label", dictionary[language].navLabel));
+  document.querySelectorAll("[data-whatsapp-pt][data-whatsapp-en]").forEach((node) => {
+    node.href = `https://wa.me/5533998347871?text=${encodeURIComponent(node.dataset[language === "pt" ? "whatsappPt" : "whatsappEn"])}`;
+  });
+  document.dispatchEvent(new CustomEvent("geus:language", { detail: language }));
   document.querySelectorAll("[data-contact-label]").forEach((node) => node.textContent = language === "pt" ? node.dataset.pt : node.dataset.en);
 };
 
@@ -81,8 +88,8 @@ if (!storedLanguage && !autoLanguage) {
   fetch("/api/locale", { headers: { Accept: "application/json" } })
     .then((response) => response.ok ? response.json() : null)
     .then((locale) => {
-      if (locale?.language && !localStorage.getItem(LANG_KEY)) {
-        sessionStorage.setItem(AUTO_LANG_KEY, locale.language);
+      if (locale?.language && !safeGet("localStorage", LANG_KEY)) {
+        safeSet("sessionStorage", AUTO_LANG_KEY, locale.language);
         applyLanguage(locale.language, false);
       }
     })
@@ -130,137 +137,5 @@ if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: re
   reveal.forEach((node) => observer.observe(node));
 } else reveal.forEach((node) => node.classList.add("is-visible"));
 
-document.querySelectorAll("[data-diagnostic-form]").forEach((form) => {
-  // Validate the visible step ourselves; native submit cannot focus hidden fields.
-  form.noValidate = true;
-  const steps = Array.from(form.querySelectorAll("[data-form-step]"));
-  const progress = Array.from(form.querySelectorAll("[data-progress]"));
-  const previousButton = form.querySelector("[data-form-prev]");
-  const nextButton = form.querySelector("[data-form-next]");
-  const submitButton = form.querySelector("[data-form-submit]");
-  const stepLabel = form.querySelector("[data-form-step-label]");
-  let currentStep = 0;
-
-  const showStep = (index) => {
-    currentStep = Math.max(0, Math.min(index, steps.length - 1));
-    steps.forEach((step, stepIndex) => {
-      const active = stepIndex === currentStep;
-      step.hidden = !active;
-      step.classList.toggle("is-active", active);
-    });
-    progress.forEach((item, stepIndex) => item.classList.toggle("is-active", stepIndex <= currentStep));
-    previousButton.hidden = currentStep === 0;
-    nextButton.hidden = currentStep === steps.length - 1;
-    submitButton.hidden = currentStep !== steps.length - 1;
-    form.dataset.step = String(currentStep);
-    if (stepLabel) stepLabel.textContent = `${currentStep + 1} / ${steps.length}`;
-  };
-
-  const validateCurrentStep = () => {
-    const fields = Array.from(steps[currentStep].querySelectorAll("input, select, textarea"));
-    const invalidField = fields.find((field) => !field.checkValidity());
-    if (!invalidField) return true;
-    invalidField.reportValidity();
-    return false;
-  };
-
-  const query = new URLSearchParams(window.location.search);
-  const requestedProduct = query.get("produto");
-  const needField = form.querySelector('[name="Necessidade"]');
-  const cadiaFields = form.querySelector("[data-cadia-fields]");
-  const modeField = form.querySelector('[name="Autonomia CADIA"]');
-  const contextualNodes = Array.from(document.querySelectorAll("[data-autoflux-pt], [data-cadia-pt]"));
-  contextualNodes.forEach((node) => { node.dataset.basePt = node.dataset.pt; node.dataset.baseEn = node.dataset.en; });
-
-  const syncProductContext = () => {
-    const product = needField?.value;
-    const cadiaSelected = product === "cadia";
-    document.body.classList.toggle("diagnostic-cadia", cadiaSelected);
-    document.body.classList.toggle("diagnostic-autoflux", product === "autoflux");
-    contextualNodes.forEach((node) => {
-      const context = product === "cadia" || product === "autoflux" ? product : "base";
-      node.dataset.pt = node.dataset[`${context}Pt`] || node.dataset.basePt;
-      node.dataset.en = node.dataset[`${context}En`] || node.dataset.baseEn;
-    });
-    if (cadiaFields) {
-      cadiaFields.hidden = !cadiaSelected;
-      cadiaFields.querySelectorAll("input, select").forEach((field) => { field.disabled = !cadiaSelected; });
-    }
-    applyLanguage(language, false);
-  };
-
-  if (requestedProduct) {
-    if (needField && Array.from(needField.options).some((option) => option.value === requestedProduct)) {
-      needField.value = requestedProduct;
-    }
-    if (requestedProduct === "autoflux") {
-      const segmentField = form.querySelector('[name="Segmento"]');
-      if (segmentField && !segmentField.value) segmentField.value = language === "pt" ? "Automotivo / loja de veículos" : "Automotive / vehicle dealership";
-      const plan = query.get("plano");
-      if (plan) {
-        const planField = document.createElement("input");
-        planField.type = "hidden";
-        planField.name = "Plano AutoFlux";
-        planField.value = plan.toUpperCase();
-        form.append(planField);
-      }
-    }
-  }
-  if (requestedProduct === "cadia" && modeField && ["assistida", "supervisionada", "autonoma"].includes(query.get("modo"))) {
-    modeField.value = query.get("modo");
-  }
-  needField?.addEventListener("change", syncProductContext);
-  syncProductContext();
-
-  const focusStep = () => {
-    const legend = steps[currentStep].querySelector("legend");
-    if (legend) { legend.tabIndex = -1; legend.focus({ preventScroll: true }); }
-    form.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-  };
-
-  nextButton?.addEventListener("click", () => {
-    if (!validateCurrentStep()) return;
-    showStep(currentStep + 1);
-    focusStep();
-  });
-
-  previousButton?.addEventListener("click", () => {
-    showStep(currentStep - 1);
-    focusStep();
-  });
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!validateCurrentStep()) return;
-    if (currentStep < steps.length - 1) { showStep(currentStep + 1); focusStep(); return; }
-    const invalidStep = steps.findIndex((step) => Array.from(step.querySelectorAll("input, select, textarea")).some((field) => !field.checkValidity()));
-    if (invalidStep !== -1) { showStep(invalidStep); focusStep(); validateCurrentStep(); return; }
-    const data = new FormData(form);
-    const lines = language === "pt"
-      ? ["Olá! Preenchi o diagnóstico estratégico da Geus."]
-      : ["Hi! I completed the Geus strategic audit."];
-    for (const [key, value] of data.entries()) {
-      if (key === "Plano AutoFlux" && needField?.value !== "autoflux") continue;
-      const field = form.elements.namedItem(key);
-      const displayValue = field?.tagName === "SELECT" ? field.selectedOptions[0]?.textContent : value;
-      if (String(value).trim()) lines.push(`${key}: ${String(displayValue).trim()}`);
-    }
-    const url = `https://wa.me/5533998347871?text=${encodeURIComponent(lines.join("\n"))}`;
-    window.open(url, "_blank", "noopener");
-    const success = form.querySelector("[data-form-success]");
-    if (success) {
-      success.hidden = false;
-      success.textContent = language === "pt"
-        ? "Diagnóstico preparado. Revise e envie sua mensagem no WhatsApp. "
-        : "Assessment prepared. Review and send your message on WhatsApp. ";
-      const sendLink = document.createElement("a");
-      sendLink.href = url;
-      sendLink.target = "_blank";
-      sendLink.rel = "noopener";
-      sendLink.textContent = language === "pt" ? "Abrir WhatsApp ↗" : "Open WhatsApp ↗";
-      success.append(sendLink);
-    }
-  });
-
-  showStep(0);
-});
+// One shared diagnostic powers the home and the dedicated product journeys.
+window.GeusDiagnostic?.mount({ getLanguage: () => language, applyLanguage });

@@ -44,13 +44,11 @@ for (const page of pages) {
   });
 }
 
-test('The three modes carry product and mode to the diagnostic', () => {
+test('The three modes carry product and mode to the shared diagnostic', () => {
   for (const mode of ['assistida', 'supervisionada', 'autonoma']) {
     assert.ok(cadia.includes(`/diagnostico/?produto=cadia&amp;modo=${mode}`));
-    assert.ok(diagnostic.includes(`value="${mode}"`));
+    assert.ok(read('assets/diagnostic.js').includes(mode));
   }
-  assert.match(js, /\["assistida", "supervisionada", "autonoma"\]\.includes\(query.get\("modo"\)\)/);
-  assert.match(js, /field.disabled = !cadiaSelected/);
 });
 
 test('Catalog, home, both forms, footer and sitemap include CADIA', () => {
@@ -59,7 +57,7 @@ test('Catalog, home, both forms, footer and sitemap include CADIA', () => {
     assert.match(read(page), /products-grid-three/);
     assert.match(read(page), /href="\/produtos\/cadia\/"/);
   }
-  for (const page of ['index.html', 'diagnostico/index.html']) assert.match(read(page), /option value="cadia"/);
+  for (const page of ['index.html', 'diagnostico/index.html']) assert.match(read(page), /data-diagnostic-mount/);
   assert.match(js, /href="\/produtos\/cadia\/">CADIA/);
   assert.match(read('sitemap.xml'), /<loc>https:\/\/www.geussolucoes.com\/produtos\/cadia\/<\/loc>/);
 });
@@ -76,8 +74,8 @@ test('The public offer distinguishes implementation, recurring service and scope
 test('Shared JS parses and preserves non-sending WhatsApp preparation', () => {
   assert.doesNotThrow(() => new Script(js));
   assert.match(js, /https:\/\/wa.me\/5533998347871\?text=/);
-  assert.match(js, /encodeURIComponent\(lines.join\("\\n"\)\)/);
-  assert.match(js, /sendLink.href = url/);
+  assert.match(read("assets/diagnostic.js"), /encodeURIComponent\(message\(/);
+  assert.doesNotMatch(read("assets/diagnostic.js"), /window.open|fetch\(/);
   assert.match(js, /prefers-reduced-motion: reduce/);
 });
 
