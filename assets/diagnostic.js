@@ -43,6 +43,7 @@
   }
   function mount({ getLanguage, applyLanguage }) {
     const ctx = context(location.search);
+    const contextNodes = [...document.querySelectorAll('[data-autoflux-pt], [data-cadia-pt]')].map(node => ({node, pt:node.dataset.pt, en:node.dataset.en}));
     document.querySelectorAll('[data-diagnostic-mount]').forEach((host, index) => {
       const form = document.createElement('form'); form.className = 'form-panel multi-step-form'; form.noValidate = true; form.dataset.diagnosticForm = '';
       host.replaceChildren(form);
@@ -77,14 +78,19 @@
       function data() { return Object.fromEntries([...controls].filter(([,x])=>!x.control.disabled).map(([name,x])=>[name,x.control.value.trim()])); }
       function renderBranch() {
         for (const [name, item] of controls) if (branchHost.contains(item.control)) controls.delete(name);
-        branchHost.replaceChildren(); (branches[controls.get('product').control.value] || branches.geral).forEach(field=>addField(field,branchHost));
+        const selectedProduct = controls.get('product').control.value;
+        contextNodes.forEach(({node,pt,en}) => {
+          node.dataset.pt = node.getAttribute(`data-${selectedProduct}-pt`) || pt;
+          node.dataset.en = node.getAttribute(`data-${selectedProduct}-en`) || en;
+        });
+        branchHost.replaceChildren(); (branches[selectedProduct] || branches.geral).forEach(field=>addField(field,branchHost));
         if (controls.has('mode') && ctx.mode) controls.get('mode').control.value = ctx.mode;
         applyLanguage(getLanguage());
       }
       function draw() { form.dataset.step = step; steps.forEach((s,i)=>{s.hidden=reviewing || i!==step;}); actions.hidden=reviewing; note.hidden=reviewing; review.hidden=!reviewing; back.hidden=step===0;
         progress.textContent=reviewing ? tr('Revisão — falta enviar no WhatsApp','Review — send in WhatsApp to finish') : tr(`Etapa ${step+1} de 3`,`Step ${step+1} of 3`);
         bilingual(next,step===2?'Revisar diagnóstico':'Continuar',step===2?'Review diagnostic':'Continue');
-        if (reviewing) { summary.replaceChildren(); entries(data(),getLanguage()).forEach(([k,v])=>{const dt=el('dt');dt.textContent=k; const dd=el('dd');dd.textContent=v;summary.append(dt,dd);}); send.href=`https://wa.me/5533998347871?text=${encodeURIComponent(message(data(),getLanguage(),ctx.plan,location.pathname))}`; }
+        if (reviewing) { summary.replaceChildren(); entries(data(),getLanguage()).forEach(([k,v])=>{const dt=el('dt');dt.textContent=k; const dd=el('dd');dd.textContent=v;summary.append(dt,dd);}); if(data().product==='autoflux' && ctx.plan){const dt=el('dt');dt.textContent=tr('Plano de interesse','Plan of interest');const dd=el('dd');dd.textContent=ctx.plan.toUpperCase();summary.append(dt,dd);} send.href=`https://wa.me/5533998347871?text=${encodeURIComponent(message(data(),getLanguage(),ctx.plan,location.pathname))}`; }
       }
       function focusStep() { const target = reviewing ? review : steps[step].querySelector('input,select,textarea'); target?.focus(); }
       form.addEventListener('submit', event=>{event.preventDefault();
