@@ -699,3 +699,33 @@ html[lang="en"] .contact-whatsapp .contact-badge, html[lang="en"] .contact-whats
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Portfolio captures keep their original composition at every card width. */
+.portfolio-section .project-visual,
+.portfolio-section .project-card.featured .project-visual {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: auto;
+}
+.portfolio-section .project-visual img,
+.logistics-case .market-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  transform: none;
+}
+.portfolio-section .browser-bar,
+.logistics-case .browser-bar { flex-shrink: 0; min-width: 0; }
+.portfolio-section .browser-bar i,
+.logistics-case .browser-bar i { flex-shrink: 0; }
+.portfolio-section .browser-bar b,
+.logistics-case .browser-bar b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.portfolio-section .project-body > div { min-width: 0; }
+.portfolio-section .project-foot a { display: inline-flex; align-items: center; min-height: 44px; }
