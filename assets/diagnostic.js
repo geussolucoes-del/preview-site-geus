@@ -19,8 +19,11 @@
     geral: [f('operation', 'O que sua empresa faz e quem atende?', 'What does your business do and whom does it serve?'), f('project', 'O que você quer estruturar ou melhorar?', 'What do you want to build or improve?')]
   };
   const budget = [f('budget', 'Verba mensal disponível — informe valor e moeda, ou “a definir”', 'Available monthly budget — amount and currency, or “to be decided”')];
+  const minimums = Object.freeze({autoflux:{name:'AutoFlux',amount:'R$ 2.000'},cadia:{name:'CADIA',amount:'R$ 1.500'},madg:{name:'MADG',amount:'US$ 350'}});
+  const investmentFor = product => Object.hasOwn(minimums,product) ? [f('investment_ready',`Você tem pelo menos ${minimums[product].amount} disponíveis para começar com o ${minimums[product].name}?`,`Do you have at least ${minimums[product].amount} available to start with ${minimums[product].name}?`,'select',options('yes|Sim, tenho esse investimento disponível|Yes, I have this investment available','no|Não tenho esse investimento disponível agora|I do not have this investment available right now'))] : [];
+  const investmentStatus = data => Object.hasOwn(minimums,data.product) ? data.investment_ready==='yes' ? 'eligible' : data.investment_ready==='no' ? 'ineligible' : 'pending' : 'not_applicable';
   const finalFields = [f('goal', 'Qual resultado importa mais e o que dificulta alcançá-lo?', 'Which result matters most and what is holding you back?', 'textarea'), f('timing', 'Quando pretende começar?', 'When would you like to start?', 'select', options('now|Assim que possível|As soon as possible', '30days|Nos próximos 30 dias|Within 30 days', 'planning|Estou planejando|I am planning')), f('website', 'Site ou Instagram (opcional)', 'Website or Instagram (optional)', 'text', null, false)];
-  const fieldsFor = product => [...common, ...(branches[product] || branches.geral), ...budget, ...finalFields];
+  const fieldsFor = product => [...common, ...investmentFor(product), ...(branches[product] || branches.geral), ...(Object.hasOwn(minimums,product)?[]:budget), ...finalFields];
   function validate(field, value) {
     const v = String(value || '').trim();
     if (!v) return !field.required;
@@ -47,6 +50,7 @@
     root.dataLayer.push({ event, product: product || 'geral', funnel: 'diagnostico_site', ...extra });
   }
   function mount({ getLanguage, applyLanguage }) {
+    if(!document.querySelector('[data-diagnostic-mount]'))return;
     const ctx = context(location.search);
     const isHomepage = ['/', '/index.html'].includes(location.pathname);
     const fixedProduct = !isHomepage && ['autoflux','madg','cadia'].includes(ctx.product) ? ctx.product : '';
@@ -82,7 +86,29 @@
         const control=document.createElement('input');control.type='hidden';control.name='product';control.value=fixedProduct;
         wrap.append(control);steps[0].append(wrap);controls.set('product',{control,field});
       });
-      const branchHost = el('div','diagnostic-branch'); steps[1].append(branchHost); budget.forEach(field=>addField(field,steps[1])); finalFields.forEach(field=>addField(field,steps[2]));
+      const investmentHost=el('div','diagnostic-investment');steps[0].append(investmentHost);
+      const branchHost = el('div','diagnostic-branch'); steps[1].append(branchHost); finalFields.forEach(field=>addField(field,steps[2]));
+      const confirm=el('dialog','diagnostic-confirm');confirm.setAttribute('aria-labelledby',`investment-confirm-${index}`);
+      const confirmTitle=el('h2','','Só para confirmar seu momento','Let’s confirm your current situation');confirmTitle.id=`investment-confirm-${index}`;
+      const confirmCopy=el('p');const confirmActions=el('div','form-actions');
+      const cancel=el('button','button','Quero corrigir minha resposta','I want to correct my answer');cancel.type='button';
+      const accept=el('button','button button-primary','Sim, confirmar','Yes, confirm');accept.type='button';
+      confirmActions.append(cancel,accept);confirm.append(confirmTitle,confirmCopy,confirmActions);form.append(confirm);
+      function resetInvestment(){const control=controls.get('investment_ready')?.control;if(control){control.value='';control.focus();}}
+      cancel.addEventListener('click',()=>{confirm.close();resetInvestment();});
+      confirm.addEventListener('cancel',()=>resetInvestment());
+      accept.addEventListener('click',()=>{
+        const values=data();if(investmentStatus(values)!=='ineligible'){confirm.close();return;}
+        track('diagnostic_form_disqualified',values.product,{reason:'minimum_investment'});
+        try{sessionStorage.removeItem('geus_diagnostic_receipt');}catch{}
+        location.assign('/agradecimento/?produto='+encodeURIComponent(values.product)+'&motivo=investimento');
+      });
+      function confirmInvestment(){
+        if(investmentStatus(data())!=='ineligible')return false;
+        const requirement=minimums[data().product];
+        bilingual(confirmCopy,`Você confirma que não tem ${requirement.amount} disponíveis para começar com o ${requirement.name} neste momento? Se marcou sem querer, pode corrigir sua resposta.`,`Do you confirm that you do not currently have ${requirement.amount} available to start with ${requirement.name}? If you selected this by mistake, you can correct your answer.`);
+        if(!confirm.open){confirm.showModal();cancel.focus();}return true;
+      }
       const consent = el('label','diagnostic-consent'); const check = document.createElement('input'); check.type = 'checkbox'; check.required = true;
       const consentText = el('span','','Concordo que a Geus use estas informações para responder ao meu contato.','I agree that Geus may use this information to respond to my inquiry.');
       const privacy = el('a','','Política de privacidade','Privacy policy'); privacy.href = '/politica-de-privacidade/'; privacy.target = '_blank'; privacy.rel = 'noopener'; consent.append(check,consentText); steps[2].append(consent,privacy);
@@ -94,13 +120,15 @@
       let step = 0; let reviewing = false; let sending = false; let midpointTracked = false;
       function data() { return Object.fromEntries([...controls].filter(([,x])=>!x.control.disabled).map(([name,x])=>[name,name==='product' && fixedProduct ? fixedProduct : x.control.value.trim()])); }
       function renderBranch() {
-        for (const [name, item] of controls) if (branchHost.contains(item.control)) controls.delete(name);
+        for (const [name, item] of controls) if (branchHost.contains(item.control)||investmentHost.contains(item.control)) controls.delete(name);
         const selectedProduct = fixedProduct || controls.get('product').control.value;
         contextNodes.forEach(({node,pt,en}) => {
           node.dataset.pt = node.getAttribute(`data-${selectedProduct}-pt`) || pt;
           node.dataset.en = node.getAttribute(`data-${selectedProduct}-en`) || en;
         });
-        branchHost.replaceChildren(); (branches[selectedProduct] || branches.geral).forEach(field=>addField(field,branchHost));
+        investmentHost.replaceChildren();investmentFor(selectedProduct).forEach(field=>addField(field,investmentHost));
+        controls.get('investment_ready')?.control.addEventListener('change',confirmInvestment);
+        branchHost.replaceChildren(); [...(branches[selectedProduct] || branches.geral),...(Object.hasOwn(minimums,selectedProduct)?[]:budget)].forEach(field=>addField(field,branchHost));
         if (controls.has('mode') && ctx.mode) controls.get('mode').control.value = ctx.mode;
         applyLanguage(getLanguage());
       }
@@ -112,6 +140,7 @@
       function focusStep() { const target = reviewing ? review : steps[step].querySelector('input:not([type="hidden"]),select,textarea'); target?.focus(); }
       form.addEventListener('submit', event=>{event.preventDefault();
         if(sending || reviewing)return;
+        if(confirmInvestment())return;
         for(const {control,field} of controls.values()) { if(!steps[step].contains(control)) continue; control.setCustomValidity(validate(field,control.value)?'':tr(field.type==='tel'?'Informe um telefone válido com DDD/código do país.':'Preencha este campo com uma resposta válida.',field.type==='tel'?'Enter a valid phone with area/country code.':'Please enter a valid answer.')); if(!control.checkValidity()){control.setAttribute('aria-invalid','true');control.reportValidity();return;} }
         if(step===2 && !check.checked){check.reportValidity();return;}
         if(step<2) step++; else reviewing=true;
@@ -122,6 +151,7 @@
       send.addEventListener('click',async()=>{
         if(sending)return;
         const values=data();
+        if(investmentStatus(values)==='ineligible'){reviewing=false;step=0;draw();confirmInvestment();return;}
         // Revalidate the entire payload, not just the currently visible step.
         for(const {field,control} of controls.values()){
           if(!validate(field,control.value)){reviewing=false;step=steps.findIndex(s=>s.contains(control));draw();control.focus();control.reportValidity();return;}
@@ -149,7 +179,7 @@
       renderBranch(); document.addEventListener('geus:language',draw); draw();
     });
   }
-  const api = { fieldsFor, validate, context, entries, message, mount, track };
+  const api = { fieldsFor, validate, context, entries, message, mount, track, minimums, investmentStatus };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.GeusDiagnostic = api;
 })(typeof window === 'undefined' ? globalThis : window);

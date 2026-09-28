@@ -1,7 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-const {fieldsFor,validate,context,entries,message,track}=createRequire(import.meta.url)('../assets/diagnostic.js');
+const {fieldsFor,validate,context,entries,message,track,minimums,investmentStatus}=createRequire(import.meta.url)('../assets/diagnostic.js');
+
+test('Each product requires explicit minimum investment confirmation',()=>{
+ assert.equal(minimums.autoflux.amount,'R$ 2.000');
+ assert.equal(minimums.cadia.amount,'R$ 1.500');
+ assert.equal(minimums.madg.amount,'US$ 350');
+ for(const product of ['autoflux','madg','cadia']){
+  assert.equal(investmentStatus({product}),'pending');
+  assert.equal(investmentStatus({product,investment_ready:'no'}),'ineligible');
+  assert.equal(investmentStatus({product,investment_ready:'yes'}),'eligible');
+  const gate=fieldsFor(product).find(f=>f.name==='investment_ready');
+  assert.ok(gate.required);assert.equal(validate(gate,'unknown'),false);
+  assert.ok(gate.label[0].includes(minimums[product].amount));
+  assert.ok(entries({product,investment_ready:'yes'}).some(([q,a])=>q.includes(minimums[product].amount)&&a.includes('Sim')));
+ }
+ assert.equal(investmentStatus({product:'geral'}),'not_applicable');
+});
 
 test('Funnel events distinguish all products without personal data',()=>{
  const previous=globalThis.dataLayer;

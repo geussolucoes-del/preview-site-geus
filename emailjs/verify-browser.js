@@ -11,10 +11,11 @@ async (page) => {
       if(await page.locator('select[name="product"]').count())throw Error('Diagnóstico de produto permite troca');
       if(await page.locator('input[name="product"]').inputValue()!==product)throw Error('Contexto do produto incorreto');
     }
+    await page.locator('[name="investment_ready"]').selectOption('yes');
     for(const [name,value] of Object.entries({name:'Teste integração',company:'Empresa teste',phone:'33999999999',location:'Brasil'})) await page.locator('[name="'+name+'"]').fill(value);
     await page.locator('.form-actions button[type="submit"]').click();
     const values={autoflux:{stock:'11-30',sales:'6-15',vehicles:'Seminovos',territory:'Região local'},madg:{service:'Limpeza',territory:'Região local',capacity:'10',channel:'Instagram'},cadia:{channel:'whatsapp',volume:'11-50',process:'Equipe comercial',mode:'assistida'}}[product];
-    for(const [name,value] of Object.entries({...values,budget:'R$ 2000'})){
+    for(const [name,value] of Object.entries(values)){
       const control=page.locator('[name="'+name+'"]');
       if(await control.evaluate(el=>el.tagName)==='SELECT')await control.selectOption(value);else await control.fill(value);
     }
@@ -61,6 +62,7 @@ async (page) => {
   const sentProducts=requests.map(r=>r.template_params.product_id);
   if(sentProducts.join(',')!=='autoflux,autoflux,madg,cadia')throw Error('Envios duplicados ou produtos errados');
   if(requests.some(r=>r.template_id!=='template_unico'))throw Error('Mais de um template');
+  if(requests.some(r=>!r.template_params.answer_rows.some(row=>row.question.includes('disponíveis para começar')&&row.answer==='Sim, tenho esse investimento disponível')))throw Error('Confirmação de investimento ausente no email');
   if(!requests.at(-1).template_params.answers.includes('Quem atende hoje'))throw Error('Respostas CADIA ausentes');
   await page.evaluate(()=>sessionStorage.removeItem('geus_diagnostic_receipt'));
   await page.goto('http://127.0.0.1:4173/obrigado/');
