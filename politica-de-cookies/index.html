@@ -13,7 +13,10 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2" />
     <link rel="manifest" href="../site.webmanifest?v=2" />
     <link rel="stylesheet" href="../assets/legal.css?v=2" />
-  </head>
+    <link rel="stylesheet" href="/assets/consent.css?v=1">
+  <script src="/assets/tag-config.js?v=1"></script>
+  <script src="/assets/consent.js?v=1"></script>
+</head>
   <body>
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <header class="shell topbar">
@@ -57,8 +60,8 @@
             <strong>Em resumo</strong>
             <p>
               Na data desta atualização, o site institucional da GEUS não ativa cookies de
-              análise, publicidade ou perfilamento. Por isso, não exibimos um banner de
-              consentimento sem finalidade real.
+              análise, publicidade ou perfilamento. O banner permite registrar antecipadamente
+              sua escolha para essas categorias; o Google Tag Manager ainda não foi instalado.
             </p>
             <p>
               Este site é operado por GEUS SOLUCAO EM TRAFEGO LTDA, CNPJ 59.811.544/0001-86.
@@ -81,9 +84,10 @@
               Google Analytics, Meta Pixel, Hotjar ou outra ferramenta de rastreamento de
               marketing instalada no navegador.
             </p>
-            <p>Há armazenamento funcional no navegador: a escolha do idioma e o recibo temporário do diagnóstico. Essas tecnologias não são cookies publicitários. Os eventos do formulário são registrados em uma camada de dados em memória, sem dados de contato ou respostas; nesta versão não há tag de marketing transmitindo esses eventos.</p>
+            <p>Há armazenamento funcional no navegador: a escolha do idioma, as preferências de consentimento e o recibo temporário do diagnóstico. Essas tecnologias não são cookies publicitários. Os eventos do formulário são registrados em uma camada de dados em memória, sem dados de contato ou respostas; nesta versão não há tag de marketing transmitindo esses eventos.</p>
             <div class="table-wrap"><table><caption>Inventário de armazenamento funcional</caption><thead><tr><th>Registro</th><th>Finalidade e conteúdo</th><th>Duração</th></tr></thead><tbody>
               <tr><td>geus_language · localStorage</td><td>Lembrar o idioma escolhido (PT/EN), sem dados de contato.</td><td>Até o visitante remover os dados do site ou trocar a escolha.</td></tr>
+              <tr><td>geus_cookie_consent · localStorage</td><td>Registrar autorização ou recusa de análise e publicidade, versão do aviso e data da escolha, sem dados de contato.</td><td>180 dias; depois é solicitada nova escolha. Pode ser alterado antes em Preferências de cookies.</td></tr>
               <tr><td>geus_auto_language · sessionStorage</td><td>Idioma sugerido a partir da localização aproximada do acesso pela hospedagem.</td><td>Durante a sessão da aba.</td></tr>
               <tr><td>geus_diagnostic_receipt · sessionStorage</td><td>Produto e resumo das respostas após envio aceito; viabiliza a página de obrigado e o WhatsApp escolhido pelo visitante.</td><td>Durante a sessão da aba; também é removido na saída por desqualificação.</td></tr>
             </tbody></table></div>
@@ -148,6 +152,7 @@
 
           <section class="section" id="controle">
             <h2>5. Como controlar cookies</h2>
+            <p>Use “Preferências de cookies” no rodapé para autorizar ou recusar cada categoria opcional, inclusive depois de aceitar. As opções não vêm pré-selecionadas e a recusa não bloqueia o diagnóstico. Se ferramentas opcionais estiverem ativas, reduzir a permissão recarrega a página para interromper scripts carregados. Tentamos remover cookies conhecidos acessíveis ao site; cookies de terceiros ou protegidos devem ser removidos pelas configurações do navegador. A revogação não desfaz tratamentos anteriores.</p>
             <p>
               O visitante pode revisar, bloquear ou excluir cookies nas configurações do
               navegador. O bloqueio de tecnologias estritamente necessárias poderá afetar a
@@ -155,8 +160,9 @@
             </p>
             <p>Para apagar os registros listados acima, remova os dados deste site nas configurações de privacidade do navegador (isso inclui armazenamento local, não apenas cookies). Bloquear armazenamento não impede a leitura do site nem o envio do formulário, mas pode impedir a personalização do idioma e a recuperação do recibo na página de obrigado.</p>
             <p>
-              Como não existem cookies opcionais ativados diretamente pela GEUS nesta versão do
-              site, não há preferências adicionais a serem gerenciadas aqui neste momento.
+              As preferências do banner já podem ser gerenciadas, mas nenhuma ferramenta
+              opcional está instalada nesta versão. Autorizar uma categoria não significa que
+              uma ferramenta inexistente será ativada.
             </p>
           </section>
 

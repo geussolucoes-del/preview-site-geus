@@ -1,6 +1,6 @@
 async page => {
  const base=await page.evaluate(()=>location.origin);
- const paths=['/','/produtos/','/produtos/autoflux/','/produtos/madg/','/produtos/cadia/','/portfolio/','/reviews/','/contato/','/diagnostico/?produto=autoflux','/obrigado/','/agradecimento/?produto=cadia&motivo=investimento','/politica-de-privacidade/','/politica-de-cookies/','/termos-de-uso/'];
+ const paths=['/','/produtos/','/produtos/autoflux/','/produtos/madg/','/produtos/cadia/','/portfolio/','/reviews/','/contato/','/diagnostico/?produto=autoflux','/obrigado/','/agradecimento/?produto=cadia&motivo=investimento','/politica-de-privacidade/','/politica-de-cookies/','/termos-de-uso/','/404.html'];
  const findings=[],links=new Set(),resources=new Set(),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  page.on('response',r=>{if(r.status()>=400)errors.push(r.status()+' '+r.url());});
@@ -21,7 +21,7 @@ async page => {
    });
    result.links.forEach(l=>links.add(l));
    if(result.overflow||result.outside.length||result.brokenImages.length)findings.push({path,width,...result,links:undefined});
-   if(width===1366&&!result.canonical)findings.push({path,missingCanonical:true});
+   if(width===1366&&!result.canonical&&path!=='/404.html')findings.push({path,missingCanonical:true});
    if(await page.locator('[data-lang="en"]').count()){
     await page.locator('[data-lang="en"]').click();
     if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))findings.push({path,width,englishOverflow:true});

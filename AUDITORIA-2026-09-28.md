@@ -1,5 +1,14 @@
 # Curadoria do site — 28/09/2026
 
+## Complemento posterior: banner e 404
+
+A pedido do usuário, foi acrescentado banner preparatório para GTM em todas as páginas, inclusive legais e 404. As observações abaixo sobre ausência de banner descrevem a primeira rodada histórica da auditoria, anterior a este complemento.
+
+- Aceitar, rejeitar, personalizar análise/publicidade, revisão no rodapé, validade de 180 dias e opções desmarcadas por padrão. Interface PT/EN e modal nativo com Escape/foco.
+- Consent Mode v2 negado por padrão; carregamento básico condicionado à autorização. ID real vazio, nenhum GTM/Pixel instalado. Requisitos de checks por tag documentados em `GTM-CONSENTIMENTO.md`.
+- 404 personalizada com links seguros para home/produtos, assets absolutos e noindex; sem WhatsApp ou redirecionamento para falso sucesso.
+- 31 testes Node passaram. Navegador testou banner/modal em quatro larguras, rejeição persistida, aceitação, categorias separadas, expiração e retirada, com contêiner simulado sem tags reais. Políticas atualizadas para registrar essa preferência.
+
 ## Resultado e correções
 
 - Varredura de 14 rotas em 320, 390, 768 e 1366 px, PT/EN: nenhum transbordamento horizontal, imagem quebrada ou link interno sem destino. Revisão visual adicional dos planos e tabelas legais; corrigidos selo do Pro e quebras no inventário de armazenamento.
