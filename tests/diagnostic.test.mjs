@@ -6,7 +6,10 @@ const {fieldsFor,validate,context,entries,message,track,minimums,investmentStatu
 test('Each product requires explicit minimum investment confirmation',()=>{
  assert.equal(minimums.autoflux.amount,'R$ 2.000');
  assert.equal(minimums.cadia.amount,'R$ 1.500');
- assert.equal(minimums.madg.amount,'US$ 350');
+ assert.equal(minimums.madg.amount,'R$ 2.000 ou US$ 400');
+ assert.equal(minimums.autoflux.amountEn,'US$ 400');
+ assert.equal(minimums.cadia.amountEn,'US$ 300');
+ assert.equal(minimums.madg.amountEn,'US$ 400');
  for(const product of ['autoflux','madg','cadia']){
   assert.equal(investmentStatus({product}),'pending');
   assert.equal(investmentStatus({product,investment_ready:'no'}),'ineligible');
@@ -14,6 +17,9 @@ test('Each product requires explicit minimum investment confirmation',()=>{
   const gate=fieldsFor(product).find(f=>f.name==='investment_ready');
   assert.ok(gate.required);assert.equal(validate(gate,'unknown'),false);
   assert.ok(gate.label[0].includes(minimums[product].amount));
+  assert.ok(gate.label[1].includes(minimums[product].amountEn));
+  assert.ok(!gate.label[1].includes('R$'));
+  assert.ok(entries({product,investment_ready:'yes'},'en').some(([q])=>q.includes(minimums[product].amountEn)));
   assert.ok(entries({product,investment_ready:'yes'}).some(([q,a])=>q.includes(minimums[product].amount)&&a.includes('Sim')));
  }
  assert.equal(investmentStatus({product:'geral'}),'not_applicable');

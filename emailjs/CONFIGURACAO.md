@@ -75,7 +75,10 @@ Testes técnicos diretos no EmailJS não disparam eventos ou conversões no site
 O diagnóstico atual qualifica por leitura humana: no e-mail aparece “A avaliar”,
 sem afirmar que qualquer preenchimento seja um lead automaticamente qualificado.
 Antes disso, a primeira etapa exige investimento disponível: AutoFlux R$ 2.000,
-CADIA R$ 1.500 e MADG US$ 350. “Não” abre uma confirmação; corrigir ou Escape
+CADIA R$ 1.500 e MADG R$ 2.000 ou US$ 400. Em inglês: AutoFlux US$ 400,
+CADIA US$ 300 e MADG US$ 400. São equivalências comerciais fixas, não cotação
+em tempo real. Pergunta, confirmação, saída e respostas do e-mail usam o idioma.
+“Não” abre uma confirmação; corrigir ou Escape
 permite rever a resposta. Confirmar encerra em /agradecimento/ com Instagram,
 sem envio EmailJS, recibo de sucesso ou conversão. O dataLayer registra apenas
 `diagnostic_form_disqualified`, com `product` e `reason: minimum_investment`.

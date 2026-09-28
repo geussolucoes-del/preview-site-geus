@@ -3,10 +3,11 @@ async page => {
   page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/api/locale',r=>r.fulfill({status:200,contentType:'application/json',body:'{"language":"pt"}'}));
   await page.route('https://api.emailjs.com/**',r=>{sends++;return r.fulfill({status:200,body:'OK'});});
-  const amounts={autoflux:'R$ 2.000',cadia:'R$ 1.500',madg:'US$ 350'};
+  const amounts={autoflux:'R$ 2.000',cadia:'R$ 1.500',madg:'R$ 2.000 ou US$ 400'};
   for(const width of [320,390,1366])for(const product of Object.keys(amounts)){
     await page.setViewportSize({width,height:844});
     await page.goto('http://127.0.0.1:4173/diagnostico/?produto='+product);
+    await page.getByRole('button',{name:'PT',exact:true}).click();
     const gate=page.locator('[name="investment_ready"]');
     if(!(await page.locator('label[for="diagnostic-0-investment_ready"]').textContent()).includes(amounts[product]))throw Error('Wrong amount');
     await gate.selectOption('no');
@@ -42,9 +43,23 @@ async page => {
   await page.locator('[name="investment_ready"]').selectOption('yes');
   await page.locator('[name="product"]').selectOption('madg');
   if(await page.locator('[name="investment_ready"]').inputValue()!=='')throw Error('Product change kept approval');
-  if(!(await page.locator('label[for="diagnostic-0-investment_ready"]').textContent()).includes('US$ 350'))throw Error('Home amount did not adapt');
+  if(!(await page.locator('label[for="diagnostic-0-investment_ready"]').textContent()).includes('R$ 2.000 ou US$ 400'))throw Error('Home amount did not adapt');
   await page.locator('[name="product"]').selectOption('geral');
   if(await page.locator('[name="investment_ready"]').count())throw Error('General project got false threshold');
+  for(const product of Object.keys(amounts)){
+    await page.goto('http://127.0.0.1:4173/diagnostico/?produto='+product);
+    await page.getByRole('button',{name:'EN',exact:true}).click();
+    const amount=product==='cadia'?'US$ 300':'US$ 400';
+    const label=await page.locator('label[for="diagnostic-0-investment_ready"]').textContent();
+    if(!label.includes(amount)||label.includes('R$'))throw Error('English amount wrong');
+    await page.locator('[name="investment_ready"]').selectOption('no');
+    const copy=await page.locator('dialog p').textContent();
+    if(!copy.includes(amount)||copy.includes('R$'))throw Error('English confirmation wrong');
+    await page.getByRole('button',{name:'Yes, confirm',exact:true}).click();
+    await page.waitForURL('**/agradecimento/**');
+    const exit=await page.locator('[data-investment-exit]').textContent();
+    if(!exit.includes(amount)||exit.includes('R$'))throw Error('English exit wrong');
+  }
   if(sends!==0)throw Error('Disqualified visitor sent an email');
   if(errors.length)throw Error(errors.join(';'));
   return {passed:'3 products at 320,390,1366px; cancel; Escape; yes; confirmed no; Instagram; product change; dataLayer',realEmailsSent:0};

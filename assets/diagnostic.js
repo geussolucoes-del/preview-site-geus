@@ -19,8 +19,9 @@
     geral: [f('operation', 'O que sua empresa faz e quem atende?', 'What does your business do and whom does it serve?'), f('project', 'O que você quer estruturar ou melhorar?', 'What do you want to build or improve?')]
   };
   const budget = [f('budget', 'Verba mensal disponível — informe valor e moeda, ou “a definir”', 'Available monthly budget — amount and currency, or “to be decided”')];
-  const minimums = Object.freeze({autoflux:{name:'AutoFlux',amount:'R$ 2.000'},cadia:{name:'CADIA',amount:'R$ 1.500'},madg:{name:'MADG',amount:'US$ 350'}});
-  const investmentFor = product => Object.hasOwn(minimums,product) ? [f('investment_ready',`Você tem pelo menos ${minimums[product].amount} disponíveis para começar com o ${minimums[product].name}?`,`Do you have at least ${minimums[product].amount} available to start with ${minimums[product].name}?`,'select',options('yes|Sim, tenho esse investimento disponível|Yes, I have this investment available','no|Não tenho esse investimento disponível agora|I do not have this investment available right now'))] : [];
+  // Fixed commercial equivalents defined by GEUS, not live exchange rates.
+  const minimums = Object.freeze({autoflux:{name:'AutoFlux',amount:'R$ 2.000',amountEn:'US$ 400'},cadia:{name:'CADIA',amount:'R$ 1.500',amountEn:'US$ 300'},madg:{name:'MADG',amount:'R$ 2.000 ou US$ 400',amountEn:'US$ 400'}});
+  const investmentFor = product => Object.hasOwn(minimums,product) ? [f('investment_ready',`Você tem pelo menos ${minimums[product].amount} disponíveis para começar com o ${minimums[product].name}?`,`Do you have at least ${minimums[product].amountEn} available to start with ${minimums[product].name}?`,'select',options('yes|Sim, tenho esse investimento disponível|Yes, I have this investment available','no|Não tenho esse investimento disponível agora|I do not have this investment available right now'))] : [];
   const investmentStatus = data => Object.hasOwn(minimums,data.product) ? data.investment_ready==='yes' ? 'eligible' : data.investment_ready==='no' ? 'ineligible' : 'pending' : 'not_applicable';
   const finalFields = [f('goal', 'Qual resultado importa mais e o que dificulta alcançá-lo?', 'Which result matters most and what is holding you back?', 'textarea'), f('timing', 'Quando pretende começar?', 'When would you like to start?', 'select', options('now|Assim que possível|As soon as possible', '30days|Nos próximos 30 dias|Within 30 days', 'planning|Estou planejando|I am planning')), f('website', 'Site ou Instagram (opcional)', 'Website or Instagram (optional)', 'text', null, false)];
   const fieldsFor = product => [...common, ...investmentFor(product), ...(branches[product] || branches.geral), ...(Object.hasOwn(minimums,product)?[]:budget), ...finalFields];
@@ -106,7 +107,7 @@
       function confirmInvestment(){
         if(investmentStatus(data())!=='ineligible')return false;
         const requirement=minimums[data().product];
-        bilingual(confirmCopy,`Você confirma que não tem ${requirement.amount} disponíveis para começar com o ${requirement.name} neste momento? Se marcou sem querer, pode corrigir sua resposta.`,`Do you confirm that you do not currently have ${requirement.amount} available to start with ${requirement.name}? If you selected this by mistake, you can correct your answer.`);
+        bilingual(confirmCopy,`Você confirma que não tem ${requirement.amount} disponíveis para começar com o ${requirement.name} neste momento? Se marcou sem querer, pode corrigir sua resposta.`,`Do you confirm that you do not currently have ${requirement.amountEn} available to start with ${requirement.name}? If you selected this by mistake, you can correct your answer.`);
         if(!confirm.open){confirm.showModal();cancel.focus();}return true;
       }
       const consent = el('label','diagnostic-consent'); const check = document.createElement('input'); check.type = 'checkbox'; check.required = true;
