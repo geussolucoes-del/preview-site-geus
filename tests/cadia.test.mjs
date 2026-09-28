@@ -71,10 +71,10 @@ test('The public offer distinguishes implementation, recurring service and scope
   assert.doesNotMatch(cadia, /R\$ 1\.500\s*\/\s*mês|100%|vendas garantidas/);
 });
 
-test('Shared JS parses and preserves non-sending WhatsApp preparation', () => {
+test('Shared JS parses and sends through the shared delivery service', () => {
   assert.doesNotThrow(() => new Script(js));
   assert.match(js, /https:\/\/wa.me\/5533998347871\?text=/);
-  assert.match(read("assets/diagnostic.js"), /encodeURIComponent\(message\(/);
+  assert.match(read("assets/diagnostic.js"), /await root.GEUSLeadService.send\(payload\)/);
   assert.doesNotMatch(read("assets/diagnostic.js"), /window.open|fetch\(/);
   assert.match(js, /prefers-reduced-motion: reduce/);
 });

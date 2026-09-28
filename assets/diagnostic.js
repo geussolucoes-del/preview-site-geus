@@ -1,4 +1,4 @@
-/* Shared diagnostic: no lead is sent until the visitor sends the WhatsApp message. */
+/* One diagnostic and one EmailJS template for every product. */
 (function (root) {
   'use strict';
   const f = (name, pt, en, type = 'text', options = null, required = true) => ({ name, label: [pt, en], type, options, required });
@@ -32,7 +32,8 @@
   }
   function context(search) {
     const q = new URLSearchParams(search);
-    return { product: Object.hasOwn(branches, q.get('produto')) ? q.get('produto') : '', plan: ['start','pro','premium'].includes(q.get('plano')) ? q.get('plano') : '', mode: ['assistida','supervisionada','autonoma'].includes(q.get('modo')) ? q.get('modo') : '' };
+    const product = q.get('produto') === 'adg' ? 'madg' : q.get('produto');
+    return { product: Object.hasOwn(branches, product) ? product : '', plan: ['start','pro','premium'].includes(q.get('plano')) ? q.get('plano') : '', mode: ['assistida','supervisionada','autonoma'].includes(q.get('modo')) ? q.get('modo') : '' };
   }
   function entries(data, lang = 'pt') {
     const i = lang === 'en' ? 1 : 0;
@@ -40,6 +41,10 @@
   }
   function message(data, lang, plan, source) {
     return [lang === 'en' ? 'Hello! I would like to discuss this business diagnostic with Geus.' : 'Olá! Quero conversar com a Geus sobre este diagnóstico da minha empresa.', ...entries(data, lang).map(([key, value]) => `${key}: ${value}`), ...(data.product === 'autoflux' && ['start','pro','premium'].includes(plan) ? [`Plano / Plan: ${plan.toUpperCase()}`] : []), `Origem / Source: ${source}`].join('\n');
+  }
+  function track(event, product, extra = {}) {
+    root.dataLayer = Array.isArray(root.dataLayer) ? root.dataLayer : [];
+    root.dataLayer.push({ event, product: product || 'geral', funnel: 'diagnostico_site', ...extra });
   }
   function mount({ getLanguage, applyLanguage }) {
     const ctx = context(location.search);
@@ -70,11 +75,12 @@
       const consent = el('label','diagnostic-consent'); const check = document.createElement('input'); check.type = 'checkbox'; check.required = true;
       const consentText = el('span','','Concordo que a Geus use estas informações para responder ao meu contato.','I agree that Geus may use this information to respond to my inquiry.');
       const privacy = el('a','','Política de privacidade','Privacy policy'); privacy.href = '/politica-de-privacidade/'; privacy.target = '_blank'; privacy.rel = 'noopener'; consent.append(check,consentText); steps[2].append(consent,privacy);
-      const note = el('p','form-note','Ao concluir, você revisa as respostas e abre o WhatsApp. A mensagem só é enviada quando você tocar em Enviar no aplicativo.','After reviewing your answers, you open WhatsApp. The message is only sent when you tap Send in the app.'); form.append(note);
+      const note = el('p','form-note','Revise suas respostas e envie o diagnóstico. A equipe Geus recebe seu contexto para avaliar o próximo passo.','Review your answers and submit your diagnostic. The Geus team receives your context to assess the next step.'); form.append(note);
       const actions = el('div','form-actions'); const back = el('button','button','Voltar','Back'); back.type = 'button'; const next = el('button','button button-primary','Continuar','Continue'); next.type = 'submit'; actions.append(back,next); form.append(actions);
-      const review = el('section','diagnostic-review'); review.hidden = true; review.tabIndex = -1; const title = el('h3','','Revise seu diagnóstico','Review your diagnostic'); const summary = el('dl'); const send = el('a','button button-primary','Abrir WhatsApp ↗','Open WhatsApp ↗'); send.target='_blank'; send.rel='noopener';
+      const review = el('section','diagnostic-review'); review.hidden = true; review.tabIndex = -1; const title = el('h3','','Revise seu diagnóstico','Review your diagnostic'); const summary = el('dl'); const send = el('button','button button-primary','Enviar diagnóstico →','Submit diagnostic →'); send.type='button';
       const edit = el('button','button','Editar respostas','Edit answers'); edit.type='button'; review.append(title,summary,note.cloneNode(true),send,edit); form.append(review);
-      let step = 0; let reviewing = false;
+      const status = el('p','form-note diagnostic-status'); status.hidden=true; status.setAttribute('role','status'); status.setAttribute('aria-live','polite'); review.append(status);
+      let step = 0; let reviewing = false; let sending = false; let midpointTracked = false;
       function data() { return Object.fromEntries([...controls].filter(([,x])=>!x.control.disabled).map(([name,x])=>[name,x.control.value.trim()])); }
       function renderBranch() {
         for (const [name, item] of controls) if (branchHost.contains(item.control)) controls.delete(name);
@@ -88,22 +94,49 @@
         applyLanguage(getLanguage());
       }
       function draw() { form.dataset.step = step; steps.forEach((s,i)=>{s.hidden=reviewing || i!==step;}); actions.hidden=reviewing; note.hidden=reviewing; review.hidden=!reviewing; back.hidden=step===0;
-        progress.textContent=reviewing ? tr('Revisão — falta enviar no WhatsApp','Review — send in WhatsApp to finish') : tr(`Etapa ${step+1} de 3`,`Step ${step+1} of 3`);
+        progress.textContent=reviewing ? tr('Revisão — confirme e envie seu diagnóstico','Review — confirm and submit your diagnostic') : tr(`Etapa ${step+1} de 3`,`Step ${step+1} of 3`);
         bilingual(next,step===2?'Revisar diagnóstico':'Continuar',step===2?'Review diagnostic':'Continue');
-        if (reviewing) { summary.replaceChildren(); entries(data(),getLanguage()).forEach(([k,v])=>{const dt=el('dt');dt.textContent=k; const dd=el('dd');dd.textContent=v;summary.append(dt,dd);}); if(data().product==='autoflux' && ctx.plan){const dt=el('dt');dt.textContent=tr('Plano de interesse','Plan of interest');const dd=el('dd');dd.textContent=ctx.plan.toUpperCase();summary.append(dt,dd);} send.href=`https://wa.me/5533998347871?text=${encodeURIComponent(message(data(),getLanguage(),ctx.plan,location.pathname))}`; }
+        if (reviewing) { summary.replaceChildren(); entries(data(),getLanguage()).forEach(([k,v])=>{const dt=el('dt');dt.textContent=k; const dd=el('dd');dd.textContent=v;summary.append(dt,dd);}); if(data().product==='autoflux' && ctx.plan){const dt=el('dt');dt.textContent=tr('Plano de interesse','Plan of interest');const dd=el('dd');dd.textContent=ctx.plan.toUpperCase();summary.append(dt,dd);} }
       }
       function focusStep() { const target = reviewing ? review : steps[step].querySelector('input,select,textarea'); target?.focus(); }
       form.addEventListener('submit', event=>{event.preventDefault();
+        if(sending || reviewing)return;
         for(const {control,field} of controls.values()) { if(!steps[step].contains(control)) continue; control.setCustomValidity(validate(field,control.value)?'':tr(field.type==='tel'?'Informe um telefone válido com DDD/código do país.':'Preencha este campo com uma resposta válida.',field.type==='tel'?'Enter a valid phone with area/country code.':'Please enter a valid answer.')); if(!control.checkValidity()){control.setAttribute('aria-invalid','true');control.reportValidity();return;} }
         if(step===2 && !check.checked){check.reportValidity();return;}
-        if(step<2) step++; else reviewing=true; draw();focusStep();
+        if(step<2) step++; else reviewing=true;
+        if(step===1 && !midpointTracked){midpointTracked=true;track('diagnostic_form_midpoint',data().product,{step:2});}
+        draw();focusStep();
       });
       back.addEventListener('click',()=>{step=Math.max(0,step-1);draw();focusStep();}); edit.addEventListener('click',()=>{reviewing=false;step=0;draw();focusStep();});
-      send.addEventListener('click',()=>{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'diagnostic_whatsapp_open',product:data().product});});
+      send.addEventListener('click',async()=>{
+        if(sending)return;
+        const values=data();
+        // Revalidate the entire payload, not just the currently visible step.
+        for(const {field,control} of controls.values()){
+          if(!validate(field,control.value)){reviewing=false;step=steps.findIndex(s=>s.contains(control));draw();control.focus();control.reportValidity();return;}
+        }
+        if(!check.checked){reviewing=false;step=2;draw();check.reportValidity();return;}
+        const answers=entries(values,getLanguage()).map(([question,answer])=>({question,answer}));
+        if(values.product==='autoflux' && ctx.plan)answers.push({question:tr('Plano de interesse','Plan of interest'),answer:ctx.plan.toUpperCase()});
+        const payload={productId:values.product,labels:{name:values.name,company:values.company,phone:values.phone,email:values.email},answers,privacyConsent:check.checked,pageUrl:location.href,sourceCta:ctx.product ? `Diagnóstico ${ctx.product}` : 'Diagnóstico geral'};
+        sending=true;send.disabled=true;edit.disabled=true;form.setAttribute('aria-busy','true');
+        status.hidden=false;bilingual(status,'Estamos enviando seu diagnóstico…','Sending your diagnostic…');
+        track('diagnostic_form_submit_attempt',values.product);
+        try{
+          await root.GEUSLeadService.send(payload);
+          track('diagnostic_form_submit',values.product,{delivery:'emailjs_accepted'});
+          const receipt={product:values.product,message:message(values,getLanguage(),ctx.plan,location.pathname)};
+          try{sessionStorage.setItem('geus_diagnostic_receipt',JSON.stringify(receipt));}catch{}
+          location.assign('/obrigado/?produto='+encodeURIComponent(values.product)+'&enviado=1');
+        }catch(error){
+          track('diagnostic_form_error',values.product,{error_code:error.code || 'network_error'});
+          bilingual(status,'Não conseguimos confirmar o envio. Suas respostas continuam aqui. Tente novamente ou escreva para geussolucoes@gmail.com.','We could not confirm submission. Your answers are still here. Try again or email geussolucoes@gmail.com.');
+        }finally{sending=false;send.disabled=false;edit.disabled=false;form.removeAttribute('aria-busy');}
+      });
       controls.get('product').control.addEventListener('change',renderBranch); controls.get('product').control.value=ctx.product; renderBranch(); document.addEventListener('geus:language',draw); draw();
     });
   }
-  const api = { fieldsFor, validate, context, entries, message, mount };
+  const api = { fieldsFor, validate, context, entries, message, mount, track };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.GeusDiagnostic = api;
 })(typeof window === 'undefined' ? globalThis : window);

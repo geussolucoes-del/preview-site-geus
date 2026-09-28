@@ -1,0 +1,47 @@
+# Ativar a entrega de diagnósticos
+
+O mesmo formulário em `assets/diagnostic.js` atende home e `/diagnostico/`.
+Ele já adapta as perguntas para AutoFlux, MADG (ADG), CADIA ou projeto geral.
+`assets/lead-service.js` envia todos ao mesmo serviço e template EmailJS, incluindo
+produto, nome, empresa, telefone, e-mail, respostas, plano quando aplicável, URL e consentimento.
+Produto, plano e modo são preservados dos CTAs. Trocar de produto limpa as perguntas da opção anterior.
+
+## Configuração na conta
+
+1. Conecte seu serviço de envio no EmailJS.
+2. Reutilize ou crie **um** template e cole `template-unico.html` no editor HTML.
+3. Configure To Email fixo: `geussolucoes@gmail.com`.
+4. Subject: `[GEUS · {{product}}] Novo diagnóstico de {{name}}`.
+5. From Name: `GEUS Site`. Remetente: o endereço do serviço conectado.
+6. Deixe Reply-To vazio/fixo: o e-mail do visitante é opcional.
+7. Copie Public Key, Service ID e Template ID para `assets/lead-config.js`.
+   Não use chave privada, senha ou token de acesso neste arquivo público.
+8. Se sua conta restringir domínios, autorize os domínios de produção usados pelo site.
+9. Envie um diagnóstico real, confirme o histórico EmailJS e o recebimento na caixa de entrada.
+
+As variáveis usam chaves duplas `{{answers}}`: o EmailJS escapa respostas do usuário.
+Não use chaves triplas para essas respostas.
+
+Sem configuração, em erro HTTP ou timeout, o formulário mantém as respostas e mostra
+uma mensagem com opção de nova tentativa. Somente depois do aceite do EmailJS
+o visitante vai para `/obrigado/`, onde pode continuar no WhatsApp com o contexto.
+O aceite da API não prova entrega na caixa de entrada; confira o primeiro envio real.
+Não existe fila permanente de contatos ou reenvio automático no navegador.
+
+## Eventos sem dados pessoais
+
+- `diagnostic_form_open_click`: clique de entrada no diagnóstico.
+- `diagnostic_form_midpoint`: avanço à segunda etapa, uma vez por formulário.
+- `diagnostic_form_submit_attempt`: tentativa de envio.
+- `diagnostic_form_submit`: envio aceito pelo EmailJS (conversão).
+- `diagnostic_form_error`: falha; inclui um código, sem as respostas.
+- `diagnostic_thank_you_view`: visita à página com recibo de envio na sessão.
+- `diagnostic_thank_you_whatsapp_click`: clique WhatsApp após envio.
+- `diagnostic_whatsapp_open`: nome anterior, preservado no clique da página de obrigado.
+
+Cada evento inclui `product` e `funnel`. Não configure a tentativa como conversão no Google Ads.
+O diagnóstico atual qualifica por leitura humana: no e-mail aparece “A avaliar”,
+sem afirmar que qualquer preenchimento seja um lead automaticamente qualificado.
+
+Fontes oficiais: https://www.emailjs.com/docs/rest-api/send/
+e https://www.emailjs.com/docs/user-guide/dynamic-variables-templates/

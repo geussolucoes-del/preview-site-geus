@@ -109,6 +109,15 @@ const setMenuOpen = (open, restoreFocus = false) => {
 };
 
 document.addEventListener("click", (event) => {
+  const diagnosticLink = event.target.closest('a[href*="/diagnostico/"], a[href="#diagnostico"]');
+  if (diagnosticLink) {
+    const url = new URL(diagnosticLink.href, location.href);
+    const requestedProduct = url.searchParams.get('produto');
+    const product = ['autoflux','madg','cadia','geral'].includes(requestedProduct) ? requestedProduct : requestedProduct === 'adg' ? 'madg' : 'geral';
+    const payload = { event: 'diagnostic_form_open_click', product, funnel: 'diagnostico_site' };
+    window.dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
+    window.dataLayer.push(payload);
+  }
   const langButton = event.target.closest("[data-lang]");
   if (langButton) applyLanguage(langButton.dataset.lang);
   const menuButton = event.target.closest("[data-menu]");

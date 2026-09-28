@@ -27,4 +27,7 @@ Para servir localmente: `python3 -m http.server 4173`.
 Abra `/tests/responsive.html` para conferir CADIA, catálogo, home e diagnóstico em
 viewports de 320 a 1440 px. A ferramenta é `noindex` e fica fora da navegação pública.
 Teste os dois idiomas, o menu com teclado, os links e o formulário em três etapas.
-O diagnóstico apenas prepara a mensagem para o WhatsApp; o usuário ainda precisa enviá-la.
+O diagnóstico envia as respostas pelo EmailJS e só navega para obrigado após aceite da API.
+Um único template atende AutoFlux, MADG e CADIA. Configure os identificadores públicos
+em `assets/lead-config.js` e use `emailjs/template-unico.html` no EmailJS.
+Veja `emailjs/CONFIGURACAO.md` para ativação e validação de entrega real.
