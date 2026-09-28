@@ -3,24 +3,25 @@ const AUTO_LANG_KEY = "geus_auto_language";
 const isPortuguese = (navigator.language || "").toLowerCase().startsWith("pt");
 const safeGet = (type, key) => { try { return window[type].getItem(key); } catch { return null; } };
 const safeSet = (type, key, value) => { try { window[type].setItem(key, value); } catch {} };
-const storedLanguage = safeGet("localStorage", LANG_KEY);
-const autoLanguage = safeGet("sessionStorage", AUTO_LANG_KEY);
+const validLanguage = value => ['pt','en'].includes(value) ? value : null;
+const storedLanguage = validLanguage(safeGet("localStorage", LANG_KEY));
+const autoLanguage = validLanguage(safeGet("sessionStorage", AUTO_LANG_KEY));
 let language = storedLanguage || autoLanguage || (isPortuguese ? "pt" : "en");
 
 const dictionary = {
   pt: {
     skip: "Ir para o conteúdo", navProducts: "Produtos", navPortfolio: "Portfólio", navReviews: "Reviews", navContact: "Contato", talk: "Falar agora",
-    menuLabel: "Abrir menu", closeMenu: "Fechar menu", navLabel: "Principal", audit: "Diagnóstico", privacy: "Privacidade", terms: "Termos", footerLine: "Tecnologia e crescimento construídos de perto para negócios reais.", rights: "Geus Soluções. Todos os direitos reservados."
+    menuLabel: "Abrir menu", closeMenu: "Fechar menu", navLabel: "Principal", audit: "Diagnóstico", privacy: "Privacidade", terms: "Termos", cookies: "Cookies", footerLine: "Tecnologia e crescimento construídos de perto para negócios reais.", rights: "Geus Soluções. Todos os direitos reservados."
   },
   en: {
     skip: "Skip to content", navProducts: "Products", navPortfolio: "Portfolio", navReviews: "Reviews", navContact: "Contact", talk: "Talk to us",
-    menuLabel: "Open menu", closeMenu: "Close menu", navLabel: "Main navigation", audit: "Assessment", privacy: "Privacy", terms: "Terms", footerLine: "Technology and growth built closely around real businesses.", rights: "Geus Solutions. All rights reserved."
+    menuLabel: "Open menu", closeMenu: "Close menu", navLabel: "Main navigation", audit: "Assessment", privacy: "Privacy", terms: "Terms", cookies: "Cookies", footerLine: "Technology and growth built closely around real businesses.", rights: "Geus Solutions. All rights reserved."
   }
 };
 
 const currentPath = location.pathname.replace(/\/$/, "") || "/";
 const activeProduct = ["autoflux", "madg", "cadia"].find(product => currentPath === `/produtos/${product}`);
-const diagnosticHref = activeProduct ? `/diagnostico/?produto=${activeProduct}` : "/diagnostico/";
+const diagnosticHref = activeProduct ? `/diagnostico/?produto=${activeProduct}` : "/#diagnostico";
 const navCurrent = (path) => currentPath === path || (path !== "/" && currentPath.startsWith(path));
 
 const renderChrome = () => {
@@ -49,12 +50,12 @@ const renderChrome = () => {
     <div class="site-footer"><div class="container">
       <div class="footer-main"><div><a class="brand" href="/"><img src="/assets/logo-geus-symbol.png" alt="" width="34" height="34"><span>geus</span></a><p class="muted" data-t="footerLine"></p></div>
       <nav class="footer-links" aria-label="Geus"><a href="/produtos/autoflux/">AutoFlux</a><a href="/produtos/madg/">MADG</a><a href="/produtos/cadia/">CADIA</a><a href="/portfolio/" data-t="navPortfolio"></a><a href="${diagnosticHref}" data-t="audit"></a><a href="/contato/" data-t="navContact"></a><a href="https://www.instagram.com/geusofc/" target="_blank" rel="noopener">Instagram ↗</a><a href="mailto:geussolucoes@gmail.com">E-mail ↗</a></nav></div>
-      <div class="footer-bottom"><span>© ${new Date().getFullYear()} <span data-t="rights"></span></span><span><a href="/politica-de-privacidade/" data-t="privacy"></a> · <a href="/termos-de-uso/" data-t="terms"></a></span></div>
+      <div class="footer-bottom"><span>© ${new Date().getFullYear()} <span data-t="rights"></span><br>GEUS SOLUCAO EM TRAFEGO LTDA · CNPJ 59.811.544/0001-86</span><span><a href="/politica-de-privacidade/" data-t="privacy"></a> · <a href="/politica-de-cookies/" data-t="cookies"></a> · <a href="/termos-de-uso/" data-t="terms"></a></span></div>
     </div></div>`;
 };
 
 const applyLanguage = (nextLanguage, persist = true) => {
-  language = nextLanguage;
+  language = validLanguage(nextLanguage) || 'pt';
   if (persist) safeSet("localStorage", LANG_KEY, language);
   document.documentElement.lang = language === "pt" ? "pt-BR" : "en";
   document.querySelectorAll("[data-t]").forEach((node) => {
@@ -88,7 +89,7 @@ if (!storedLanguage && !autoLanguage) {
   fetch("/api/locale", { headers: { Accept: "application/json" } })
     .then((response) => response.ok ? response.json() : null)
     .then((locale) => {
-      if (locale?.language && !safeGet("localStorage", LANG_KEY)) {
+      if (validLanguage(locale?.language) && !validLanguage(safeGet("localStorage", LANG_KEY))) {
         safeSet("sessionStorage", AUTO_LANG_KEY, locale.language);
         applyLanguage(locale.language, false);
       }
@@ -109,7 +110,7 @@ const setMenuOpen = (open, restoreFocus = false) => {
 };
 
 document.addEventListener("click", (event) => {
-  const diagnosticLink = event.target.closest('a[href*="/diagnostico/"], a[href="#diagnostico"]');
+  const diagnosticLink = event.target.closest('a[href*="/diagnostico/"], a[href$="#diagnostico"]');
   if (diagnosticLink) {
     const url = new URL(diagnosticLink.href, location.href);
     const requestedProduct = url.searchParams.get('produto');

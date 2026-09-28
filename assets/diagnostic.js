@@ -111,6 +111,8 @@
         if(!confirm.open){confirm.showModal();cancel.focus();}return true;
       }
       const consent = el('label','diagnostic-consent'); const check = document.createElement('input'); check.type = 'checkbox'; check.required = true;
+      const handling=el('p','form-note','A triagem inicial usa sua confirmação do investimento mínimo. Ao enviar, suas respostas seguem pelo EmailJS para o e-mail da Geus, para avaliar e responder a esta solicitação — não para inscrever você em marketing. Para revisão humana da triagem ou direitos de privacidade: geussolucoes@gmail.com.','Initial screening uses your minimum-investment confirmation. On submission, EmailJS delivers your answers to Geus by email to assess and respond to this request — not to subscribe you to marketing. For human review or privacy rights: geussolucoes@gmail.com.');
+      steps[2].append(handling);
       const consentText = el('span','','Concordo que a Geus use estas informações para responder ao meu contato.','I agree that Geus may use this information to respond to my inquiry.');
       const privacy = el('a','','Política de privacidade','Privacy policy'); privacy.href = '/politica-de-privacidade/'; privacy.target = '_blank'; privacy.rel = 'noopener'; consent.append(check,consentText); steps[2].append(consent,privacy);
       const note = el('p','form-note','Revise suas respostas e envie o diagnóstico. A equipe Geus recebe seu contexto para avaliar o próximo passo.','Review your answers and submit your diagnostic. The Geus team receives your context to assess the next step.'); form.append(note);

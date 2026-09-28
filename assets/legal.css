@@ -10,6 +10,8 @@
   --shadow: 0 24px 70px rgba(45, 24, 85, 0.11);
 }
 
+@font-face { font-family: Inter; font-style: normal; font-weight: 400 800; font-display: swap; src: url('/assets/inter-latin.woff2') format('woff2'); }
+
 * {
   box-sizing: border-box;
 }
@@ -300,6 +302,7 @@ li::marker {
 table {
   width: 100%;
   min-width: 610px;
+  overflow-wrap: normal;
   border-collapse: collapse;
   background: rgba(255, 255, 255, 0.64);
 }
@@ -311,6 +314,9 @@ td {
   text-align: left;
   vertical-align: top;
 }
+
+td:first-child { min-width: 190px; }
+caption { padding: 14px 18px; text-align: left; font-weight: 650; }
 
 th {
   color: var(--purple-deep);

@@ -16,6 +16,9 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2" />
     <link rel="manifest" href="../site.webmanifest?v=2" />
     <style>
+      @font-face { font-family: Inter; font-style: normal; font-weight: 400 800; font-display: swap; src: url('/assets/inter-latin.woff2') format('woff2'); }
+      .skip-link { position: fixed; top: -80px; left: 16px; z-index: 10; padding: 10px 16px; background: #5424c7; color: white; }
+      .skip-link:focus { top: 12px; }
       :root {
         --ink: #10111a;
         --muted: #5f6170;
@@ -37,6 +40,7 @@
 
       body {
         margin: 0;
+        overflow-wrap: anywhere;
         color: var(--ink);
         background:
           radial-gradient(circle at 8% 4%, rgba(182, 91, 220, 0.13), transparent 27rem),
@@ -492,6 +496,7 @@
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <header class="shell topbar">
       <a class="brand" href="../" aria-label="GEUS - página inicial">
         <img src="../assets/logo-geus-symbol.png" alt="" width="42" height="42" />
@@ -502,7 +507,7 @@
       <span class="topbar-label">Privacidade e proteção de dados</span>
     </header>
 
-    <main class="shell">
+    <main class="shell" id="conteudo">
       <section class="hero" aria-labelledby="page-title">
         <div>
           <span class="eyebrow">Transparência GEUS</span>
@@ -514,7 +519,7 @@
         </div>
         <div class="updated">
           <span>Última atualização</span>
-          <strong>28 de julho de 2026</strong>
+          <strong>28 de setembro de 2026</strong>
         </div>
       </section>
 
@@ -552,7 +557,7 @@
               A <strong>GEUS SOLUCAO EM TRAFEGO LTDA</strong>, inscrita no CNPJ sob o
               nº <strong>59.811.544/0001-86</strong>, opera sob a marca <strong>GEUS</strong> e
               oferece soluções de aquisição digital, comunicação, tecnologia e gestão de
-              campanhas, incluindo a metodologia <strong>GEUS Auto Flux</strong>.
+              campanhas, incluindo <strong>AutoFlux, MADG e CADIA</strong>.
             </p>
             <p>
               Para os tratamentos descritos nesta Política, a GEUS SOLUCAO EM TRAFEGO LTDA atua
@@ -609,6 +614,7 @@
 
           <section class="section" id="bases-legais">
             <h2>4. Bases legais do tratamento</h2>
+            <p>Para responder ao diagnóstico comercial, utilizamos as informações enviadas a pedido do visitante para avaliar uma possível contratação e atender à solicitação. A confirmação exibida no formulário se refere a esse atendimento, não a uma inscrição em publicidade ou comunicações promocionais.</p>
             <p>
               O tratamento poderá se apoiar, conforme o caso, no consentimento do titular, na
               execução de contrato ou de procedimentos preliminares relacionados a contrato, no
@@ -625,6 +631,7 @@
 
           <section class="section" id="compartilhamento">
             <h2>5. Com quem podemos compartilhar</h2>
+            <p>Neste site, a hospedagem é fornecida pela Vercel. O formulário usa o EmailJS para transmitir nome, empresa, telefone, e-mail opcional, localização comercial, produto de interesse e respostas para geussolucoes@gmail.com, em serviço de e-mail do Google (Gmail). Os provedores também podem processar informações técnicas necessárias ao envio e à segurança. O envio só ocorre após a ação “Enviar diagnóstico” e o aceite informado no formulário.</p>
             <p>
               A GEUS poderá compartilhar dados estritamente necessários com fornecedores que
               apoiam sua operação, incluindo serviços de hospedagem, formulários, CRM,
@@ -657,6 +664,7 @@
 
           <section class="section" id="retencao">
             <h2>7. Por quanto tempo mantemos os dados</h2>
+            <p>As respostas em preenchimento ficam na memória da página. Depois de um envio aceito, o navegador mantém temporariamente, em sessionStorage, um recibo com o produto e o resumo das respostas, para a página de obrigado e o botão de WhatsApp. Esse registro permanece durante a sessão da aba e pode ser removido pelo visitante nos dados do navegador. Cópias recebidas no e-mail e registros dos provedores seguem as finalidades e critérios de retenção abaixo; fechar a aba não elimina essas cópias.</p>
             <p>
               Conservamos os dados somente pelo período necessário para cumprir as finalidades
               descritas nesta Política, atender obrigações legais e contratuais, resguardar
@@ -670,6 +678,7 @@
 
           <section class="section" id="direitos">
             <h2>8. Seus direitos como titular</h2>
+            <p>A primeira etapa do formulário aplica uma triagem automática baseada exclusivamente na resposta sobre disponibilidade do investimento mínimo de cada produto. Uma resposta negativa pede confirmação e impede o envio comercial naquela jornada; não representa avaliação de crédito. Você pode corrigir a resposta antes de confirmar ou solicitar revisão humana e informações sobre o critério pelo e-mail geussolucoes@gmail.com. O atendimento de direitos de privacidade não depende de preencher ou se qualificar no formulário comercial.</p>
             <p>
               Nos termos da LGPD, o titular poderá solicitar, quando aplicável:
             </p>
@@ -692,6 +701,7 @@
 
           <section class="section" id="cookies">
             <h2>9. Cookies e tecnologias semelhantes</h2>
+            <p>O site utiliza armazenamento local para lembrar o idioma escolhido (geus_language) e armazenamento de sessão para o idioma automático (geus_auto_language) e o recibo do diagnóstico (geus_diagnostic_receipt). Os eventos de jornada são colocados em uma camada de dados em memória, sem nome, telefone, e-mail ou respostas. Nesta versão, não há tag de medição ou publicidade enviando esses eventos a uma plataforma externa.</p>
             <p>
               Na data desta atualização, este site não ativa cookies de análise, publicidade ou
               perfilamento. A infraestrutura de hospedagem poderá tratar informações técnicas
@@ -750,7 +760,7 @@
             <div class="contact-card">
               <div>
                 <span>Canais de atendimento</span>
-                <strong>WhatsApp: +55 33 99834-7871</strong>
+                <strong>Canal de privacidade e revisão humana</strong>
                 <a href="mailto:geussolucoes@gmail.com">geussolucoes@gmail.com</a>
               </div>
               <div class="contact-actions">
@@ -764,11 +774,11 @@
                 </a>
                 <a
                   class="button"
-                  href="https://wa.me/5533998347871?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20GEUS%20e%20gostaria%20de%20falar%20sobre%20privacidade%20e%20prote%C3%A7%C3%A3o%20de%20dados."
+                  href="mailto:geussolucoes@gmail.com?subject=Privacidade%20e%20LGPD"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  WhatsApp ↗
+                  E-mail de privacidade ↗
                 </a>
               </div>
             </div>

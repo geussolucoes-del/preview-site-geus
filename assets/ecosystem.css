@@ -321,7 +321,7 @@ img { display: block; max-width: 100%; }
 .autoflux-plan-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border: 1px solid rgba(0,0,0,.17); }
 .autoflux-plan { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 2rem; }
 .autoflux-plan + .autoflux-plan { border-left: 1px solid rgba(0,0,0,.17); }
-.autoflux-plan.is-featured { background: #111114; color: var(--text); }
+.autoflux-plan.is-featured { background: #111114; color: var(--text); padding-top: 3.25rem; }
 .autoflux-popular { position: absolute; top: 0; right: 0; padding: .55rem .8rem; background: var(--lime); color: #111; font-size: .6rem; font-weight: 850; text-transform: uppercase; }
 .autoflux-plan-top { display: flex; justify-content: space-between; gap: 1rem; min-height: 50px; }
 .autoflux-plan-top > span { font-size: 1.35rem; font-weight: 850; }
@@ -754,6 +754,9 @@ html[lang="en"] .contact-whatsapp .contact-badge, html[lang="en"] .contact-whats
 .investment-exit .display { font-size: clamp(2.2rem,5vw,4.5rem); text-wrap: balance; }
 .investment-exit .lede { margin-inline: auto; }
 .investment-exit .form-actions { justify-content: center; flex-wrap: wrap; }
+.footer-bottom > span { min-width: 0; overflow-wrap: anywhere; line-height: 1.7; }
+.offer-disclosure { max-width: 1000px; margin: 0 0 1.5rem; font-size: .9rem; line-height: 1.7; color: #514d59; }
+.autoflux-price strong { font-size: clamp(2.4rem,4.6vw,4.8rem); }
 .diagnostic-review dt { margin-top: 1.2rem; color: var(--muted); font-size: .8rem; }
 .diagnostic-review dd { margin: .3rem 0 0; white-space: pre-wrap; line-height: 1.5; }
 .diagnostic-review > .button { margin: 1rem .5rem 0 0; }

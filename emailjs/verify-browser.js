@@ -6,6 +6,7 @@ async (page) => {
   const fill = async(product,width=1366,home=false) => {
     await page.setViewportSize({width,height:844});
     await page.goto('http://127.0.0.1:4173/'+(home?'':'diagnostico/')+'?produto='+product+(product==='autoflux'?'&plano=pro':''));
+    await page.locator('[data-lang="pt"]').click();
     if(home)await page.locator('select[name="product"]').selectOption(product);
     else {
       if(await page.locator('select[name="product"]').count())throw Error('Diagnóstico de produto permite troca');
