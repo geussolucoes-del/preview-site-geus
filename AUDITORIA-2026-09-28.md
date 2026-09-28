@@ -8,6 +8,8 @@ A pedido do usuário, foi acrescentado banner preparatório para GTM em todas as
 - Consent Mode v2 negado por padrão; carregamento básico condicionado à autorização. ID real vazio, nenhum GTM/Pixel instalado. Requisitos de checks por tag documentados em `GTM-CONSENTIMENTO.md`.
 - 404 personalizada com links seguros para home/produtos, assets absolutos e noindex; sem WhatsApp ou redirecionamento para falso sucesso.
 - 31 testes Node passaram. Navegador testou banner/modal em quatro larguras, rejeição persistida, aceitação, categorias separadas, expiração e retirada, com contêiner simulado sem tags reais. Políticas atualizadas para registrar essa preferência.
+- Nova varredura: 15 páginas em quatro larguras, sem transbordamento ou links internos quebrados. Após recusar opcionais, os envios simulados dos três produtos e a página de obrigado continuaram funcionando.
+- Verificação pública pós-deploy: banner visível, preferência recuperável no rodapé, rota inexistente devolve a 404 personalizada com status HTTP 404, link de recuperação retorna à home e nenhuma requisição a GTM/Analytics/Pixel. Teste reproduzível em `tests/verify-consent-live.js`.
 
 ## Resultado e correções
 
