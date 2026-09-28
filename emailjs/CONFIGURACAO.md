@@ -59,6 +59,19 @@ Não existe fila permanente de contatos ou reenvio automático no navegador.
 - `diagnostic_whatsapp_open`: nome anterior, preservado no clique da página de obrigado.
 
 Cada evento inclui `product` e `funnel`. Não configure a tentativa como conversão no Google Ads.
+
+### Separação por produto no GTM
+
+Use uma variável da camada de dados chamada `product` (versão 2).
+Os valores são `autoflux`, `madg` e `cadia` (`geral` para projeto personalizado).
+O nome do evento continua compartilhado; a segmentação vem dessa variável.
+Para separar os envios, use o evento personalizado `diagnostic_form_submit` e
+uma condição `product` igual ao produto desejado em cada acionador.
+Repita a condição nos eventos de abertura, segunda etapa e WhatsApp após envio.
+Assim, cada produto pode ter sua tag/conversão sem duplicar formulários ou templates.
+Não envie nome, telefone, e-mail ou respostas para o dataLayer.
+Testes técnicos diretos no EmailJS não disparam eventos ou conversões no site.
+
 O diagnóstico atual qualifica por leitura humana: no e-mail aparece “A avaliar”,
 sem afirmar que qualquer preenchimento seja um lead automaticamente qualificado.
 
