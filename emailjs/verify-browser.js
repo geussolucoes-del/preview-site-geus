@@ -6,7 +6,11 @@ async (page) => {
   const fill = async(product,width=1366,home=false) => {
     await page.setViewportSize({width,height:844});
     await page.goto('http://127.0.0.1:4173/'+(home?'':'diagnostico/')+'?produto='+product+(product==='autoflux'?'&plano=pro':''));
-    await page.locator('[name="product"]').selectOption(product);
+    if(home)await page.locator('select[name="product"]').selectOption(product);
+    else {
+      if(await page.locator('select[name="product"]').count())throw Error('Diagnóstico de produto permite troca');
+      if(await page.locator('input[name="product"]').inputValue()!==product)throw Error('Contexto do produto incorreto');
+    }
     for(const [name,value] of Object.entries({name:'Teste integração',company:'Empresa teste',phone:'33999999999',location:'Brasil'})) await page.locator('[name="'+name+'"]').fill(value);
     await page.locator('.form-actions button[type="submit"]').click();
     const values={autoflux:{stock:'11-30',sales:'6-15',vehicles:'Seminovos',territory:'Região local'},madg:{service:'Limpeza',territory:'Região local',capacity:'10',channel:'Instagram'},cadia:{channel:'whatsapp',volume:'11-50',process:'Equipe comercial',mode:'assistida'}}[product];
@@ -28,6 +32,8 @@ async (page) => {
   if(await page.locator('[name="name"]').inputValue()!=='Teste integração')throw Error('Perdeu dados');
   if(await page.evaluate(()=>window.dataLayer.some(x=>x.event==='diagnostic_form_submit')))throw Error('Conversão falsa');
   if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Overflow mobile');
+  await page.getByRole('button',{name:'Editar respostas'}).click();
+  if(await page.locator('select[name="product"]').count() || await page.locator('input[name="product"]').inputValue()!=='cadia')throw Error('Editar liberou troca de produto');
   await page.unroute('**/assets/lead-config.js*');
   await page.route('**/assets/lead-config.js*',route=>route.fulfill({status:200,contentType:'application/javascript',body:'window.GEUS_EMAILJS={publicKey:"test",serviceId:"service_test",templateId:"template_unico"};'}));
   let failure=true;
@@ -59,6 +65,12 @@ async (page) => {
   await page.evaluate(()=>sessionStorage.removeItem('geus_diagnostic_receipt'));
   await page.goto('http://127.0.0.1:4173/obrigado/');
   if(await page.locator('[data-thank-whatsapp]').isVisible())throw Error('Obrigado direto confirmou envio');
+  await page.goto('http://127.0.0.1:4173/diagnostico/');
+  await page.waitForURL('http://127.0.0.1:4173/#diagnostico');
+  await page.locator('select[name="product"]').selectOption('autoflux');
+  await page.locator('select[name="product"]').selectOption('cadia');
+  if(await page.locator('[name="stock"]').count())throw Error('Homepage manteve perguntas do produto anterior');
+  if(!await page.locator('[name="volume"]').count())throw Error('Homepage não adaptou perguntas');
   if(errors.length)throw Error(errors.join('; '));
   return {passed:['sem configuração','falha HTTP mantém respostas','AutoFlux com plano','MADG pela home','CADIA mobile','um template para todos','obrigado só com recibo'],realEmailsSent:0};
 }

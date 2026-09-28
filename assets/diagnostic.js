@@ -48,6 +48,9 @@
   }
   function mount({ getLanguage, applyLanguage }) {
     const ctx = context(location.search);
+    const isHomepage = ['/', '/index.html'].includes(location.pathname);
+    const fixedProduct = !isHomepage && ['autoflux','madg','cadia'].includes(ctx.product) ? ctx.product : '';
+    if(!isHomepage && !fixedProduct){location.replace('/#diagnostico');return;}
     const contextNodes = [...document.querySelectorAll('[data-autoflux-pt], [data-cadia-pt]')].map(node => ({node, pt:node.dataset.pt, en:node.dataset.en}));
     document.querySelectorAll('[data-diagnostic-mount]').forEach((host, index) => {
       const form = document.createElement('form'); form.className = 'form-panel multi-step-form'; form.noValidate = true; form.dataset.diagnosticForm = '';
@@ -70,7 +73,15 @@
         wrap.append(label,control); container.append(wrap); controls.set(field.name, { control, field });
       }
       [['Sua empresa','Your business'],['Sua operação','Your operation'],['Seu próximo passo','Your next step']].forEach((titles) => { const s = el('fieldset','form-step'); s.append(el('legend','',...titles)); form.append(s); steps.push(s); });
-      common.forEach(field => addField(field,steps[0]));
+      common.forEach(field => {
+        if(field.name !== 'product' || !fixedProduct){addField(field,steps[0]);return;}
+        const wrap=el('div','field diagnostic-product-context');
+        wrap.append(el('p','form-note','Solução selecionada','Selected solution'));
+        const names={autoflux:'AutoFlux',madg:'MADG',cadia:'CADIA'};
+        const name=el('strong');name.textContent=names[fixedProduct];wrap.append(name);
+        const control=document.createElement('input');control.type='hidden';control.name='product';control.value=fixedProduct;
+        wrap.append(control);steps[0].append(wrap);controls.set('product',{control,field});
+      });
       const branchHost = el('div','diagnostic-branch'); steps[1].append(branchHost); budget.forEach(field=>addField(field,steps[1])); finalFields.forEach(field=>addField(field,steps[2]));
       const consent = el('label','diagnostic-consent'); const check = document.createElement('input'); check.type = 'checkbox'; check.required = true;
       const consentText = el('span','','Concordo que a Geus use estas informações para responder ao meu contato.','I agree that Geus may use this information to respond to my inquiry.');
@@ -81,10 +92,10 @@
       const edit = el('button','button','Editar respostas','Edit answers'); edit.type='button'; review.append(title,summary,note.cloneNode(true),send,edit); form.append(review);
       const status = el('p','form-note diagnostic-status'); status.hidden=true; status.setAttribute('role','status'); status.setAttribute('aria-live','polite'); review.append(status);
       let step = 0; let reviewing = false; let sending = false; let midpointTracked = false;
-      function data() { return Object.fromEntries([...controls].filter(([,x])=>!x.control.disabled).map(([name,x])=>[name,x.control.value.trim()])); }
+      function data() { return Object.fromEntries([...controls].filter(([,x])=>!x.control.disabled).map(([name,x])=>[name,name==='product' && fixedProduct ? fixedProduct : x.control.value.trim()])); }
       function renderBranch() {
         for (const [name, item] of controls) if (branchHost.contains(item.control)) controls.delete(name);
-        const selectedProduct = controls.get('product').control.value;
+        const selectedProduct = fixedProduct || controls.get('product').control.value;
         contextNodes.forEach(({node,pt,en}) => {
           node.dataset.pt = node.getAttribute(`data-${selectedProduct}-pt`) || pt;
           node.dataset.en = node.getAttribute(`data-${selectedProduct}-en`) || en;
@@ -98,7 +109,7 @@
         bilingual(next,step===2?'Revisar diagnóstico':'Continuar',step===2?'Review diagnostic':'Continue');
         if (reviewing) { summary.replaceChildren(); entries(data(),getLanguage()).forEach(([k,v])=>{const dt=el('dt');dt.textContent=k; const dd=el('dd');dd.textContent=v;summary.append(dt,dd);}); if(data().product==='autoflux' && ctx.plan){const dt=el('dt');dt.textContent=tr('Plano de interesse','Plan of interest');const dd=el('dd');dd.textContent=ctx.plan.toUpperCase();summary.append(dt,dd);} }
       }
-      function focusStep() { const target = reviewing ? review : steps[step].querySelector('input,select,textarea'); target?.focus(); }
+      function focusStep() { const target = reviewing ? review : steps[step].querySelector('input:not([type="hidden"]),select,textarea'); target?.focus(); }
       form.addEventListener('submit', event=>{event.preventDefault();
         if(sending || reviewing)return;
         for(const {control,field} of controls.values()) { if(!steps[step].contains(control)) continue; control.setCustomValidity(validate(field,control.value)?'':tr(field.type==='tel'?'Informe um telefone válido com DDD/código do país.':'Preencha este campo com uma resposta válida.',field.type==='tel'?'Enter a valid phone with area/country code.':'Please enter a valid answer.')); if(!control.checkValidity()){control.setAttribute('aria-invalid','true');control.reportValidity();return;} }
@@ -133,7 +144,9 @@
           bilingual(status,'Não conseguimos confirmar o envio. Suas respostas continuam aqui. Tente novamente ou escreva para geussolucoes@gmail.com.','We could not confirm submission. Your answers are still here. Try again or email geussolucoes@gmail.com.');
         }finally{sending=false;send.disabled=false;edit.disabled=false;form.removeAttribute('aria-busy');}
       });
-      controls.get('product').control.addEventListener('change',renderBranch); controls.get('product').control.value=ctx.product; renderBranch(); document.addEventListener('geus:language',draw); draw();
+      if(!fixedProduct)controls.get('product').control.addEventListener('change',renderBranch);
+      controls.get('product').control.value=fixedProduct;
+      renderBranch(); document.addEventListener('geus:language',draw); draw();
     });
   }
   const api = { fieldsFor, validate, context, entries, message, mount, track };

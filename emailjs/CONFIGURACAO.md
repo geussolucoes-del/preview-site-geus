@@ -5,6 +5,11 @@ Ele já adapta as perguntas para AutoFlux, MADG (ADG), CADIA ou projeto geral.
 `assets/lead-service.js` envia todos ao mesmo serviço e template EmailJS, incluindo
 produto, nome, empresa, telefone, e-mail, respostas, plano quando aplicável, URL e consentimento.
 Produto, plano e modo são preservados dos CTAs. Trocar de produto limpa as perguntas da opção anterior.
+Na homepage o visitante escolhe a solução. Nos diagnósticos com `?produto=autoflux`,
+`?produto=madg` ou `?produto=cadia`, a solução fica fixa e não aparece um seletor.
+O mesmo controlador, serviço e template enviam todos os contatos.
+O acesso a `/diagnostico/` sem um produto válido leva ao formulário da homepage,
+onde a escolha fica disponível. Editar respostas não libera a troca no diagnóstico de produto.
 
 ## Configuração na conta
 
