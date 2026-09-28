@@ -2,6 +2,7 @@ async (page) => {
   const errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.route('**/api/locale',route=>route.fulfill({status:200,contentType:'application/json',body:'{"language":"pt"}'}));
+  await page.route('**/assets/lead-config.js*',route=>route.fulfill({status:200,contentType:'application/javascript',body:'window.GEUS_EMAILJS={publicKey:"",serviceId:"",templateId:""};'}));
   const fill = async(product,width=1366,home=false) => {
     await page.setViewportSize({width,height:844});
     await page.goto('http://127.0.0.1:4173/'+(home?'':'diagnostico/')+'?produto='+product+(product==='autoflux'?'&plano=pro':''));
@@ -27,6 +28,7 @@ async (page) => {
   if(await page.locator('[name="name"]').inputValue()!=='Teste integração')throw Error('Perdeu dados');
   if(await page.evaluate(()=>window.dataLayer.some(x=>x.event==='diagnostic_form_submit')))throw Error('Conversão falsa');
   if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Overflow mobile');
+  await page.unroute('**/assets/lead-config.js*');
   await page.route('**/assets/lead-config.js*',route=>route.fulfill({status:200,contentType:'application/javascript',body:'window.GEUS_EMAILJS={publicKey:"test",serviceId:"service_test",templateId:"template_unico"};'}));
   let failure=true;
   const requests=[];

@@ -1,25 +1,143 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><title>Novo contato GEUS</title></head>
-<body style="margin:0;padding:24px;background:#f3f0f8;font-family:Arial,sans-serif;color:#211832">
-  <table role="presentation" style="width:100%;max-width:620px;margin:auto;background:#fff;border-radius:16px;padding:28px">
-    <tr><td>
-      <p style="color:#7136ce;font-weight:bold;letter-spacing:2px">GEUS · {{product}}</p>
-      <h1 style="font-size:24px">Novo contato: {{name}}</h1>
-      <p><strong>Empresa:</strong> {{company}}<br>
-        <strong>Telefone:</strong> {{phone}}<br>
-        <strong>E-mail:</strong> {{email}}<br>
-        <strong>Qualificado:</strong> {{qualified}}</p>
-      <h2 style="font-size:18px">Respostas do diagnóstico</h2>
-      <div style="white-space:pre-wrap;line-height:1.7">{{answers}}</div>
-      <hr style="border:0;border-top:1px solid #e7e0ef;margin:24px 0">
-      <p style="font-size:13px;line-height:1.7;overflow-wrap:anywhere">
-        <strong>Produto:</strong> {{product}} ({{product_id}})<br>
-        <strong>Origem:</strong> {{page_url}}<br>
-        <strong>Botão de entrada:</strong> {{source_cta}}<br>
-        <strong>Data (UTC):</strong> {{submitted_at}}<br>
-        <strong>Ciência da política:</strong> {{privacy_consent}}
-      </p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>Novo diagnóstico — GEUS · {{product}}</title>
+  <style>
+    body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+    body,table,td,a,p,h1,h2{font-family:Inter,'Segoe UI',Arial,Helvetica,sans-serif;}
+    table,td{mso-table-lspace:0pt;mso-table-rspace:0pt;}
+    table{border-collapse:collapse;}
+    img{border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;}
+    body{margin:0!important;padding:0!important;width:100%!important;background-color:#eeebf3;}
+    @media only screen and (max-width:620px){
+      .outer-pad{padding:16px 8px!important;}
+      .section-pad{padding:26px 20px!important;}
+      .header-pad{padding:28px 20px!important;}
+      .contact-label,.contact-value{padding:11px 10px!important;}
+      .email-title{font-size:25px!important;line-height:1.25!important;}
+      .brand-name{font-size:28px!important;}
+      .answer-cell{padding:14px 12px!important;}
+      .footer-pad{padding:24px 20px!important;}
+    }
+    @media only screen and (max-width:380px){
+      .contact-label,.contact-value{display:block!important;width:auto!important;}
+      .contact-label{border-bottom:0!important;padding-bottom:2px!important;}
+      .contact-value{padding-top:2px!important;}
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#eeebf3;font-family:Inter,'Segoe UI',Arial,Helvetica,sans-serif;">
+  <div style="display:none;font-size:1px;line-height:1px;color:#eeebf3;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">
+    Novo diagnóstico {{product}} · {{name}} · {{company}}. Contato e respostas reunidos para sua avaliação.
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eeebf3" style="width:100%;background-color:#eeebf3;">
+    <tr><td class="outer-pad" align="center" style="padding:32px 12px;">
+      <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;table-layout:fixed;border-radius:16px;overflow:hidden;font-family:Inter,'Segoe UI',Arial,Helvetica,sans-serif;">
+        <tr><td height="5" bgcolor="#a85ae1" style="height:5px;line-height:5px;font-size:0;background-color:#a85ae1;">&nbsp;</td></tr>
+        <tr>
+          <td class="header-pad" bgcolor="#191322" style="padding:32px 36px;background-color:#191322;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="48" style="width:48px;vertical-align:middle;">
+                  <img src="https://www.geussolucoes.com/assets/logo-geus-symbol.png" width="38" height="38" alt="" style="display:block;width:38px;height:38px;">
+                </td>
+                <td class="brand-name" style="color:#ffffff;font-size:30px;line-height:1.2;letter-spacing:-1px;vertical-align:middle;">geus</td>
+              </tr>
+            </table>
+            <p style="margin:28px 0 10px;color:#d3b3f4;font-size:11px;line-height:1.6;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Diagnóstico estratégico</p>
+            <h1 class="email-title" style="margin:0;color:#ffffff;font-size:29px;line-height:1.25;font-weight:700;letter-spacing:-0.5px;">Uma nova conversa<br>começa com contexto.</h1>
+            <p style="margin:16px 0 0;color:#d1c7dc;font-size:14px;line-height:1.7;">{{name}} compartilhou o cenário de {{company}}.</p>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#6331bd" style="padding:15px 24px;background-color:#6331bd;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed;">
+              <tr>
+                <td style="color:#ffffff;font-size:16px;line-height:1.5;font-weight:700;word-wrap:break-word;">{{product}}</td>
+                <td width="46%" align="right" style="color:#efe7fc;font-size:12px;line-height:1.5;word-wrap:break-word;">Qualificação: {{qualified}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="section-pad" bgcolor="#ffffff" style="padding:30px 36px;background-color:#ffffff;">
+            <p style="margin:0 0 8px;color:#6331bd;font-size:11px;line-height:1.6;letter-spacing:2px;font-weight:700;text-transform:uppercase;">01 · Contato</p>
+            <h2 style="margin:0 0 18px;color:#231b33;font-size:19px;line-height:1.4;">Quem está chegando</h2>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;table-layout:fixed;">
+                  <tr>
+                    <td class="contact-label" width="34%" bgcolor="#f5f1fb" style="padding:13px 16px;background-color:#f5f1fb;color:#615a70;font-size:12px;line-height:1.6;vertical-align:top;border-bottom:1px solid #e8e1ef;">Nome</td>
+                    <td class="contact-value" width="66%" bgcolor="#f5f1fb" style="padding:13px 16px;background-color:#f5f1fb;color:#231b33;font-size:14px;line-height:1.6;vertical-align:top;font-weight:700;word-wrap:break-word;overflow-wrap:anywhere;border-bottom:1px solid #e8e1ef;">{{name}}</td>
+                  </tr>
+                  <tr>
+                    <td class="contact-label" width="34%" bgcolor="#ffffff" style="padding:13px 16px;background-color:#ffffff;color:#615a70;font-size:12px;line-height:1.6;vertical-align:top;border-bottom:1px solid #e8e1ef;">Empresa</td>
+                    <td class="contact-value" width="66%" bgcolor="#ffffff" style="padding:13px 16px;background-color:#ffffff;color:#231b33;font-size:14px;line-height:1.6;vertical-align:top;font-weight:400;word-wrap:break-word;overflow-wrap:anywhere;border-bottom:1px solid #e8e1ef;">{{company}}</td>
+                  </tr>
+                  <tr>
+                    <td class="contact-label" width="34%" bgcolor="#f5f1fb" style="padding:13px 16px;background-color:#f5f1fb;color:#615a70;font-size:12px;line-height:1.6;vertical-align:top;border-bottom:1px solid #e8e1ef;">Telefone / WhatsApp</td>
+                    <td class="contact-value" width="66%" bgcolor="#f5f1fb" style="padding:13px 16px;background-color:#f5f1fb;color:#231b33;font-size:14px;line-height:1.6;vertical-align:top;font-weight:400;word-wrap:break-word;overflow-wrap:anywhere;border-bottom:1px solid #e8e1ef;"><a href="tel:{{phone}}" style="color:#6331bd;text-decoration:none;font-weight:700;">{{phone}}</a></td>
+                  </tr>
+                  <tr>
+                    <td class="contact-label" width="34%" bgcolor="#ffffff" style="padding:13px 16px;background-color:#ffffff;color:#615a70;font-size:12px;line-height:1.6;vertical-align:top;border-bottom:1px solid #e8e1ef;">E-mail</td>
+                    <td class="contact-value" width="66%" bgcolor="#ffffff" style="padding:13px 16px;background-color:#ffffff;color:#231b33;font-size:14px;line-height:1.6;vertical-align:top;font-weight:400;word-wrap:break-word;overflow-wrap:anywhere;border-bottom:1px solid #e8e1ef;">{{email}}</td>
+                  </tr>
+            </table>
+            <p style="margin:12px 0 0;color:#776f83;font-size:11px;line-height:1.7;">O e-mail é opcional. Quando não preenchido, aparece como “Não informado”.</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="section-pad" bgcolor="#ffffff" style="padding:0 36px 30px;background-color:#ffffff;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td height="1" bgcolor="#e8e1ef" style="height:1px;font-size:0;line-height:1px;background-color:#e8e1ef;">&nbsp;</td></tr>
+            </table>
+            <p style="margin:26px 0 8px;color:#6331bd;font-size:11px;line-height:1.6;letter-spacing:2px;font-weight:700;text-transform:uppercase;">02 · Operação e objetivo</p>
+            <h2 style="margin:0 0 18px;color:#231b33;font-size:19px;line-height:1.4;">O cenário nas palavras do contato</h2>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;table-layout:fixed;">
+              {{#answer_rows}}
+              <tr>
+                <td class="answer-cell" bgcolor="#f5f1fb" style="padding:15px 16px;background-color:#f5f1fb;border-bottom:4px solid #ffffff;">
+                  <p style="margin:0 0 6px;color:#6331bd;font-size:12px;line-height:1.6;font-weight:700;word-wrap:break-word;overflow-wrap:anywhere;">{{question}}</p>
+                  <p style="margin:0;color:#231b33;font-size:14px;line-height:1.75;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;">{{answer}}</p>
+                </td>
+              </tr>
+              {{/answer_rows}}
+              {{^answer_rows}}
+              <tr><td class="answer-cell" bgcolor="#f5f1fb" style="padding:16px;background-color:#f5f1fb;">
+                <pre style="margin:0;font-family:Inter,'Segoe UI',Arial,Helvetica,sans-serif;font-size:14px;line-height:1.75;color:#231b33;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;">{{answers}}</pre>
+              </td></tr>
+              {{/answer_rows}}
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="section-pad" bgcolor="#faf8fc" style="padding:26px 36px;background-color:#faf8fc;border-top:1px solid #e8e1ef;">
+            <p style="margin:0 0 8px;color:#6331bd;font-size:11px;line-height:1.6;letter-spacing:2px;font-weight:700;text-transform:uppercase;">03 · Registro do envio</p>
+            <p style="margin:0 0 12px;color:#615a70;font-size:12px;line-height:1.8;">
+              <strong style="color:#231b33;">Entrada:</strong> {{source_cta}}<br>
+              <strong style="color:#231b33;">Data e hora (UTC):</strong> {{submitted_at}}<br>
+              <strong style="color:#231b33;">Consentimento para contato:</strong> {{privacy_consent}}
+            </p>
+            <p style="margin:0;color:#615a70;font-size:12px;line-height:1.7;"><strong style="color:#231b33;">Página de origem</strong></p>
+            <p style="margin:4px 0 0;color:#615a70;font-size:12px;line-height:1.7;word-break:break-all;overflow-wrap:anywhere;">{{page_url}}</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="footer-pad" bgcolor="#191322" style="padding:26px 36px;background-color:#191322;">
+            <p style="margin:0 0 8px;color:#ffffff;font-size:13px;line-height:1.7;font-weight:700;">GEUS · Estratégia, tecnologia e crescimento.</p>
+            <p style="margin:0 0 14px;color:#c5bbd1;font-size:12px;line-height:1.7;">Informações reunidas para uma conversa individualizada.<br>Uso interno da equipe GEUS.</p>
+            <p style="margin:0;color:#c5bbd1;font-size:11px;line-height:1.8;">GEUS SOLUCAO EM TRAFEGO LTDA · CNPJ 59.811.544/0001-86<br>
+              <a href="mailto:geussolucoes@gmail.com" style="color:#dbc2fa;text-decoration:none;">geussolucoes@gmail.com</a>
+            </p>
+            <p style="margin:16px 0 0;color:#a99bb9;font-size:10px;line-height:1.7;">Notificação gerada pelo diagnóstico do site. Receber este formulário não confirma contratação nem qualificação automática.</p>
+          </td>
+        </tr>
+      </table>
+      <!--[if mso]></td></tr></table><![endif]-->
     </td></tr>
   </table>
 </body>

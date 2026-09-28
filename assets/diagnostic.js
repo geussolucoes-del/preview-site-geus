@@ -35,9 +35,9 @@
     const product = q.get('produto') === 'adg' ? 'madg' : q.get('produto');
     return { product: Object.hasOwn(branches, product) ? product : '', plan: ['start','pro','premium'].includes(q.get('plano')) ? q.get('plano') : '', mode: ['assistida','supervisionada','autonoma'].includes(q.get('modo')) ? q.get('modo') : '' };
   }
-  function entries(data, lang = 'pt') {
+  function entries(data, lang = 'pt', exclude = []) {
     const i = lang === 'en' ? 1 : 0;
-    return fieldsFor(data.product).filter(field => String(data[field.name] || '').trim()).map(field => [field.label[i], field.options ? (field.options.find(option => option[0] === data[field.name]) || [,'',''])[i + 1] : String(data[field.name]).trim()]);
+    return fieldsFor(data.product).filter(field => !exclude.includes(field.name) && String(data[field.name] || '').trim()).map(field => [field.label[i], field.options ? (field.options.find(option => option[0] === data[field.name]) || [,'',''])[i + 1] : String(data[field.name]).trim()]);
   }
   function message(data, lang, plan, source) {
     return [lang === 'en' ? 'Hello! I would like to discuss this business diagnostic with Geus.' : 'Olá! Quero conversar com a Geus sobre este diagnóstico da minha empresa.', ...entries(data, lang).map(([key, value]) => `${key}: ${value}`), ...(data.product === 'autoflux' && ['start','pro','premium'].includes(plan) ? [`Plano / Plan: ${plan.toUpperCase()}`] : []), `Origem / Source: ${source}`].join('\n');
@@ -116,7 +116,7 @@
           if(!validate(field,control.value)){reviewing=false;step=steps.findIndex(s=>s.contains(control));draw();control.focus();control.reportValidity();return;}
         }
         if(!check.checked){reviewing=false;step=2;draw();check.reportValidity();return;}
-        const answers=entries(values,getLanguage()).map(([question,answer])=>({question,answer}));
+        const answers=entries(values,getLanguage(),['product','name','company','phone','email']).map(([question,answer])=>({question,answer}));
         if(values.product==='autoflux' && ctx.plan)answers.push({question:tr('Plano de interesse','Plan of interest'),answer:ctx.plan.toUpperCase()});
         const payload={productId:values.product,labels:{name:values.name,company:values.company,phone:values.phone,email:values.email},answers,privacyConsent:check.checked,pageUrl:location.href,sourceCta:ctx.product ? `Diagnóstico ${ctx.product}` : 'Diagnóstico geral'};
         sending=true;send.disabled=true;edit.disabled=true;form.setAttribute('aria-busy','true');

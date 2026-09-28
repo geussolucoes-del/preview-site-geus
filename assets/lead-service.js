@@ -37,6 +37,7 @@
       investment: labels.investment || "Não informado",
       stock: labels.stock || "Não informado",
       answers: answers.map(({ question, answer }) => `${question}: ${answer || "Não informado"}`).join("\n"),
+      answer_rows: answers.map(({ question, answer }) => ({ question: String(question), answer: String(answer || "Não informado") })),
       page_url: lead.pageUrl || window.location.href,
       source_cta: lead.sourceCta || "Acesso direto ao formulário",
       submitted_at: new Date().toISOString(),

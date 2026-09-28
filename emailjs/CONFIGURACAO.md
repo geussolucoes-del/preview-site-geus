@@ -19,8 +19,22 @@ Produto, plano e modo são preservados dos CTAs. Trocar de produto limpa as perg
 8. Se sua conta restringir domínios, autorize os domínios de produção usados pelo site.
 9. Envie um diagnóstico real, confirme o histórico EmailJS e o recebimento na caixa de entrada.
 
-As variáveis usam chaves duplas `{{answers}}`: o EmailJS escapa respostas do usuário.
+As respostas são renderizadas em linhas individuais pelo loop `{{#answer_rows}}`,
+usando `{{question}}` e `{{answer}}`. O EmailJS suporta listas de objetos nos templates.
+O bloco `{{^answer_rows}}` mantém compatibilidade com o texto `{{answers}}` da versão anterior.
+As variáveis usam chaves duplas: o EmailJS escapa respostas do usuário.
 Não use chaves triplas para essas respostas.
+
+O HTML foi inspirado na organização dos exemplos BrasilCleaning e Ana Lemes:
+cabeçalho da marca, destaque do produto, contato, respostas e registro do envio.
+Usa tabelas, estilos inline, largura fluida até 600 px, ajuste mobile e largura
+condicional para Outlook. A logo é uma imagem remota; mesmo com imagens bloqueadas,
+o nome GEUS e todos os dados continuam em texto. Respostas opcionais ausentes não
+viram links de e-mail inválidos. O status é “A avaliar” até análise humana.
+
+Cole o arquivo **completo** no editor HTML do EmailJS (não no editor visual).
+O preview local confere layout e variáveis; a entrega/renderização no Gmail ou
+Outlook só pode ser confirmada pelo envio real depois de configurar a conta.
 
 Sem configuração, em erro HTTP ou timeout, o formulário mantém as respostas e mostra
 uma mensagem com opção de nova tentativa. Somente depois do aceite do EmailJS
