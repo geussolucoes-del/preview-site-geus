@@ -7,7 +7,7 @@ const root=new URL('../',import.meta.url);
 const read=path=>readFileSync(new URL(path,root));
 const current=read('index.html').toString('utf8');
 const original=execFileSync('git',['show','HEAD:index.html'],{cwd:root}).toString('utf8');
-const normalize=html=>html.replaceAll('\r\n','\n').replace('ecosystem.css?v=17','ecosystem.css?v=16').replace(/        <div class="institutional-stage[\s\S]*?        <\/div>\n(?=      <\/div>)/,'        <!-- visual hero -->\n');
+const normalize=html=>html.replaceAll('\r\n','\n').replace(/ecosystem.css\?v=\d+/,'ecosystem.css?v=VERSION').replace(/        <div class="institutional-stage[\s\S]*?        <\/div>\n(?=      <\/div>)/,'        <!-- visual hero -->\n');
 test('Only hero visual and its stylesheet version change in homepage HTML',()=>{
  assert.equal(normalize(current),normalize(original));
 });
@@ -23,7 +23,7 @@ test('Picture has correct breakpoint, dimensions and accessible description',()=
 });
 test('Imported artwork retains original dimensions; scoped CSS contains without cropping',()=>{
  for(const [name,w,h] of [['desktop.png',1402,1122],['mobile.png',1536,1024]]){
-  const png=read('images/hero-geus-preview/'+name);assert.equal(png.readUInt32BE(16),w);assert.equal(png.readUInt32BE(20),h);
+  const png=read('images/hero-geus-transparent/'+name);assert.equal(png.readUInt32BE(16),w);assert.equal(png.readUInt32BE(20),h);
  }
  const css=read('assets/ecosystem.css').toString('utf8');
  assert.match(css,/institutional-stage\.institutional-stage--art[^}]+min-height: 0/);

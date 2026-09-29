@@ -99,19 +99,22 @@ img { display: block; max-width: 100%; }
 .stage-line-a { top: 50%; right: 18px; left: 18px; height: 1px; }
 .stage-line-b { top: 70px; bottom: 20px; left: 50%; width: 1px; }
 
-/* Approved hero artwork: preserve the complete composition, never cover/crop. */
-.institutional-stage.institutional-stage--art { width: 100%; min-height: 0; aspect-ratio: 1402 / 1122; background: #030303; }
+/* Transparent illustration: natural proportions, no card or clipping. */
+.institutional-stage.institutional-stage--art { width: 100%; min-height: 0; aspect-ratio: 1402 / 1122; border: 0; background: transparent; overflow: visible; }
 .institutional-stage--art picture { display: block; width: 100%; }
 .institutional-stage--art .institutional-hero-art { width: 100%; height: auto; aspect-ratio: 1402 / 1122; object-fit: contain; }
-.institutional-hero-brand { position: absolute; left: 47.08%; top: 43.4%; width: 5.7%; aspect-ratio: 1; background: #030303; border-radius: 16%; }
+.institutional-hero-brand { position: absolute; left: 47.08%; top: 43.4%; width: 5.7%; aspect-ratio: 1; background: var(--bg); }
 .institutional-hero-brand img { width: 100%; height: auto; object-fit: contain; }
+@media (min-width: 981px) {
+  .institutional-stage.institutional-stage--art { --hero-bleed: max(var(--pad), calc((100vw - var(--max)) / 2)); width: calc(100% + var(--hero-bleed) + 2.5rem); margin-left: -2.5rem; }
+}
 @media (min-width: 681px) and (max-width: 980px) {
   .institutional-stage.institutional-stage--art { max-width: 564px; justify-self: center; }
 }
 @media (max-width: 680px) {
   .institutional-stage.institutional-stage--art { aspect-ratio: 1536 / 1024; }
   .institutional-stage--art .institutional-hero-art { aspect-ratio: 1536 / 1024; }
-  .institutional-hero-brand { left: 44.2%; top: 36.52%; width: 10.16%; background: #020202; }
+  .institutional-hero-brand { left: 44.2%; top: 36.52%; width: 10.16%; }
 }
 
 .mission-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 3rem; }
