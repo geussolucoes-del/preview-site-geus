@@ -99,6 +99,21 @@ img { display: block; max-width: 100%; }
 .stage-line-a { top: 50%; right: 18px; left: 18px; height: 1px; }
 .stage-line-b { top: 70px; bottom: 20px; left: 50%; width: 1px; }
 
+/* Approved hero artwork: preserve the complete composition, never cover/crop. */
+.institutional-stage.institutional-stage--art { width: 100%; min-height: 0; aspect-ratio: 1402 / 1122; background: #030303; }
+.institutional-stage--art picture { display: block; width: 100%; }
+.institutional-stage--art .institutional-hero-art { width: 100%; height: auto; aspect-ratio: 1402 / 1122; object-fit: contain; }
+.institutional-hero-brand { position: absolute; left: 47.08%; top: 43.4%; width: 5.7%; aspect-ratio: 1; background: #030303; border-radius: 16%; }
+.institutional-hero-brand img { width: 100%; height: auto; object-fit: contain; }
+@media (min-width: 681px) and (max-width: 980px) {
+  .institutional-stage.institutional-stage--art { max-width: 564px; justify-self: center; }
+}
+@media (max-width: 680px) {
+  .institutional-stage.institutional-stage--art { aspect-ratio: 1536 / 1024; }
+  .institutional-stage--art .institutional-hero-art { aspect-ratio: 1536 / 1024; }
+  .institutional-hero-brand { left: 44.2%; top: 36.52%; width: 10.16%; background: #020202; }
+}
+
 .mission-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 3rem; }
 .mission-index { display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; padding-right: 1.5rem; border-right: 1px solid rgba(0,0,0,.16); color: #5d5962; font-size: .72rem; text-transform: uppercase; }
 .mission-index span { color: var(--violet-deep); font-size: 2rem; font-weight: 800; }
